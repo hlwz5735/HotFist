@@ -1,0 +1,32 @@
+{
+  "name": "蓝海基地",
+  "width": 1140,
+  "startPosition": {
+    "x": 50,
+    "y": 300
+  },
+  "tmxMap": "Maps/Level01.tmx",
+  "enemies": [
+    {
+      "type": "JapanArmyI",
+      "position": {
+        "x": 368,
+        "y": 208
+      }
+    },
+    {
+      "type": "JapanArmyI",
+      "position": {
+        "x": 688,
+        "y": 96
+      }
+    },
+    {
+      "type": "JapanArmyI",
+      "position": {
+        "x": 880,
+        "y": 144
+      }
+    }
+  ]
+}

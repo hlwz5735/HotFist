@@ -1,0 +1,10 @@
+{
+  "name": "test_space",
+  "width": 1140,
+  "startPosition": {
+    "x": 50,
+    "y": 300
+  },
+  "bgm": "Audio/05-Esaka.mp3",
+  "tmxMap": "Maps/Level01.tmx"
+}

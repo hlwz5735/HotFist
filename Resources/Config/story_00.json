@@ -1,0 +1,48 @@
+{
+  "resources": [{
+    "path": "UIS",
+    "type": "plist"
+  },{
+    "path": "Story00",
+    "type": "plist"
+  }, {
+    "path": "StoryImg/00_00.png",
+    "name": "00_00.png",
+    "type": "png"
+  }, {
+    "path": "Audio/Story00.mp3",
+    "type": "mp3"
+  }],
+  "events": [{
+    "cmd": "playBgm",
+    "path": "Audio/01-Story00.mp3",
+    "loop": true
+  }, {
+    "cmd": "showImg",
+    "data": {
+      "textureName": "00_00.png",
+      "tag": "background",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "pivot": {
+        "x": 0,
+        "y": 0
+      },
+      "opacity": 150,
+      "flippedX": false,
+      "flippedY": false,
+      "scaleX": 1,
+      "scaleY": 1
+    }
+  }, {
+    "cmd": "moveImg",
+    "data": {
+      "tag": "background",
+      "textureName": "00_00.png",
+      "duration": 300,
+      "opacity": 255
+    }
+  }]
+}

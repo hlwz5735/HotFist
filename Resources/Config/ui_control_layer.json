@@ -1,0 +1,102 @@
+{
+  "moveLeftButton": {
+    "normalImage": "DirectBtn.png",
+    "selectedImage": "DirectBtn_P.png",
+    "disableImage": "",
+    "flippedX": true,
+    "label": "",
+    "scale9": false,
+    "position": {
+      "x": 50,
+      "y": 100
+    }
+  },
+  "moveRightButton": {
+    "normalImage": "DirectBtn.png",
+    "selectedImage": "DirectBtn_P.png",
+    "disableImage": "",
+    "label": "",
+    "scale9": false,
+    "position": {
+      "x": 114,
+      "y": 100
+    }
+  },
+  "attackButton": {
+    "normalImage": "AtkBtn.png",
+    "selectedImage": "AtkBtn_P.png",
+    "disableImage": "",
+    "label": "",
+    "scale9": false,
+    "position": {
+      "x": 550,
+      "y": 115
+    }
+  },
+  "jumpButton": {
+    "normalImage": "JmpBtn.png",
+    "selectedImage": "JmpBtn_P.png",
+    "disableImage": "",
+    "label": "",
+    "scale9": false,
+    "position": {
+      "x": 485,
+      "y": 64
+    }
+  },
+  "shieldButton": {
+    "normalImage": "ShieldBtn.png",
+    "selectedImage": "ShieldBtn_P.png",
+    "disableImage": "",
+    "label": "",
+    "scale9": false,
+    "position": {
+      "x": 198,
+      "y": 40
+    }
+  },
+  "clockUpButton": {
+    "normalImage": "ClockUPBtn.png",
+    "selectedImage": "ClockUPBtn_P.png",
+    "disableImage": "",
+    "label": "",
+    "scale9": false,
+    "position": {
+      "x": 264,
+      "y": 40
+    }
+  },
+  "cloakButton": {
+    "normalImage": "CloakBtn.png",
+    "selectedImage": "CloakBtn_P.png",
+    "disableImage": "",
+    "label": "",
+    "scale9": false,
+    "position": {
+      "x": 326,
+      "y": 40
+    }
+  },
+  "bladeButton": {
+    "normalImage": "BladeBtn.png",
+    "selectedImage": "BladeBtn_P.png",
+    "disableImage": "",
+    "label": "",
+    "scale9": false,
+    "position": {
+      "x": 390,
+      "y": 40
+    }
+  },
+  "pauseButton": {
+    "normalImage": "PauseBtn.png",
+    "selectedImage": "PauseBtn_P.png",
+    "disableImage": "",
+    "label": "",
+    "scale9": false,
+    "position": {
+      "x": 590,
+      "y": 317
+    }
+  }
+}

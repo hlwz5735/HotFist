@@ -1,0 +1,46 @@
+{
+  "name": "test_space",
+  "width": 1856,
+  "startPosition": {
+    "x": 50,
+    "y": 300
+  },
+  "tmxMap": "Maps/Level02.tmx",
+  "enemies": [
+    {
+      "type": "JapanArmyI",
+      "position": {
+        "x": 368,
+        "y": 208
+      }
+    },
+    {
+      "type": "JapanArmyII",
+      "position": {
+        "x": 688,
+        "y": 96
+      }
+    },
+    {
+      "type": "Ninja",
+      "position": {
+        "x": 880,
+        "y": 144
+      }
+    },
+    {
+      "type": "Ninja",
+      "position": {
+        "x": 256,
+        "y": 128
+      }
+    },
+    {
+      "type": "Liuhai",
+      "position": {
+        "x": 640,
+        "y": 128
+      }
+    }
+  ]
+}
