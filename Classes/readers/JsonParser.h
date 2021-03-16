@@ -2,6 +2,7 @@
 #define HOTFISTREMASTER_JSONPARSER_H
 
 #include "external/json/document.h"
+#include <string>
 
 rapidjson::Document getDocumentFromResource(std::string fileName);
 

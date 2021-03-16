@@ -24,8 +24,8 @@ public:
 private:
     void initDebugScenes();
     void _addDebugScene(const std::string &name, const std::function<cocos2d::Scene* ()> callback);
-    std::vector<const std::string> _sceneNames;
-    std::vector<const std::function<cocos2d::Scene* ()>> _sceneCallbacks;
+    std::vector<std::string> _sceneNames;
+    std::vector<std::function<cocos2d::Scene* ()>> _sceneCallbacks;
     // std::unordered_map<std::string, std::function<cocos2d::Scene* ()>> _sceneMap;
 };
 

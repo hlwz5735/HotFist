@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
  Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
@@ -73,8 +73,9 @@ bool AppDelegate::applicationDidFinishLaunching()
     if (!glview)
     {
 #if DESKTOP_RUNTIME
+        const auto factor = 1.0f;
         glview = GLViewImpl::createWithRect("HotFistRemaster",
-                cocos2d::Rect(0, 0, designResolutionSize.width / 2, designResolutionSize.height / 2));
+                cocos2d::Rect(0, 0, designResolutionSize.width * factor, designResolutionSize.height * factor));
         // glview = GLViewImpl::createWithFullScreen("HotFistRemaster");
 #else
         glview = GLViewImpl::create("HotFistRemaster");

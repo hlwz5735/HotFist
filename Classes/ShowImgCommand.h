@@ -7,6 +7,7 @@
 
 #include "external/json/document.h"
 #include "cocos/math/Vec2.h"
+#include <string>
 
 using std::string;
 using cocos2d::Vec2;
