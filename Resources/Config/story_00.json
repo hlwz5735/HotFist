@@ -13,7 +13,7 @@
     "path": "Audio/Story00.mp3",
     "type": "mp3"
   }],
-  "events": [{
+  "commands": [{
     "cmd": "playBgm",
     "path": "Audio/01-Story00.mp3",
     "loop": true
@@ -30,19 +30,30 @@
         "x": 0,
         "y": 0
       },
-      "opacity": 150,
+      "opacity": 30,
       "flippedX": false,
       "flippedY": false,
       "scaleX": 1,
       "scaleY": 1
     }
   }, {
+    "cmd": "wait",
+    "data": {
+      "value": 120
+    }
+  }, {
     "cmd": "moveImg",
     "data": {
       "tag": "background",
-      "textureName": "00_00.png",
-      "duration": 300,
+      "duration": 100,
       "opacity": 255
+    }
+  }, {
+    "cmd": "waitInput"
+  }, {
+    "cmd": "jump",
+    "data": {
+      "index": 0
     }
   }]
 }
