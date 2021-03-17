@@ -12,7 +12,7 @@ class NewStoryScene: public Scene
 {
 public:
     NewStoryScene();
-    virtual bool init(const std::string& storyName);
+    virtual bool initWithStoryName(const std::string& storyName);
     static NewStoryScene* create(const std::string& storyName);
 
     void update(float dt) override;
@@ -41,8 +41,8 @@ private:
     /** 处理事件 */
     void handleCommand(rapidjson::Value& object);
 
-    void handleShowImgCommand(const ShowImgCommand& cmd);
-    void handleMoveImgCommand(const MoveImgCommand& cmd);
+    void handleShowImgCommand(const ShowImgCommand& cmd) const;
+    void handleMoveImgCommand(const MoveImgCommand& cmd) const;
 };
 
 
