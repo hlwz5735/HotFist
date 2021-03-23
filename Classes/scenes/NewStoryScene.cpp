@@ -6,6 +6,7 @@ using namespace cocos2d::experimental;
 #include "SceneFactory.h"
 #include "ShowImgCommand.h"
 #include "MoveImgCommand.h"
+#include "ShowMsgCommand.h"
 #include "NewStoryScene.h"
 
 #ifdef WIN32
@@ -154,37 +155,62 @@ void NewStoryScene::handleCommand(rapidjson::Value& object)
 		const bool isLoop = object["loop"].GetBool();
 		AudioEngine::play2d(path, isLoop);
 	}
-		// 显示图片
+	// 显示图片
 	else if (cmd == "showImg")
 	{
 		const auto command = ShowImgCommand::fromJsonDocument(object["data"]);
 		this->handleShowImgCommand(command);
 	}
-		// 移动图片
+	// 移动图片
 	else if (cmd == "moveImg")
 	{
 		const auto command = MoveImgCommand::fromJsonDocument(object["data"]);
 		this->handleMoveImgCommand(command);
 	}
-		// 跳转命令
+	// 跳转命令
 	else if (cmd == "jump")
 	{
 		this->commandStep = object["data"]["index"].GetInt();
 	}
-		// 等待用户输入
+	// 等待用户输入
 	else if (cmd == "waitInput")
 	{
 		this->isWaitingInput = true;
 	}
-		// 等待若干帧
+	// 等待若干帧
 	else if (cmd == "wait")
 	{
 		this->commandWaitFrame = object["data"]["value"].GetInt();
 	}
-		// 加载关卡
+	// 加载关卡
 	else if (cmd == "loadLevel")
 	{
 		Director::getInstance()->replaceScene(SceneFactory::loadLevel(object["data"]["value"].GetString()));
+	}
+	else if (cmd == "showMsg")
+	{
+		const auto command = ShowMsgCommand::fromJsonDocument(object["data"]);
+		this->handleShowMsgCommand(command);
+	}
+	else if (cmd == "hideMsg")
+	{
+		std::string position = "all";
+		if (object.HasMember("value") && object["value"].HasMember("position"))
+		{
+			position = StringUtils::toString(object["value"]["position"].GetString());
+		}
+		if (position == "all" || position == "top")
+		{
+			this->topMessageDialog->setVisible(false);
+		}
+		if (position == "all" || position == "bottom")
+		{
+			this->bottomMessageDialog->setVisible(false);
+		}
+	}
+	else
+	{
+		CCLOG("未知命令：%s", cmd.c_str());
 	}
 }
 
@@ -268,20 +294,86 @@ void NewStoryScene::handleMoveImgCommand(const MoveImgCommand& cmd) const
 	element->runAction(Spawn::create(actions));
 }
 
+void NewStoryScene::handleShowMsgCommand(const ShowMsgCommand& cmd)
+{
+	Sprite* avatar, * dialog;
+	Label* label;
+	
+	if (cmd.getPosition() == "top")
+	{
+		dialog = this->topMessageDialog;
+		avatar = this->topAvatar;
+		label = this->topMessageLabel;
+	}
+	else
+	{
+		dialog = this->bottomMessageDialog;
+		avatar = this->bottomAvatar;
+		label = this->bottomMessageLabel;
+	}
+	
+	label->setString(cmd.getText());
+	dialog->setVisible(true);
+
+	if (!cmd.getAvatar().empty())
+	{
+		avatar->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(cmd.getAvatar()));
+	}
+	
+	if (cmd.isWaitInput())
+	{
+		this->isWaitingInput = true;
+	}
+}
+
+
+
 void NewStoryScene::_initMessageDialog()
 {
 	constexpr int bx = 415, by = 50,
 			tx = 225, ty = 310;
 
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("UIS.plist", "UIS.png");
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("avatars.plist", "UIS.png");
 	this->topMessageDialog = Sprite::createWithSpriteFrameName("UI_dialogBox.png");
 	this->topMessageDialog->setPosition(tx, ty);
 	this->topMessageDialog->setVisible(false);
+	this->mainLayer->addChild(topMessageDialog, 5);
+	
 	this->bottomMessageDialog = Sprite::createWithSpriteFrameName("UI_dialogBox.png");
 	this->bottomMessageDialog->setFlippedX(true);
 	this->bottomMessageDialog->setPosition(bx, by);
 	this->bottomMessageDialog->setVisible(false);
-
-	this->mainLayer->addChild(topMessageDialog, 5);
 	this->mainLayer->addChild(bottomMessageDialog, 5);
+	
+	this->topAvatar = Sprite::create();
+	this->topAvatar->setPosition(38, 50);
+	this->topMessageDialog->addChild(this->topAvatar);
+	
+	this->bottomAvatar = Sprite::create();
+	this->bottomAvatar->setPosition(412, 53);
+	this->bottomMessageDialog->addChild(bottomAvatar);
+
+	
+	this->topMessageLabel = _createMessageLabel();
+	this->topMessageLabel->setPosition(84, 74);
+	this->topMessageDialog->addChild(topMessageLabel);
+
+	this->bottomMessageLabel = _createMessageLabel();
+	this->bottomMessageLabel->setPosition(75, 74);
+	this->bottomMessageDialog->addChild(bottomMessageLabel);
+	
+	// this->topAvatar->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("Avatar_Nvidia.png"));
+	// this->bottomAvatar->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("Avatar_AmyRay.png"));
+}
+
+Label* NewStoryScene::_createMessageLabel()
+{
+	const TTFConfig ttfConfig("fonts/Deng.ttf", 14, GlyphCollection::DYNAMIC, nullptr, true);
+	auto label = Label::createWithTTF(ttfConfig, "");
+	label->setLineSpacing(2);
+	label->setDimensions(295, 60);
+	label->enableOutline(Color4B::BLACK, 1);
+	label->setAnchorPoint(Vec2(0, 1));
+	return label;
 }

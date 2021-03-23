@@ -7,6 +7,7 @@ USING_NS_CC;
 
 class ShowImgCommand;
 class MoveImgCommand;
+class ShowMsgCommand;
 
 class NewStoryScene: public Scene
 {
@@ -33,6 +34,8 @@ private:
     Sprite* bottomMessageDialog;
     Sprite* topAvatar;
     Sprite* bottomAvatar;
+    Label* topMessageLabel;
+    Label* bottomMessageLabel;
 
     /** 
      * 描述故事的原始JSON文档
@@ -43,13 +46,17 @@ private:
 private:
     /** 加载所有资源 */
     void loadResources();
+
     /** 处理事件 */
     void handleCommand(rapidjson::Value& object);
 
     void handleShowImgCommand(const ShowImgCommand& cmd) const;
     void handleMoveImgCommand(const MoveImgCommand& cmd) const;
+    void handleShowMsgCommand(const ShowMsgCommand& cmd);
+
 
     void _initMessageDialog();
+    Label* _createMessageLabel();
 };
 
 #endif //HOTFISTREMASTER_NEWSTORYSCENE_H

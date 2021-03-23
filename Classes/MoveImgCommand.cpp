@@ -2,10 +2,6 @@
 using cocostudio::DictionaryHelper;
 #include "MoveImgCommand.h"
 
-#ifdef _MSC_VER
-#undef GetObject
-#endif
-
 MoveImgCommand MoveImgCommand::fromJsonDocument(rapidjson::Value& object)
 {
 	const auto dictionaryHelper = DictionaryHelper::getInstance();

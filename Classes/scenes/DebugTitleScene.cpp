@@ -22,7 +22,7 @@ bool DebugTitleScene::init()
     const auto visibleSize = _director->getVisibleSize();
     const auto layer = Layer::create();
 
-    TTFConfig ttfConfig("fonts/FZYouHJW_503L.TTF", 20);
+    TTFConfig ttfConfig("fonts/Deng.ttf", 20);
     auto startY = visibleSize.height - 30;
 
     auto it = this->_sceneNames.cbegin();

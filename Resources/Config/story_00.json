@@ -1,61 +1,165 @@
 {
-  "resources": [{
-    "path": "Story00",
-    "type": "plist"
-  }, {
-    "path": "StoryImg/00_00.png",
-    "name": "00_00.png",
-    "type": "png"
-  }, {
-    "path": "Audio/01-Story00.mp3",
-    "type": "mp3"
-  }],
-  "commands": [{
-    "cmd": "playBgm",
-    "path": "Audio/01-Story00.mp3",
-    "loop": true
-  }, {
-    "cmd": "showImg",
-    "data": {
-      "textureName": "00_BG_00.png",
-      "tag": "backgroundImg",
-      "opacity": 30
+  "resources": [
+    {
+      "path": "Story00",
+      "type": "plist"
+    },
+    {
+      "path": "StoryImg/00_00.png",
+      "name": "00_00.png",
+      "type": "png"
+    },
+    {
+      "path": "Audio/01-Story00.mp3",
+      "type": "mp3"
     }
-  }, {
-    "cmd": "showImg",
-    "data": {
-      "textureName": "00_00.png",
-      "tag": "tempText0",
-      "opacity": 30
+  ],
+  "commands": [
+    {
+      "cmd": "playBgm",
+      "path": "Audio/01-Story00.mp3",
+      "loop": true
+    },
+    {
+      "cmd": "showImg",
+      "data": {
+        "textureName": "00_BG_00.png",
+        "tag": "backgroundImg",
+        "opacity": 30
+      }
+    },
+    {
+      "cmd": "showImg",
+      "data": {
+        "textureName": "00_00.png",
+        "tag": "tempText0",
+        "opacity": 30
+      }
+    },
+    {
+      "cmd": "moveImg",
+      "data": {
+        "tag": "backgroundImg",
+        "duration": 100,
+        "opacity": 255
+      }
+    },
+    {
+      "cmd": "moveImg",
+      "data": {
+        "tag": "tempText0",
+        "duration": 100,
+        "opacity": 255
+      }
+    },
+    {
+      "cmd": "waitInput"
+    },
+    {
+      "cmd": "moveImg",
+      "data": {
+        "tag": "tempText0",
+        "visible": false
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "avatar": "Avatar_AmyRay.png",
+        "text": "好的伙计们，刚刚头儿说的想必大家也都听到了，这次的任务可是相当艰巨啊！",
+        "position": "top"
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "avatar": "Avatar_Nvidia.png",
+        "text": "大哥，昇国怎么就就有本事打到西京去的啊？",
+        "position": "bottom"
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "text": "哼！泰尼瑞斯公司的改造人技术早就背着我们卖到世界各处了。昇国，依我看，肯定是通过泰尼瑞斯搞了一支改造人的军队。",
+        "position": "top"
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "text": "你是说，昇国是靠着泰尼瑞斯的改造人技术偷袭成功的？我还以为泰尼瑞斯只跟咱们国家打交道呢。这下可麻烦了！",
+        "position": "bottom"
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "text": "任务开始前，卡洛斯少将单独将我叫了过去。从他掌握的情报来看，对方士兵的火力、机动性、精确打击能力已经远远超出了普通单兵的作战水平。",
+        "position": "top"
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "text": "换句话说，敌军士兵的能力已经大大超出了人类肉体的极限。卡洛斯少将认为，昇国士兵一定经过了某种程度的基因改造或外骨骼强化。",
+        "position": "top"
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "text": "经过智库比对，结果是这群士兵的强化数据非常接近某家军事科技公司给我们军方提供的改造人科技方案。",
+        "position": "top"
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "text": "泰尼瑞斯……",
+        "position": "bottom"
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "text": "所以上头要派我们来执行任务？",
+        "position": "bottom"
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "text": "正是如此。我们的身体都经过了泰尼瑞斯和华国合作研发的作战改造。如果昇国也在使用改造人技术，那就应该由我们来好好教训教训它！",
+        "position": "top"
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "text": "大哥，我不得不提醒你一句，这次我们的任务是救援沙伯依元帅，不是正面作战！",
+        "position": "bottom"
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "text": "五号，这次的救援不比寻常。敌人的实力未知，想要不开一枪就完成任务几乎是不可能的。如果不小心触发了警报，你们都要果断地转入正面战斗。明白吗？",
+        "position": "top"
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "text": "Yes Sir！",
+        "position": "bottom"
+      }
+    },
+    {
+      "cmd": "loadLevel",
+      "data": {
+        "value": "01"
+      }
     }
-  }, {
-    "cmd": "moveImg",
-    "data": {
-      "tag": "backgroundImg",
-      "duration": 100,
-      "opacity": 255
-    }
-  }, {
-    "cmd": "moveImg",
-    "data": {
-      "tag": "tempText0",
-      "duration": 100,
-      "opacity": 255
-    }
-  }, {
-    "cmd": "waitInput"
-  }, {
-    "cmd": "moveImg",
-    "data": {
-      "tag": "tempText0",
-      "visible": false
-    }
-  }, {
-    "cmd": "waitInput"
-  }, {
-    "cmd": "loadLevel",
-    "data": {
-      "value": "01"
-    }
-  }]
+  ]
 }

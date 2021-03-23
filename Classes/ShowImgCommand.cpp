@@ -6,10 +6,6 @@
 using cocostudio::DictionaryHelper;
 #include "ShowImgCommand.h"
 
-#ifdef _MSC_VER
-#undef GetObject
-#endif
-
 ShowImgCommand ShowImgCommand::fromJsonDocument(rapidjson::Value &object)
 {
     const auto dictionaryHelper = DictionaryHelper::getInstance();
