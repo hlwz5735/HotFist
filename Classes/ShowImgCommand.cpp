@@ -21,21 +21,24 @@ ShowImgCommand ShowImgCommand::fromJsonDocument(rapidjson::Value &object)
 
     if (object.HasMember("position"))
     {
-        auto positionObj = object["position"].GetObject();
-        cmd.position = Vec2(dictionaryHelper->getFloatValue_json(positionObj, "x", 0),
-            dictionaryHelper->getFloatValue_json(positionObj, "y", 0));
+        const auto x = dictionaryHelper->getFloatValue_json(object["position"], "x", 0);
+        const auto y = dictionaryHelper->getFloatValue_json(object["position"], "y", 0);
+        cmd.position = Vec2(x, y);
     }
     if (object.HasMember("pivot"))
     {
-        auto pivotObj = object["pivot"].GetObject();
-        cmd.pivot = Vec2(dictionaryHelper->getFloatValue_json(pivotObj, "x", 0),
-            dictionaryHelper->getFloatValue_json(pivotObj, "y", 0));
+        const auto x = dictionaryHelper->getFloatValue_json(object["pivot"], "x", 0);
+        const auto y = dictionaryHelper->getFloatValue_json(object["pivot"], "y", 0);
+        cmd.pivot = Vec2(x, y);
     }
 
     cmd.opacity = dictionaryHelper->getIntValue_json(object, "opacity", 255);
+    cmd.zIndex = dictionaryHelper->getIntValue_json(object, "zIndex", 0);
     cmd.flippedX = dictionaryHelper->getBooleanValue_json(object, "flippedX", false);
     cmd.flippedY = dictionaryHelper->getBooleanValue_json(object, "flippedY", false);
     cmd.scaleX = dictionaryHelper->getFloatValue_json(object, "scaleX", 1);
     cmd.scaleY = dictionaryHelper->getFloatValue_json(object, "scaleY", 1);
+    cmd.visible = dictionaryHelper->getBooleanValue_json(object, "visible", true);
+
     return cmd;
 }

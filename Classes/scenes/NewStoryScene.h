@@ -29,6 +29,11 @@ private:
     /** 故事场景的主图层 */
     Layer* mainLayer;
 
+    Sprite* topMessageDialog;
+    Sprite* bottomMessageDialog;
+    Sprite* topAvatar;
+    Sprite* bottomAvatar;
+
     /** 
      * 描述故事的原始JSON文档
      * 
@@ -43,7 +48,8 @@ private:
 
     void handleShowImgCommand(const ShowImgCommand& cmd) const;
     void handleMoveImgCommand(const MoveImgCommand& cmd) const;
-};
 
+    void _initMessageDialog();
+};
 
 #endif //HOTFISTREMASTER_NEWSTORYSCENE_H

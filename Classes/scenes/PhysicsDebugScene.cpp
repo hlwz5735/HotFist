@@ -1,5 +1,5 @@
 ﻿#include "PhysicsDebugScene.h"
-#include "readers/LevelDataReader.h"
+#include "../readers/LevelDataReader.h"
 
 bool PhysicsDebugScene::init()
 {

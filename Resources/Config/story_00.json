@@ -1,8 +1,5 @@
 {
   "resources": [{
-    "path": "UIS",
-    "type": "plist"
-  },{
     "path": "Story00",
     "type": "plist"
   }, {
@@ -10,7 +7,7 @@
     "name": "00_00.png",
     "type": "png"
   }, {
-    "path": "Audio/Story00.mp3",
+    "path": "Audio/01-Story00.mp3",
     "type": "mp3"
   }],
   "commands": [{
@@ -20,33 +17,38 @@
   }, {
     "cmd": "showImg",
     "data": {
-      "textureName": "00_00.png",
-      "tag": "background",
-      "position": {
-        "x": 0,
-        "y": 0
-      },
-      "pivot": {
-        "x": 0,
-        "y": 0
-      },
-      "opacity": 30,
-      "flippedX": false,
-      "flippedY": false,
-      "scaleX": 1,
-      "scaleY": 1
+      "textureName": "00_BG_00.png",
+      "tag": "backgroundImg",
+      "opacity": 30
     }
   }, {
-    "cmd": "wait",
+    "cmd": "showImg",
     "data": {
-      "value": 120
+      "textureName": "00_00.png",
+      "tag": "tempText0",
+      "opacity": 30
     }
   }, {
     "cmd": "moveImg",
     "data": {
-      "tag": "background",
+      "tag": "backgroundImg",
       "duration": 100,
       "opacity": 255
+    }
+  }, {
+    "cmd": "moveImg",
+    "data": {
+      "tag": "tempText0",
+      "duration": 100,
+      "opacity": 255
+    }
+  }, {
+    "cmd": "waitInput"
+  }, {
+    "cmd": "moveImg",
+    "data": {
+      "tag": "tempText0",
+      "visible": false
     }
   }, {
     "cmd": "waitInput"

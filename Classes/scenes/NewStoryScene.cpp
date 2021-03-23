@@ -32,6 +32,8 @@ bool NewStoryScene::initWithStoryName(const std::string& storyName)
 
 	this->mainLayer = Layer::create();
 	this->addChild(mainLayer);
+	// 初始化消息对话框
+	this->_initMessageDialog();
 
 	// 读取JSON配置文件的数据
 	this->document = getDocumentFromResource(StringUtils::format("Config/story_%s.json", storyName.c_str()));
@@ -190,22 +192,28 @@ void NewStoryScene::handleShowImgCommand(const ShowImgCommand& cmd) const
 {
 	// 获取当前tag对应的图片是否已存在，如果已存在，则先将其移除
 	auto* element = dynamic_cast<Sprite*>(this->mainLayer->getChildByName(cmd.getTag()));
-
 	if (element != nullptr)
 	{
 		this->mainLayer->removeChild(element, true);
 	}
+
 	element = Sprite::createWithSpriteFrameName(cmd.getTextureName());
 	element->setName(cmd.getTag());
-
+	element->setAnchorPoint(cmd.getPivot());
+	element->setPosition(cmd.getPosition());
 	element->setScale(cmd.getScaleX(), cmd.getScaleY());
 	element->setFlippedX(cmd.isFlippedX());
 	element->setFlippedY(cmd.isFlippedY());
-	element->setPosition(cmd.getPosition());
-	element->setAnchorPoint(cmd.getPivot());
 	element->setOpacity(cmd.getOpacity());
-
-	this->mainLayer->addChild(element);
+	element->setVisible(cmd.isVisible());
+	if (cmd.getZIndex() == 0)
+	{
+		this->mainLayer->addChild(element);
+	}
+	else
+	{
+		this->mainLayer->addChild(element, cmd.getZIndex());
+	}
 }
 
 void NewStoryScene::handleMoveImgCommand(const MoveImgCommand& cmd) const
@@ -216,15 +224,22 @@ void NewStoryScene::handleMoveImgCommand(const MoveImgCommand& cmd) const
 	{
 		return;
 	}
+    // 设置精灵的可见性，如果内容不可见，则不执行动作
+    element->setVisible(cmd.isVisible());
+    if (!cmd.isVisible())
+    {
+        return;
+    }
 
 	element->setFlippedX(cmd.getFlippedX());
 	element->setFlippedY(cmd.getFlippedY());
+
 
 	// 计算帧时间到毫秒事件
 	constexpr auto timePerFrame = 1.0 / 60;
 	const auto actionTime = static_cast<float>(timePerFrame * cmd.getDuration());
 
-	Vector<FiniteTimeAction*> actions;
+	auto actions = Vector<FiniteTimeAction*>();
 	// 图片移动的设置
 	if (cmd.isMoveAbsolute())
 	{
@@ -251,4 +266,22 @@ void NewStoryScene::handleMoveImgCommand(const MoveImgCommand& cmd) const
 	}
 
 	element->runAction(Spawn::create(actions));
+}
+
+void NewStoryScene::_initMessageDialog()
+{
+	constexpr int bx = 415, by = 50,
+			tx = 225, ty = 310;
+
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("UIS.plist", "UIS.png");
+	this->topMessageDialog = Sprite::createWithSpriteFrameName("UI_dialogBox.png");
+	this->topMessageDialog->setPosition(tx, ty);
+	this->topMessageDialog->setVisible(false);
+	this->bottomMessageDialog = Sprite::createWithSpriteFrameName("UI_dialogBox.png");
+	this->bottomMessageDialog->setFlippedX(true);
+	this->bottomMessageDialog->setPosition(bx, by);
+	this->bottomMessageDialog->setVisible(false);
+
+	this->mainLayer->addChild(topMessageDialog, 5);
+	this->mainLayer->addChild(bottomMessageDialog, 5);
 }

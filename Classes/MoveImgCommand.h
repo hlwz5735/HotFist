@@ -24,9 +24,12 @@ protected:
 	CC_SYNTHESIZE_PASS_BY_REF(float, scaleY, ScaleY);
 protected:
 	bool moveAbsolute;
+	bool visible;
 public:
 	virtual inline const bool& isMoveAbsolute() const { return moveAbsolute; }
 	virtual inline void setMoveAbsolute(const bool& val) { this->moveAbsolute = val; }
+	virtual inline const bool& isVisible() const { return visible; }
+	virtual inline void setVisible(const bool& val) { this->visible = val; }
 };
 
 #endif

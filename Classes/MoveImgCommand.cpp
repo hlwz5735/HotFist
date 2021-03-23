@@ -18,9 +18,9 @@ MoveImgCommand MoveImgCommand::fromJsonDocument(rapidjson::Value& object)
 
 	if (object.HasMember("position"))
 	{
-		auto positionObj = object["position"].GetObject();
-		cmd.position = Vec2(dictionaryHelper->getFloatValue_json(positionObj, "x", 0),
-			dictionaryHelper->getFloatValue_json(positionObj, "y", 0));
+		const auto x = dictionaryHelper->getFloatValue_json(object["position"], "x", 0);
+		const auto y = dictionaryHelper->getFloatValue_json(object["position"], "y", 0);
+		cmd.position = Vec2(x, y);
 	}
 
 	cmd.moveAbsolute = dictionaryHelper->getBooleanValue_json(object, "moveAbsolute", false);
@@ -28,6 +28,7 @@ MoveImgCommand MoveImgCommand::fromJsonDocument(rapidjson::Value& object)
 	cmd.flippedY = dictionaryHelper->getBooleanValue_json(object, "flippedY", false);
 	cmd.scaleX = dictionaryHelper->getFloatValue_json(object, "scaleX", 1);
 	cmd.scaleY = dictionaryHelper->getFloatValue_json(object, "scaleY", 1);
+	cmd.visible = dictionaryHelper->getBooleanValue_json(object, "visible", true);
 
 	return cmd;
 }
