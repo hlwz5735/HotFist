@@ -1,4 +1,5 @@
-﻿#include "PhysicsDebugScene.h"
+﻿#include "cocostudio/CCArmature.h"
+#include "PhysicsDebugScene.h"
 #include "../readers/LevelDataReader.h"
 
 bool PhysicsDebugScene::init()
@@ -42,12 +43,16 @@ bool PhysicsDebugScene::init()
         }
     }
 
-    auto sprite = Sprite::create("ModeChangeItem.png");
-    sprite->setScale(0.25f);
+    cocostudio::ArmatureDataManager::getInstance()->addArmatureFileInfo("Nivida0.png", "Nivida0.plist", "Nivida.ExportJson");
+    //新的主角精灵
+    cocostudio::Armature* sprite = cocostudio::Armature::create("Nivida");
+    // 设置当前运行动画的索引，一个“工程”可以建立多个动画
+    sprite->getAnimation()->play("Stand");
     sprite->setPosition(120, 300 - sprite->getContentSize().height / 2);
 
     auto physicsBody = PhysicsBody::createBox(sprite->getContentSize(), defaultPhysicsMaterial);
     physicsBody->setDynamic(true);
+    physicsBody->setRotationEnable(false);
     sprite->addComponent(physicsBody);
 
     layer->addChild(sprite);
