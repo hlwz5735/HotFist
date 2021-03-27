@@ -37,6 +37,7 @@ USING_NS_CC;
 
 /** 设计分辨率 */
 static cocos2d::Size designResolutionSize = cocos2d::Size(640, 360);
+float SCALE_FACTOR = 2.0f;
 
 AppDelegate::AppDelegate()
 {
@@ -73,7 +74,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     if (!glview)
     {
 #if DESKTOP_RUNTIME
-        const auto factor = 1.0f;
+        const auto factor = SCALE_FACTOR;
         glview = GLViewImpl::createWithRect("HotFistRemaster",
                 cocos2d::Rect(0, 0, designResolutionSize.width * factor, designResolutionSize.height * factor));
         // glview = GLViewImpl::createWithFullScreen("HotFistRemaster");

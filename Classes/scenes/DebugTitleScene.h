@@ -22,6 +22,7 @@ public:
     void scrollViewDidZoom(ScrollView *view) override;
 
 private:
+    void _addFrameSizeDebugLayer();
     void initDebugScenes();
     void _addDebugScene(const std::string &name, const std::function<cocos2d::Scene* ()> callback);
     std::vector<std::string> _sceneNames;

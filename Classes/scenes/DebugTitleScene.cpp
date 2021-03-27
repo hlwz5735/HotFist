@@ -5,6 +5,7 @@
 #pragma execution_character_set("utf-8")
 #endif
 
+#include <sstream>
 #include "DebugTitleScene.h"
 #include "StartScene.h"
 #include "TitleScene.h"
@@ -12,12 +13,16 @@
 #include "GameScene.h"
 #include "NewStoryScene.h"
 
+using std::ostringstream;
+
 bool DebugTitleScene::init()
 {
     if (!Scene::init())
         return false;
 
     this->initDebugScenes();
+
+    this->_addFrameSizeDebugLayer();
 
     const auto visibleSize = _director->getVisibleSize();
     const auto layer = Layer::create();
@@ -99,4 +104,35 @@ void DebugTitleScene::_addDebugScene(const string &name, const std::function<coc
 {
     _sceneNames.push_back(name);
     _sceneCallbacks.push_back(callback);
+}
+
+void DebugTitleScene::_addFrameSizeDebugLayer()
+{
+    const auto visibleSize = _director->getVisibleSize();
+    const auto layer = Layer::create();
+    const TTFConfig ttfConfig("fonts/arial.ttf", 14);
+
+    auto label = Label::createWithTTF(ttfConfig, "BL");
+    label->setPosition(10, 10);
+    layer->addChild(label);
+
+    label = Label::createWithTTF(ttfConfig, "BR");
+    label->setPosition(visibleSize.width - 10, 10);
+    layer->addChild(label);
+
+    label = Label::createWithTTF(ttfConfig, "TL");
+    label->setPosition(10, visibleSize.height - 10);
+    layer->addChild(label);
+
+    label = Label::createWithTTF(ttfConfig, "TR");
+    label->setPosition(visibleSize.width - 10, visibleSize.height - 10);
+    layer->addChild(label);
+
+    ostringstream visibleSizeStr;
+    visibleSizeStr << "visibleSize={" << visibleSize.width << ", " << visibleSize.height << "}";
+    label = Label::createWithTTF(ttfConfig, visibleSizeStr.str());
+    label->setPosition(visibleSize.width / 2, 20);
+    layer->addChild(label);
+
+    this->addChild(layer);
 }

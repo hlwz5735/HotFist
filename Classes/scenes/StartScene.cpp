@@ -31,7 +31,7 @@ bool StartScene::init()
     Sprite *pLabelp = Sprite::createWithSpriteFrameName("spin.png");
     pLabelp->setPosition(Point(-pLabelp->getContentSize().width, Director::getInstance()->getVisibleSize().height / 4));
     Sprite *pStartBg = Sprite::createWithSpriteFrameName("start_back.png");
-    pStartBg->setScale(1.5);
+    pStartBg->setScale(2);
     pStartBg->setPosition(Point(Director::getInstance()->getVisibleSize().width / 2,
             Director::getInstance()->getVisibleSize().height / 2));
     layer->addChild(pStartBg, 0);

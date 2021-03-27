@@ -50,7 +50,9 @@ bool PhysicsDebugScene::init()
     sprite->getAnimation()->play("Stand");
     sprite->setPosition(120, 300 - sprite->getContentSize().height / 2);
 
-    auto physicsBody = PhysicsBody::createBox(sprite->getContentSize(), defaultPhysicsMaterial);
+    const auto contentSize = sprite->getContentSize();
+    auto physicsBody = PhysicsBody::createBox(
+            contentSize, defaultPhysicsMaterial, Vec2(-contentSize.width / 2, 0));
     physicsBody->setDynamic(true);
     physicsBody->setRotationEnable(false);
     sprite->addComponent(physicsBody);
