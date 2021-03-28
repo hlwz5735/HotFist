@@ -157,37 +157,42 @@ void NewStoryScene::handleCommand(rapidjson::Value& object)
         const bool isLoop = object["loop"].GetBool();
         AudioEngine::play2d(path, isLoop);
     }
-        // 显示图片
+    // 显示图片
     else if (cmd == "showImg")
     {
         const auto command = ShowImgCommand::fromJsonDocument(object["data"]);
         this->handleShowImgCommand(command);
     }
-        // 移动图片
+    // 移动图片
     else if (cmd == "moveImg")
     {
         const auto command = MoveImgCommand::fromJsonDocument(object["data"]);
         this->handleMoveImgCommand(command);
     }
-        // 跳转命令
+    // 跳转命令
     else if (cmd == "jump")
     {
         this->commandStep = object["data"]["index"].GetInt();
     }
-        // 等待用户输入
+    // 等待用户输入
     else if (cmd == "waitInput")
     {
         this->isWaitingInput = true;
     }
-        // 等待若干帧
+    // 等待若干帧
     else if (cmd == "wait")
     {
         this->commandWaitFrame = object["data"]["value"].GetInt();
     }
-        // 加载关卡
+    // 加载关卡
     else if (cmd == "loadLevel")
     {
-        Director::getInstance()->replaceScene(SceneFactory::loadLevel(object["data"]["value"].GetString()));
+        _director->replaceScene(TransitionFadeBL::create(1.0f, SceneFactory::loadLevel(object["data"]["value"].GetString())));
+    }
+	// 加载故事场景
+    else if (cmd == "loadStory")
+    {
+        _director->replaceScene(TransitionFlipX::create(1.0f, NewStoryScene::create(object["data"]["value"].GetString())));
     }
     else if (cmd == "showMsg")
     {
@@ -222,6 +227,7 @@ void NewStoryScene::handleShowImgCommand(const ShowImgCommand& cmd) const
     auto* element = dynamic_cast<Sprite*>(this->mainLayer->getChildByName(cmd.getTag()));
     if (element != nullptr)
     {
+        element->stopAllActions();
         this->mainLayer->removeChild(element, true);
     }
 
@@ -292,8 +298,10 @@ void NewStoryScene::handleMoveImgCommand(const MoveImgCommand& cmd) const
     {
         actions.pushBack(ScaleTo::create(actionTime, cmd.getScaleX(), cmd.getScaleY()));
     }
-
-    element->runAction(Spawn::create(actions));
+    if (!actions.empty())
+    {
+        element->runAction(Spawn::create(actions));
+    }
 }
 
 void NewStoryScene::handleShowMsgCommand(const ShowMsgCommand& cmd)
@@ -306,12 +314,14 @@ void NewStoryScene::handleShowMsgCommand(const ShowMsgCommand& cmd)
         dialog = this->topMessageDialog;
         avatar = this->topAvatar;
         label = this->topMessageLabel;
+        this->bottomMessageDialog->setVisible(false);
     }
     else
     {
         dialog = this->bottomMessageDialog;
         avatar = this->bottomAvatar;
         label = this->bottomMessageLabel;
+        this->topMessageDialog->setVisible(false);
     }
 
     label->setString(cmd.getText());
@@ -327,8 +337,6 @@ void NewStoryScene::handleShowMsgCommand(const ShowMsgCommand& cmd)
         this->isWaitingInput = true;
     }
 }
-
-
 
 void NewStoryScene::_initMessageDialog()
 {
@@ -372,8 +380,8 @@ Label* NewStoryScene::_createMessageLabel()
 {
     const static TTFConfig ttfConfig("fonts/Deng.ttf", 14 * SCALE_FACTOR, GlyphCollection::DYNAMIC, nullptr, true);
     auto label = Label::createWithTTF(ttfConfig, "");
-    label->setLineSpacing(2 * SCALE_FACTOR);
-    label->setDimensions(295 * SCALE_FACTOR, 64 * SCALE_FACTOR);
+    // label->setLineSpacing(1 * SCALE_FACTOR);
+    label->setDimensions(295 * SCALE_FACTOR, 65 * SCALE_FACTOR);
     label->enableOutline(Color4B::BLACK, static_cast<int>(SCALE_FACTOR));
     label->setAnchorPoint(Vec2(0, 1));
     label->setScale(1 / SCALE_FACTOR);

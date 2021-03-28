@@ -156,7 +156,99 @@
       }
     },
     {
-      "cmd": "loadLevel",
+      "cmd": "showMsg",
+      "data": {
+        "avatar": "Avatar_Normand.png",
+        "text": "大哥，我们已经进入预定空降坐标。舱门即将打开。",
+        "position": "top"
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "avatar": "Avatar_AmyRay.png",
+        "text": "伙计们准备好，听我的指令。1——2——3——跳！",
+        "position": "top"
+      }
+    },
+    {
+      "cmd": "hideMsg"
+    },
+    {
+      "cmd": "moveImg",
+      "data": {
+        "tag": "backgroundImg",
+        "duration": 30,
+        "opacity": 0
+      }
+    },
+    {
+      "cmd": "wait",
+      "data": {
+        "value": 60
+      }
+    },
+    {
+      "cmd": "showImg",
+      "data": {
+        "textureName": "00_BG_01.png",
+        "tag": "backgroundImg",
+        "opacity": 0
+      }
+    },
+    {
+      "cmd": "moveImg",
+      "data": {
+        "tag": "backgroundImg",
+        "duration": 30,
+        "opacity": 255
+      }
+    },
+    {
+      "cmd": "wait",
+      "data": {
+        "value": 30
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "text": "小队，报告情况。",
+        "position": "top"
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "text": "二号报告，推进器正常，预计正常到达降落地点。",
+        "avatar": "Avatar_Normand.png",
+        "position": "bottom"
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "text": "五号报告！遭遇不明高空EMP袭击！推进器工作异常，备用伞包已遗失，正在失速！！！",
+        "avatar": "Avatar_Nvidia.png",
+        "position": "bottom"
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "text": "冷静！我的战术地图显示你现在所在位置是海滩，你可以尽量朝海面降落，切换到护盾模式，然后就祈祷自己大难不死吧。",
+        "position": "top"
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "text": "我操！！！！！！！！！！！！",
+        "position": "bottom"
+      }
+    },
+    {
+      "cmd": "loadStory",
       "data": {
         "value": "01"
       }

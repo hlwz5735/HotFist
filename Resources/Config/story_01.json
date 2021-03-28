@@ -1,0 +1,73 @@
+{
+  "resources": [
+    {
+      "path": "Story00",
+      "type": "plist"
+    },
+    {
+      "path": "Story01",
+      "type": "plist"
+    }
+  ],
+  "commands": [
+    {
+      "cmd": "showImg",
+      "data": {
+        "textureName": "01_BG.png",
+        "tag": "backgroundImg"
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "avatar": "Avatar_AmyRay.png",
+        "text": "五号，我的战术面板显示你的生命特征正常，看来你活下来了。",
+        "position": "top"
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "avatar": "Avatar_Nvidia.png",
+        "text": "咳咳，算我命大。但是我现在退化到了生命保全模式，武器也遗失了，现在作战能力严重受损。",
+        "position": "bottom"
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "text": "我们尚不知道你所受到的EMP攻击来自何处，但鉴于我们已经顺利渗透进入蓝海基地，也许昇国并不知道我们这次的行动。二号，我和三号四号先进去探探路，你在这里等一下五号。",
+        "position": "top"
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "avatar": "Avatar_Normand.png",
+        "text": "收到！",
+        "position": "bottom"
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "text": "五号，你尽快穿过海滩，和基地门口的二号汇合。",
+        "position": "top"
+      }
+    },
+    {
+      "cmd": "showMsg",
+      "data": {
+        "text": "Yes Sir。",
+        "avatar": "Avatar_Nvidia.png",
+        "position": "bottom"
+      }
+    },
+    {
+      "cmd": "loadLevel",
+      "data": {
+        "value": "01"
+      }
+    }
+  ]
+}
