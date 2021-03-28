@@ -360,11 +360,11 @@ void NewStoryScene::_initMessageDialog()
 	this->bottomMessageDialog->addChild(bottomAvatar);
 	
 	this->topMessageLabel = _createMessageLabel();
-	this->topMessageLabel->setPosition(84, 74);
+	this->topMessageLabel->setPosition(80, 74);
 	this->topMessageDialog->addChild(topMessageLabel);
 
 	this->bottomMessageLabel = _createMessageLabel();
-	this->bottomMessageLabel->setPosition(10, 74);
+	this->bottomMessageLabel->setPosition(8, 74);
 	this->bottomMessageDialog->addChild(bottomMessageLabel);
 }
 
