@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
  Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
@@ -94,6 +94,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     glview->setDesignResolutionSize(
             designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
 
+    // 设置内容缩放因数为1
     director->setContentScaleFactor(1);
 
     register_all_packages();
