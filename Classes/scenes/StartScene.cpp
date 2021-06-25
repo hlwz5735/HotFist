@@ -1,7 +1,4 @@
-﻿#ifndef _Story00__
-#define _Story00__
-
-#include "StartScene.h"
+﻿#include "StartScene.h"
 #include "SceneFactory.h"
 
 bool StartScene::init()
@@ -148,5 +145,3 @@ void StartScene::labelonStage(float dt)
 {
     text->setVisible(true);
 }
-
-#endif

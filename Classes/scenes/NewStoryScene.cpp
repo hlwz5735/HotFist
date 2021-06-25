@@ -306,8 +306,8 @@ void NewStoryScene::handleMoveImgCommand(const MoveImgCommand& cmd) const
 
 void NewStoryScene::handleShowMsgCommand(const ShowMsgCommand& cmd)
 {
-    Sprite* avatar, * dialog;
-    Label* label;
+    Sprite *avatar, *dialog;
+    Label *label;
 
     if (cmd.getPosition() == "top")
     {

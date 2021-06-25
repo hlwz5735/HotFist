@@ -5,7 +5,6 @@
 #pragma execution_character_set("utf-8")
 #endif
 
-#include <sstream>
 #include "DebugTitleScene.h"
 #include "StartScene.h"
 #include "TitleScene.h"
@@ -31,7 +30,7 @@ bool DebugTitleScene::init()
     auto startY = visibleSize.height - 30;
 
     auto it = this->_sceneNames.cbegin();
-    auto index = 0;
+    unsigned int index = 0;
     while (it != this->_sceneNames.cend())
     {
         const auto title = *it;
