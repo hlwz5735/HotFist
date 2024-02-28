@@ -2,10 +2,10 @@
 #define __TABLEVIEWTESTSCENE_H__
 
 #include "cocos2d.h"
-#include "cocos-ext.h"
+#include "GUI/ScrollView/TableView.h"
 
 USING_NS_CC;
-USING_NS_CC_EXT;
+USING_NS_AX_EXT;
 
 class TableViewTestLayer : public Layer, public TableViewDataSource, public TableViewDelegate {
 public:

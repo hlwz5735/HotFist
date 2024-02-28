@@ -95,8 +95,8 @@ void Story00::nextEvt()
         clear();
         ActionInterval *fadeinout = Sequence::create(FadeOut::create(1.0f), FadeIn::create(1.0f), NULL);
         backgroundImage->runAction(fadeinout);
-        scheduleOnce(schedule_selector(Story00::tempImageChange), 1.0f);
-        scheduleOnce(schedule_selector(Story00::event06), 2.5f);
+        scheduleOnce(AX_SCHEDULE_SELECTOR(Story00::tempImageChange), 1.0f);
+        scheduleOnce(AX_SCHEDULE_SELECTOR(Story00::event06), 2.5f);
         count++;
     }
     else if (count == 8)

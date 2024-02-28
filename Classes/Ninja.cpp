@@ -6,7 +6,7 @@
 //
 //
 
-#include "cocostudio/CCArmature.h"
+#include "cocostudio/Armature.h"
 #include "Ninja.h"
 
 USING_NS_CC;
@@ -58,7 +58,7 @@ void Ninja::hurt()
 		}
 		else
 		{
-			float tempRand = CCRANDOM_0_1();
+			float tempRand = AXRANDOM_0_1();
 			//在头部防御和腹部防御之间随机出一个
 			if (tempRand < 0.5f)
 			{
@@ -74,13 +74,13 @@ void Ninja::hurt()
 void Ninja::headHurt()
 {
 	m_sprite->getAnimation()->play("HeadHurt");
-	this->scheduleOnce(schedule_selector(Ninja::doHurt),0.33f);
+	this->scheduleOnce(AX_SCHEDULE_SELECTOR(Ninja::doHurt), 0.33f);
 	m_sprite->getAnimation()->setMovementEventCallFunc(this,movementEvent_selector(Ninja::hurtCallBack));
 }
 void Ninja::flankHurt()
 {
 	m_sprite->getAnimation()->play("FlankHurt");
-	this->scheduleOnce(schedule_selector(Ninja::doHurt),0.33f);
+	this->scheduleOnce(AX_SCHEDULE_SELECTOR(Ninja::doHurt), 0.33f);
 	m_sprite->getAnimation()->setMovementEventCallFunc(this,movementEvent_selector(Ninja::hurtCallBack));
 }
 void Ninja::airHurt()
@@ -95,7 +95,7 @@ void Ninja::airHurt()
 	}
 	velocityY = 5;
 	m_sprite->getAnimation()->play("FlankHurt");
-	this->scheduleOnce(schedule_selector(Ninja::doHurt),0.33f);
+	this->scheduleOnce(AX_SCHEDULE_SELECTOR(Ninja::doHurt),0.33f);
 	m_sprite->getAnimation()->setMovementEventCallFunc(this,movementEvent_selector(Ninja::hurtCallBack));
 }
 void Ninja::doHurt(float dt)
@@ -168,20 +168,20 @@ void Ninja::setAttackRect(float dt)
 void Ninja::Dart()
 {
 	m_sprite->getAnimation()->play("Dart"); 
-	this->scheduleOnce(schedule_selector(Ninja::setAttackRect),0.6f);
-	scheduleOnce(schedule_selector(Ninja::refresh),0.4f);
+	this->scheduleOnce(AX_SCHEDULE_SELECTOR(Ninja::setAttackRect), 0.6f);
+	scheduleOnce(AX_SCHEDULE_SELECTOR(Ninja::refresh), 0.4f);
 }
 void Ninja::Hurt_in_theAir()
 {
 	m_sprite->getAnimation()->play("Hurt_in_theAir");
-	this->scheduleOnce(schedule_selector(Ninja::setAttackRect),0.6f);
-	scheduleOnce(schedule_selector(Ninja::refresh),0.4f);
+	this->scheduleOnce(AX_SCHEDULE_SELECTOR(Ninja::setAttackRect), 0.6f);
+	scheduleOnce(AX_SCHEDULE_SELECTOR(Ninja::refresh), 0.4f);
 }
 void Ninja::Boomerang()
 {
 	m_sprite->getAnimation()->play("Boomerang");
-	this->scheduleOnce(schedule_selector(Ninja::setAttackRect),0.6f);
-	scheduleOnce(schedule_selector(Ninja::refresh),0.4f);
+	this->scheduleOnce(AX_SCHEDULE_SELECTOR(Ninja::setAttackRect), 0.6f);
+	scheduleOnce(AX_SCHEDULE_SELECTOR(Ninja::refresh), 0.4f);
 }
 void Ninja::airAttack()
 {
@@ -189,7 +189,7 @@ void Ninja::airAttack()
 }
 void Ninja::groundAttack()
 {
-	int attackIndex = static_cast<int>(CCRANDOM_0_1() * 100);
+	int attackIndex = static_cast<int>(AXRANDOM_0_1() * 100);
 	if (attackIndex <= 30)
 	{
 		Dart();

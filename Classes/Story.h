@@ -2,8 +2,7 @@
 #define _Story__
 
 #include "cocos2d.h"
-#include "audio/include/AudioEngine.h"
-using namespace cocos2d::experimental;
+#include "audio/AudioEngine.h"
 #include "Global.h"
 
 USING_NS_CC;

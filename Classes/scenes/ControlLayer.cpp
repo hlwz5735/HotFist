@@ -1,6 +1,5 @@
-#include "audio/include/AudioEngine.h"
-using namespace cocos2d::experimental;
-#include "cocostudio/CCArmature.h"
+#include "audio/AudioEngine.h"
+#include "cocostudio/Armature.h"
 #include "ControlLayer.h"
 #include "ui/CocosGUI.h"
 #include "../Readers/GuiReader.h"

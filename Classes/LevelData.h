@@ -5,11 +5,10 @@
 #ifndef HOTFISTREMASTER_LEVELDATA_H
 #define HOTFISTREMASTER_LEVELDATA_H
 
-#include "cocos/math/CCGeometry.h"
 #include "EnemyData.h"
 
 using std::string;
-using namespace cocos2d;
+using namespace ax;
 
 class LevelData
 {

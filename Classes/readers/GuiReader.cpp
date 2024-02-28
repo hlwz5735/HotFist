@@ -2,7 +2,7 @@
 // Created by 厉猛 on 2020/4/22.
 //
 #include "cocos2d.h"
-#include "cocos/ui/UIButton.h"
+#include "ui/UIButton.h"
 #include "cocostudio/DictionaryHelper.h"
 #include "GuiReader.h"
 #include "JsonParser.h"

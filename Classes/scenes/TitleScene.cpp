@@ -1,5 +1,4 @@
-﻿#include "audio/include/AudioEngine.h"
-using namespace cocos2d::experimental;
+﻿#include "audio/AudioEngine.h"
 #include "TitleScene.h"
 #include "SceneFactory.h"
 
@@ -45,24 +44,32 @@ bool TitleScene::init() {
 
     /* 在此处将内四个按钮依次添加了，然后创建一个CCMenu对象把它们括起来显示到图层里面去*/
     // newgame
-    MenuItemImage *pNewGame = MenuItemImage::create("new_game.png", "new_gameP.png", layer,
-            menu_selector(TitleScene::newGmeBtnCallBack));
+    MenuItemImage *pNewGame = MenuItemImage::create(
+        "new_game.png",
+        "new_gameP.png",
+        [this](Ref *r) { this->newGmeBtnCallBack(r); });
     // menuIamge的默认坐标原点在屏幕中点
     pNewGame->setPosition(-visibleSize.width / 2 + pNewGame->getContentSize().width,
             -visibleSize.height / 2 + 2.75f * pNewGame->getContentSize().height);
     // continue game
-    MenuItemImage *pContGame = MenuItemImage::create("con_game.png", "con_gameP.png", layer,
-            menu_selector(TitleScene::ctnGmeBtnCallBack));
+    MenuItemImage *pContGame = MenuItemImage::create(
+        "con_game.png",
+        "con_gameP.png",
+        [this](Ref *r) { this->ctnGmeBtnCallBack(r); });
     pContGame->setPosition(-visibleSize.width / 2 + 4.8f * pContGame->getContentSize().width / 2,
             -visibleSize.height / 2 + 2.75f * pContGame->getContentSize().height);
     // team
-    MenuItemImage *pTeamGame = MenuItemImage::create("team_game.png", "team_gameP.png", layer,
-            menu_selector(TitleScene::tmStudBtnCallBack));
+    MenuItemImage *pTeamGame = MenuItemImage::create(
+        "team_game.png",
+        "team_gameP.png",
+        [this](Ref *r) { this->tmStudBtnCallBack(r); });
     pTeamGame->setPosition(-visibleSize.width / 2 + pTeamGame->getContentSize().width,
             -visibleSize.height / 2 + 1.2f * pTeamGame->getContentSize().height);
     // quit game
-    MenuItemImage *pQuitGame = MenuItemImage::create("quit_game.png", "quit_gameP.png", layer,
-            menu_selector(TitleScene::quitGmeBtnCallBack));
+    MenuItemImage *pQuitGame = MenuItemImage::create(
+        "quit_game.png",
+        "quit_gameP.png",
+        [this](Ref *r) { this->quitGmeBtnCallBack(r); });
     pQuitGame->setPosition(-visibleSize.width / 2 + 4.8f * pNewGame->getContentSize().width / 2,
             -visibleSize.height / 2 + 1.2f * pQuitGame->getContentSize().height);
 

@@ -1,6 +1,5 @@
 ﻿#include <vector>
-#include "audio/include/AudioEngine.h"
-using namespace cocos2d::experimental;
+#include "audio/AudioEngine.h"
 #include "cocos2d.h"
 #include "../readers/JsonParser.h"
 #include "Global.h"

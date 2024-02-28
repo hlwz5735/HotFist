@@ -1,6 +1,5 @@
-﻿#include "audio/include/AudioEngine.h"
-using namespace cocos2d::experimental;
-#include "cocostudio/CCArmature.h"
+﻿#include "audio/AudioEngine.h"
+#include "cocostudio/Armature.h"
 #include "Hero.h"
 
 USING_NS_CC;
@@ -120,7 +119,7 @@ void Hero::hurt() {
                 // 因为没有空中防御，所以用这个代替
                 airHurt();
             } else {
-                const float tempRand = CCRANDOM_0_1();
+                const float tempRand = AXRANDOM_0_1();
                 // 在头部防御和腹部防御之间随机出一个
                 if (tempRand < 0.5f)
                 {
@@ -140,7 +139,7 @@ void Hero::hurt() {
                 // 因为没有空中防御，所以用这个代替
                 SB_FlankHurt();
             } else {
-                const float tempRand = CCRANDOM_0_1();
+                const float tempRand = AXRANDOM_0_1();
                 // 在头部防御和腹部防御之间随机出一个
                 if (tempRand < 0.5f)
                 {
@@ -159,7 +158,7 @@ void Hero::hurt() {
                 AudioEngine::play2d("Audio/e.mp3");
                 airHurt();
             } else {
-                const float tempRand = CCRANDOM_0_1();
+                const float tempRand = AXRANDOM_0_1();
                 // 在头部防御和腹部防御之间随机出一个
                 if (tempRand < 0.5f)
                 {
@@ -176,37 +175,37 @@ void Hero::hurt() {
 
 void Hero::headDefence() {
     m_sprite->getAnimation()->play("HeadDefence");
-    this->scheduleOnce(schedule_selector(Hero::doHurt), 0.33f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::doHurt), 0.33f);
     m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Hero::hurtCallBack));
 }
 
 void Hero::flankDefence() {
     m_sprite->getAnimation()->play("FlankDefence");
-    this->scheduleOnce(schedule_selector(Hero::doHurt), 0.33f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::doHurt), 0.33f);
     m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Hero::hurtCallBack));
 }
 
 void Hero::headHurt() {
     m_sprite->getAnimation()->play("HeadHurt");
-    this->scheduleOnce(schedule_selector(Hero::doHurt), 0.33f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::doHurt), 0.33f);
     m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Hero::hurtCallBack));
 }
 
 void Hero::flankHurt() {
     m_sprite->getAnimation()->play("FlankHurt");
-    this->scheduleOnce(schedule_selector(Hero::doHurt), 0.33f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::doHurt), 0.33f);
     m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Hero::hurtCallBack));
 }
 
 void Hero::SB_FlankHurt() {
     m_sprite->getAnimation()->play("SB_FlankHurt");
-    this->scheduleOnce(schedule_selector(Hero::doHurt), 0.33f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::doHurt), 0.33f);
     m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Hero::hurtCallBack));
 }
 
 void Hero::SB_HeadHurt() {
     m_sprite->getAnimation()->play("SB_HeadHurt");
-    this->scheduleOnce(schedule_selector(Hero::doHurt), 0.33f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::doHurt), 0.33f);
     m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Hero::hurtCallBack));
 }
 
@@ -218,7 +217,7 @@ void Hero::airHurt() {
     }
     velocityY = 5;
     m_sprite->getAnimation()->play("FlankHurt");
-    this->scheduleOnce(schedule_selector(Hero::doHurt), 0.33f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::doHurt), 0.33f);
     m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Hero::hurtCallBack));
 }
 
@@ -297,8 +296,8 @@ void Hero::airAttack() {
             velocityX = -5;
         else
             velocityX = 5;
-        this->scheduleOnce(schedule_selector(Hero::setAttackRect), 0.1f);
-        this->scheduleOnce(schedule_selector(Hero::refresh), 0.5f);
+        this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.1f);
+        this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::refresh), 0.5f);
     } else {
         m_sprite->getAnimation()->play("RiderKick");
         if (faceto)
@@ -306,15 +305,15 @@ void Hero::airAttack() {
         else
             velocityX = 5;
         force = 20;
-        this->scheduleOnce(schedule_selector(Hero::setAttackRect), 0.1f);
-        this->scheduleOnce(schedule_selector(Hero::refresh), 0.5f);
+        this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.1f);
+        this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::refresh), 0.5f);
     }
 
     setState(EntityState::NORMAL);
 }
 
 void Hero::groundAttack() {
-    const int temp = static_cast<int>(CCRANDOM_0_1() * 4 + 1);
+    const int temp = static_cast<int>(AXRANDOM_0_1() * 4 + 1);
     switch (temp) {
         case 1:
             heavyPunch();
@@ -332,7 +331,7 @@ void Hero::groundAttack() {
 }
 
 void Hero::terminateAttack() {
-    const int temp = static_cast<int>(CCRANDOM_0_1() * 100);
+    const int temp = static_cast<int>(AXRANDOM_0_1() * 100);
     if (temp < 50) {
         drangonPunch();
     } else {
@@ -341,7 +340,7 @@ void Hero::terminateAttack() {
 }
 
 void Hero::groundBladeAttack() {
-    const int temp = static_cast<int>(CCRANDOM_0_1() * 4 + 1);
+    const int temp = static_cast<int>(AXRANDOM_0_1() * 4 + 1);
     switch (temp) {
         case 1:
             SB_Attack1();
@@ -362,56 +361,56 @@ void Hero::heavyPunch() {
     AudioEngine::play2d("Audio/hea.mp3");
     m_sprite->getAnimation()->play("HeavyPunch");
     force = 20;
-    this->scheduleOnce(schedule_selector(Hero::setAttackRect), 0.1f);
-    this->scheduleOnce(schedule_selector(Hero::refresh), 0.4f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.1f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::refresh), 0.4f);
 }
 
 void Hero::upAttack() {
     AudioEngine::play2d("Audio/heng.mp3");
     m_sprite->getAnimation()->play("UpAttack");
     force = 20;
-    this->scheduleOnce(schedule_selector(Hero::setAttackRect), 0.1f);
-    this->scheduleOnce(schedule_selector(Hero::refresh), 0.4f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.1f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::refresh), 0.4f);
 }
 
 void Hero::heavyKick() {
     AudioEngine::play2d("Audio/heng.mp3");
     m_sprite->getAnimation()->play("HeavyKick");
     force = 20;
-    this->scheduleOnce(schedule_selector(Hero::setAttackRect), 0.1f);
-    this->scheduleOnce(schedule_selector(Hero::refresh), 0.4f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.1f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::refresh), 0.4f);
 }
 
 void Hero::SB_Attack1() {
     AudioEngine::play2d("Audio/heng.mp3");
     m_sprite->getAnimation()->play("Saber1");
     force = 28;
-    this->scheduleOnce(schedule_selector(Hero::setAttackRect), 0.1f);
-    this->scheduleOnce(schedule_selector(Hero::refresh), 0.4f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.1f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::refresh), 0.4f);
 }
 
 void Hero::SB_Attack2() {
     AudioEngine::play2d("Audio/heng.mp3");
     m_sprite->getAnimation()->play("Saber2");
     force = 28;
-    this->scheduleOnce(schedule_selector(Hero::setAttackRect), 0.1f);
-    this->scheduleOnce(schedule_selector(Hero::refresh), 0.4f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.1f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::refresh), 0.4f);
 }
 
 void Hero::SB_Attack3() {
     AudioEngine::play2d("Audio/heng.mp3");
     m_sprite->getAnimation()->play("Saber3");
     force = 30;
-    this->scheduleOnce(schedule_selector(Hero::setAttackRect), 0.1f);
-    this->scheduleOnce(schedule_selector(Hero::refresh), 0.4f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.1f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::refresh), 0.4f);
 }
 
 void Hero::SB_Attack4() {
     AudioEngine::play2d("Audio/heng.mp3");
     m_sprite->getAnimation()->play("Saber4");
     force = 35;
-    this->scheduleOnce(schedule_selector(Hero::setAttackRect), 0.1f);
-    this->scheduleOnce(schedule_selector(Hero::refresh), 0.4f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.1f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::refresh), 0.4f);
 }
 
 void Hero::drangonPunch() {
@@ -428,16 +427,16 @@ void Hero::drangonPunch() {
         velocityX = 2;
     m_sprite->getAnimation()->play("DrangonPunch");
     force = 120;
-    this->scheduleOnce(schedule_selector(Hero::setAttackRect), 0.1f);
-    this->scheduleOnce(schedule_selector(Hero::refresh), 0.6f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.1f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::refresh), 0.6f);
 }
 
 void Hero::cycloneKick() {
     m_sprite->getAnimation()->play("CycloneKick");
     AudioEngine::play2d("Audio/kale.mp3");
     force = 135;
-    this->scheduleOnce(schedule_selector(Hero::setAttackRect), 0.3f);
-    this->scheduleOnce(schedule_selector(Hero::refresh), 0.6f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.3f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::refresh), 0.6f);
 }
 
 void Hero::refresh(float dt) {
@@ -482,7 +481,7 @@ void Hero::handBlade() {
             setState(EntityState::FORCED);
             m_sprite->getAnimation()->playByIndex(13);
             AudioEngine::play2d("Audio/haaaaa.mp3");
-            scheduleOnce(schedule_selector(Hero::afterHandBlade), 1.0f);
+            scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::afterHandBlade), 1.0f);
         }
     }
 }
@@ -502,7 +501,7 @@ void Hero::jump() {
             m_sprite->getAnimation()->play("SB_Jump");
         } else
             m_sprite->getAnimation()->play("Jump");
-        this->scheduleOnce(schedule_selector(Hero::doJump), 0.33f);
+        this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::doJump), 0.33f);
     }
 }
 
@@ -534,13 +533,13 @@ void Hero::modeShield() {
 void Hero::modeIvisible() {
     if (inTheAir_flag) {
         setMode(HeroMode::INVISIBLE);
-        scheduleOnce(schedule_selector(Hero::afterModeIvisible), 0.6f);
+        scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::afterModeIvisible), 0.6f);
     } else {
         if (getMode() != HeroMode::INVISIBLE) {
             setState(EntityState::FORCED);
             m_sprite->getAnimation()->play("ModeChange");
             AudioEngine::play2d("Audio/Cloak.mp3");
-            scheduleOnce(schedule_selector(Hero::afterModeIvisible), 0.6f);
+            scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::afterModeIvisible), 0.6f);
         }
     }
 }
@@ -556,13 +555,13 @@ void Hero::afterModeIvisible(float dt) {
 void Hero::modeClockUp() {
     if (inTheAir_flag) {
         setMode(HeroMode::CLOCKUP);
-        scheduleOnce(schedule_selector(Hero::afterModeClockUp), 0.6f);
+        scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::afterModeClockUp), 0.6f);
     } else {
         if (getMode() != HeroMode::CLOCKUP) {
             setState(EntityState::FORCED);
             m_sprite->getAnimation()->play("ModeChange");
             AudioEngine::play2d("Audio/Clock.mp3");
-            scheduleOnce(schedule_selector(Hero::afterModeClockUp), 0.6f);
+            scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::afterModeClockUp), 0.6f);
         }
     }
 }

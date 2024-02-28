@@ -2,7 +2,7 @@
  * 重写了攻击动作函数attack
  * 敌人的攻击动作随机产生
  */
-#include "cocostudio/CCArmature.h"
+#include "cocostudio/Armature.h"
 #include "JapanArmyI.h"
 
 USING_NS_CC;
@@ -44,7 +44,7 @@ void JapanArmyI::hurt() {
         if (inTheAir_flag) {
             airHurt();
         } else {
-            float tempRand = CCRANDOM_0_1();
+            float tempRand = AXRANDOM_0_1();
 			//在头部防御和腹部防御之间随机出一个
             if (tempRand < 0.5f)
             {
@@ -58,13 +58,13 @@ void JapanArmyI::hurt() {
 
 void JapanArmyI::headHurt() {
     m_sprite->getAnimation()->play("HeadHurt");
-    this->scheduleOnce(schedule_selector(JapanArmyI::doHurt), 0.33f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::doHurt), 0.33f);
     m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(JapanArmyI::hurtCallBack));
 }
 
 void JapanArmyI::flankHurt() {
     m_sprite->getAnimation()->play("FlankHurt");
-    this->scheduleOnce(schedule_selector(JapanArmyI::doHurt), 0.33f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::doHurt), 0.33f);
     m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(JapanArmyI::hurtCallBack));
 }
 
@@ -76,7 +76,7 @@ void JapanArmyI::airHurt() {
     }
     velocityY = 5;
     m_sprite->getAnimation()->play("FlankHurt");
-    this->scheduleOnce(schedule_selector(JapanArmyI::doHurt), 0.33f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::doHurt), 0.33f);
     m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(JapanArmyI::hurtCallBack));
 }
 
@@ -143,36 +143,36 @@ void JapanArmyI::setAttackRect(float dt) {
 void JapanArmyI::HeavyPunch() {
     m_sprite->getAnimation()->play("HeavyPunch");
     force = 10;
-    this->scheduleOnce(schedule_selector(JapanArmyI::setAttackRect), 0.4f);
-    scheduleOnce(schedule_selector(JapanArmyI::refresh), 0.6f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::setAttackRect), 0.4f);
+    scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::refresh), 0.6f);
 }
 
 void JapanArmyI::Pistol() {
     m_sprite->getAnimation()->play("Pistol");
     force = 20;
-    this->scheduleOnce(schedule_selector(JapanArmyI::setAttackRect), 0.4f);
-    scheduleOnce(schedule_selector(JapanArmyI::refresh), 0.6f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::setAttackRect), 0.4f);
+    scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::refresh), 0.6f);
 }
 
 void JapanArmyI::UpAttack() {
     m_sprite->getAnimation()->play("UpAttack");
     force = 10;
-    this->scheduleOnce(schedule_selector(JapanArmyI::setAttackRect), 0.4f);
-    scheduleOnce(schedule_selector(JapanArmyI::refresh), 0.6f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::setAttackRect), 0.4f);
+    scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::refresh), 0.6f);
 }
 
 void JapanArmyI::BoxingPunch() {
     m_sprite->getAnimation()->play("BoxingPunch");
     force = 15;
-    this->scheduleOnce(schedule_selector(JapanArmyI::setAttackRect), 0.4f);
-    scheduleOnce(schedule_selector(JapanArmyI::refresh), 0.6f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::setAttackRect), 0.4f);
+    scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::refresh), 0.6f);
 }
 
 void JapanArmyI::SuperPistol() {
     m_sprite->getAnimation()->play("SuperPistol");
     force = 30;
-    this->scheduleOnce(schedule_selector(JapanArmyI::setAttackRect), 0.4f);
-    scheduleOnce(schedule_selector(JapanArmyI::refresh), 0.6f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::setAttackRect), 0.4f);
+    scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::refresh), 0.6f);
 }
 
 void JapanArmyI::airAttack() {
@@ -181,7 +181,7 @@ void JapanArmyI::airAttack() {
 
 void JapanArmyI::groundAttack() {
     CCLOG("IN JapanArmyI I attacked You");
-    int attackIndex = static_cast<int>(CCRANDOM_0_1() * 100);
+    int attackIndex = static_cast<int>(AXRANDOM_0_1() * 100);
     if (attackIndex <= 30) {
         HeavyPunch();
     } else if (attackIndex <= 55) {

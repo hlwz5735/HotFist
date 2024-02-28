@@ -1,5 +1,5 @@
-﻿#include "cocostudio/CCArmature.h"
-#include "audio/include/AudioEngine.h"
+﻿#include "audio/AudioEngine.h"
+#include "cocostudio/Armature.h"
 #include "../Readers/LevelDataReader.h"
 #include "GameLayer.h"
 #include "Hero.h"
@@ -10,7 +10,6 @@
 #include "SceneFactory.h"
 
 USING_NS_CC;
-using cocos2d::experimental::AudioEngine;
 
 GameLayer::GameLayer(): staticBlockVector(std::vector<Rect>()) {}
 
@@ -195,7 +194,7 @@ void GameLayer::updateAI()
                     pTemp->run();
                 } else
                 {
-                    int tempRand = static_cast<int>(CCRANDOM_0_1() * 100);
+                    int tempRand = static_cast<int>(AXRANDOM_0_1() * 100);
                     if (tempRand > 90)
                     {
                         pTemp->attack();
@@ -332,7 +331,7 @@ void GameLayer::updateEnemy()
                     if (pTemp->velocityX < 0)
                     {
                         pTemp->velocityX = -pTemp->velocityX;
-                        float temp = CCRANDOM_0_1() * 100;
+                        float temp = AXRANDOM_0_1() * 100;
                         if (temp > 70)
                         {
                             pTemp->jump();
@@ -347,7 +346,7 @@ void GameLayer::updateEnemy()
                     } else if (pTemp->velocityX > 0)
                     {
                         pTemp->velocityX = -pTemp->velocityX;
-                        float temp = CCRANDOM_0_1() * 100;
+                        float temp = AXRANDOM_0_1() * 100;
                         if (temp > 70)
                         {
                             pTemp->jump();

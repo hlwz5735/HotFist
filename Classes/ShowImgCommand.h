@@ -20,15 +20,15 @@ public:
     static ShowImgCommand fromJsonDocument(rapidjson::Value &object);
 
 protected:
-    CC_SYNTHESIZE_PASS_BY_REF(string, textureName, TextureName);
-    CC_SYNTHESIZE_PASS_BY_REF(string, tag, Tag);
-    CC_SYNTHESIZE_PASS_BY_REF(Vec2, position, Position);
-    CC_SYNTHESIZE_PASS_BY_REF(Vec2, pivot, Pivot);
-    CC_SYNTHESIZE_PASS_BY_REF(int, zIndex, ZIndex);
-    CC_SYNTHESIZE_PASS_BY_REF(int, opacity, Opacity);
+    AX_SYNTHESIZE_PASS_BY_REF(string, textureName, TextureName);
+    AX_SYNTHESIZE_PASS_BY_REF(string, tag, Tag);
+    AX_SYNTHESIZE_PASS_BY_REF(Vec2, position, Position);
+    AX_SYNTHESIZE_PASS_BY_REF(Vec2, pivot, Pivot);
+    AX_SYNTHESIZE_PASS_BY_REF(int, zIndex, ZIndex);
+    AX_SYNTHESIZE_PASS_BY_REF(int, opacity, Opacity);
 
-    CC_SYNTHESIZE_PASS_BY_REF(float, scaleX, ScaleX);
-    CC_SYNTHESIZE_PASS_BY_REF(float, scaleY, ScaleY);
+    AX_SYNTHESIZE_PASS_BY_REF(float, scaleX, ScaleX);
+    AX_SYNTHESIZE_PASS_BY_REF(float, scaleY, ScaleY);
 protected:
     bool flippedX;
     bool flippedY;

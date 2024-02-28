@@ -1,4 +1,4 @@
-﻿#include "cocostudio/CCArmature.h"
+﻿#include "cocostudio/Armature.h"
 #include "PhysicsDebugScene.h"
 #include "../readers/LevelDataReader.h"
 

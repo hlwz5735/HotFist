@@ -10,7 +10,7 @@ class AboutScene : public Scene
 public:
     bool init();
 
-    void menuReturnCall(Ref *pSender);
+    Ref *menuReturnCall(Ref *pSender);
 
     CREATE_FUNC(AboutScene);
 };

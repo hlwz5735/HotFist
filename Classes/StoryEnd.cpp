@@ -52,17 +52,17 @@ void StoryEnd::nextEvt() {
     spriteFrameArray.pushBack(frame12);
 
     Animation *animation = Animation::createWithSpriteFrames(spriteFrameArray, 4.0f);
-    FiniteTimeAction *actionMoveDone = CallFuncN::create(this, callfuncN_selector(StoryEnd::animateFinished));
+    FiniteTimeAction *actionMoveDone = CallFuncN::create([this](Node *r){ this->animateFinished(r); });
     sprite1->runAction(Sequence::create(Spawn::createWithTwoActions(fadein, Animate::create(animation)), actionMoveDone, FadeOut::create(2.0f), NULL));
 }
 
-void StoryEnd::animateFinished(CCNode *sender) {
+void StoryEnd::animateFinished(Node *sender) {
     Sprite *text = Sprite::create("StoryImg/end_end.png");
 /*	text->setAnchorPoint(Point(0,1344/2));*/
     text->setPosition(Point(320, -1344 / 2));
     this->addChild(text);
-    FiniteTimeAction *actionMoveDone = CallFuncN::create(this, callfuncN_selector(StoryEnd::backtoTitle));
-    ActionInterval *move = Sequence::create(CCMoveBy::create(40.0f, Point(0, 1344)), DelayTime::create(5.0f), actionMoveDone, NULL);
+    FiniteTimeAction *actionMoveDone = CallFuncN::create([this](Node *r){ this->backtoTitle(r); });
+    ActionInterval *move = Sequence::create(MoveBy::create(40.0f, Point(0, 1344)), DelayTime::create(5.0f), actionMoveDone, NULL);
     text->runAction(move);
 }
 

@@ -11,9 +11,9 @@ class ShowMsgCommand
 public:
 	static ShowMsgCommand fromJsonDocument(rapidjson::Value& object);
 protected:
-	CC_SYNTHESIZE_PASS_BY_REF(string, text, Text);
-	CC_SYNTHESIZE_PASS_BY_REF(string, avatar, Avatar);
-	CC_SYNTHESIZE_PASS_BY_REF(string, position, Position);
+	AX_SYNTHESIZE_PASS_BY_REF(string, text, Text);
+	AX_SYNTHESIZE_PASS_BY_REF(string, avatar, Avatar);
+	AX_SYNTHESIZE_PASS_BY_REF(string, position, Position);
 
 	bool waitInput;
 public:

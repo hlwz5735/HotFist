@@ -6,7 +6,7 @@
 #define HOTFISTREMASTER_DEBUGTITLESCENE_H
 
 #include "cocos2d.h"
-#include "cocos-ext.h"
+#include "GUI/ScrollView/ScrollView.h"
 USING_NS_CC;
 using namespace cocos2d::extension;
 

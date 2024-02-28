@@ -14,10 +14,10 @@ bool AboutScene::init()
     sptMaker->setPosition(Point(sptMaker->getContentSize().width / 2 - 20, sptMaker->getContentSize().height / 2));
     this->addChild(sptMaker);
 
-    MenuItemImage *pReturn = MenuItemImage::create("returnMenu.png",
-            "returnMenuSlected.png",
-            layer,
-            menu_selector(AboutScene::menuReturnCall));
+    MenuItemImage *pReturn = MenuItemImage::create(
+        "returnMenu.png",
+        "returnMenuSlected.png",
+        [this](Ref *r) { this->menuReturnCall(r); });
     pReturn->setOpacity(180);
 
     Menu *makeMenu = Menu::create(pReturn, nullptr);
@@ -29,7 +29,8 @@ bool AboutScene::init()
     return true;
 }
 
-void AboutScene::menuReturnCall(Ref *pSneder)
+Ref *AboutScene::menuReturnCall(Ref *pSneder)
 {
     Director::getInstance()->replaceScene(TransitionFade::create(1.2f, SceneFactory::titleScene()));
+    return this;
 }

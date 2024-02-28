@@ -1,4 +1,4 @@
-﻿#include "cocos/2d/CCNode.h"
+﻿#include "2d/Node.h"
 using namespace cocos2d;
 
 namespace hotfist {

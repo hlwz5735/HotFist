@@ -5,10 +5,10 @@
 #ifndef HOTFISTREMASTER_ENEMYDATA_H
 #define HOTFISTREMASTER_ENEMYDATA_H
 
-#include "cocos/math/CCGeometry.h"
+#include "math/Vec2.h"
 
 using namespace std;
-using namespace cocos2d;
+using namespace ax;
 
 class EnemyData
 {

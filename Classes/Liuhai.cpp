@@ -5,7 +5,7 @@
 //  Created by Ricardo on 14/9/22.
 //
 
-#include "cocostudio/CCArmature.h"
+#include "cocostudio/Armature.h"
 #include "Liuhai.h"
 
 USING_NS_CC;
@@ -56,7 +56,7 @@ void Liuhai::hurt()
         }
         else
         {
-            float tempRand = CCRANDOM_0_1();
+            float tempRand = AXRANDOM_0_1();
             //在头部防御和腹部防御之间随机出一个
             if (tempRand < 0.5f)
             {
@@ -73,14 +73,14 @@ void Liuhai::hurt()
 void Liuhai::headHurt()
 {
     m_sprite->getAnimation()->play("HeadHurt");
-    this->scheduleOnce(schedule_selector(Liuhai::doHurt), 0.33f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Liuhai::doHurt), 0.33f);
     m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Liuhai::hurtCallBack));
 }
 
 void Liuhai::flankHurt()
 {
     m_sprite->getAnimation()->play("FlankHurt");
-    this->scheduleOnce(schedule_selector(Liuhai::doHurt), 0.33f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Liuhai::doHurt), 0.33f);
     m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Liuhai::hurtCallBack));
 }
 
@@ -96,7 +96,7 @@ void Liuhai::airHurt()
     }
     velocityY = 5;
     m_sprite->getAnimation()->play("FlankHurt");
-    this->scheduleOnce(schedule_selector(Liuhai::doHurt), 0.33f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Liuhai::doHurt), 0.33f);
     m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Liuhai::hurtCallBack));
 }
 
@@ -184,8 +184,8 @@ void Liuhai::HeavyPunch()
     }
     else
         velocityX = 2;
-    this->scheduleOnce(schedule_selector(Liuhai::setAttackRect), 0.4f);
-    this->scheduleOnce(schedule_selector(Liuhai::refresh), 0.6f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Liuhai::setAttackRect), 0.4f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Liuhai::refresh), 0.6f);
 }
 
 void Liuhai::Pistol()
@@ -198,8 +198,8 @@ void Liuhai::Pistol()
     }
     else
         velocityX = 3;
-    this->scheduleOnce(schedule_selector(Liuhai::setAttackRect), 0.4f);
-    scheduleOnce(schedule_selector(Liuhai::refresh), 0.6f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Liuhai::setAttackRect), 0.4f);
+    scheduleOnce(AX_SCHEDULE_SELECTOR(Liuhai::refresh), 0.6f);
 }
 
 void Liuhai::UpAttack()
@@ -213,16 +213,16 @@ void Liuhai::UpAttack()
     else
         velocityX = 3;
     velocityY = 1;
-    this->scheduleOnce(schedule_selector(Liuhai::setAttackRect), 0.4f);
-    scheduleOnce(schedule_selector(Liuhai::refresh), 0.6f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Liuhai::setAttackRect), 0.4f);
+    scheduleOnce(AX_SCHEDULE_SELECTOR(Liuhai::refresh), 0.6f);
 }
 
 void Liuhai::BoxingPunch()
 {
     m_sprite->getAnimation()->play("Saber");
     force = 50;
-    this->scheduleOnce(schedule_selector(Liuhai::setAttackRect), 0.5f);
-    scheduleOnce(schedule_selector(Liuhai::refresh), 0.6f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Liuhai::setAttackRect), 0.5f);
+    scheduleOnce(AX_SCHEDULE_SELECTOR(Liuhai::refresh), 0.6f);
 }
 
 void Liuhai::SuperPistol()
@@ -236,8 +236,8 @@ void Liuhai::SuperPistol()
     else
         velocityX = 2;
     velocityY = 1.5;
-    this->scheduleOnce(schedule_selector(Liuhai::setAttackRect), 0.4f);
-    scheduleOnce(schedule_selector(Liuhai::refresh), 0.6f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Liuhai::setAttackRect), 0.4f);
+    scheduleOnce(AX_SCHEDULE_SELECTOR(Liuhai::refresh), 0.6f);
 }
 
 void Liuhai::airAttack()
@@ -248,7 +248,7 @@ void Liuhai::airAttack()
 void Liuhai::groundAttack()
 {
     CCLOG("IN Liuhai I attacked You");
-    int attackIndex = static_cast<int>(CCRANDOM_0_1() * 100);
+    int attackIndex = static_cast<int>(AXRANDOM_0_1() * 100);
     if (attackIndex <= 30)
     {
         HeavyPunch();

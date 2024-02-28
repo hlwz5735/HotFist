@@ -55,7 +55,7 @@ void Story03::nextEvt() {
         state = true;
         count++;
     } else {
-        CCScene *scene = SceneFactory::loadLevel("03");
+        Scene *scene = SceneFactory::loadLevel("03");
         _director->replaceScene(TransitionFade::create(1.0f, scene));
     }
 }

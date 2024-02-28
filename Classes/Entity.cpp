@@ -85,7 +85,7 @@ void Entity::jump() {
     if (!inTheAir_flag && !finished) {
         finished = true;
         m_sprite->getAnimation()->play("Jump");
-        this->scheduleOnce(schedule_selector(Entity::doJump), 0.33f);
+        this->scheduleOnce(AX_SCHEDULE_SELECTOR(Entity::doJump), 0.33f);
     }
 }
 
@@ -137,7 +137,7 @@ void Entity::hurt() {
     {
         airHurt();
     } else {
-        float tempRand = CCRANDOM_0_1();
+        float tempRand = AXRANDOM_0_1();
         if (tempRand < 0.5f)                        //在头部受伤和腹部受伤之间随机出一个
         {
             headHurt();

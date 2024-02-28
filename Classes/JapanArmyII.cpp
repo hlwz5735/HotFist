@@ -5,7 +5,7 @@
 //  Created by 田子桐 on 14-8-19.
 //
 //
-#include "cocostudio/CCArmature.h"
+#include "cocostudio/Armature.h"
 #include "JapanArmyII.h"
 
 
@@ -26,7 +26,7 @@ bool JapanArmyII::init() {
 }
 
 void JapanArmyII::initBlock() {
-    m_block = CCRectMake(
+    m_block = Rect(
             getPositionX(),
             getPositionY(),
             m_sprite->getContentSize().width - 5,
@@ -40,7 +40,7 @@ void JapanArmyII::initSprite() {
     m_sprite = CCArmature::create("Xinfeng");                            // 这里直接使用Nivida ，而此信息保存在 Nivida.ExportJson 中，与其创建的项目属性相对应
     m_sprite->getAnimation()->play("Stand");                            // 设置当前运行动画的索引，一个“工程”可以建立多个动画
     m_sprite->setPosition(Point(25, 0));                                            // 设置位置信息
-    m_sprite->setColor(ccc3(200, 0, 0));
+    m_sprite->setColor(Color3B(200, 0, 0));
     this->addChild(m_sprite);                                                        // 添加到容器，当前运行的场景之中
 }
 
@@ -51,7 +51,7 @@ void JapanArmyII::hurt() {
         if (inTheAir_flag) {
             airHurt();
         } else {
-            float tempRand = CCRANDOM_0_1();
+            float tempRand = AXRANDOM_0_1();
             if (tempRand < 0.5f)                        //在头部防御和腹部防御之间随机出一个
             {
                 headHurt();
@@ -64,13 +64,13 @@ void JapanArmyII::hurt() {
 
 void JapanArmyII::headHurt() {
     m_sprite->getAnimation()->play("HeadHurt");
-    this->scheduleOnce(schedule_selector(JapanArmyII::doHurt), 0.33f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyII::doHurt), 0.33f);
     m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(JapanArmyII::hurtCallBack));
 }
 
 void JapanArmyII::flankHurt() {
     m_sprite->getAnimation()->play("FlankHurt");
-    this->scheduleOnce(schedule_selector(JapanArmyII::doHurt), 0.33f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyII::doHurt), 0.33f);
     m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(JapanArmyII::hurtCallBack));
 }
 
@@ -82,7 +82,7 @@ void JapanArmyII::airHurt() {
     }
     velocityY = 5;
     m_sprite->getAnimation()->play("FlankHurt");
-    this->scheduleOnce(schedule_selector(JapanArmyII::doHurt), 0.33f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyII::doHurt), 0.33f);
     m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(JapanArmyII::hurtCallBack));
 }
 
@@ -150,36 +150,36 @@ void JapanArmyII::setAttackRect(float dt) {
 void JapanArmyII::HeavyPunch() {
     m_sprite->getAnimation()->play("HeavyPunch");
     force = 10;
-    this->scheduleOnce(schedule_selector(JapanArmyII::setAttackRect), 0.3f);
-    scheduleOnce(schedule_selector(JapanArmyII::refresh), 0.4f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyII::setAttackRect), 0.3f);
+    scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyII::refresh), 0.4f);
 }
 
 void JapanArmyII::Pistol() {
     m_sprite->getAnimation()->play("Pistol");
     force = 20;
-    this->scheduleOnce(schedule_selector(JapanArmyII::setAttackRect), 0.3f);
-    scheduleOnce(schedule_selector(JapanArmyII::refresh), 0.4f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyII::setAttackRect), 0.3f);
+    scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyII::refresh), 0.4f);
 }
 
 void JapanArmyII::UpAttack() {
     m_sprite->getAnimation()->play("UpAttack");
     force = 10;
-    this->scheduleOnce(schedule_selector(JapanArmyII::setAttackRect), 0.3f);
-    scheduleOnce(schedule_selector(JapanArmyII::refresh), 0.4f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyII::setAttackRect), 0.3f);
+    scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyII::refresh), 0.4f);
 }
 
 void JapanArmyII::BoxingPunch() {
     m_sprite->getAnimation()->play("BoxingPunch");
     force = 15;
-    this->scheduleOnce(schedule_selector(JapanArmyII::setAttackRect), 0.3f);
-    scheduleOnce(schedule_selector(JapanArmyII::refresh), 0.4f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyII::setAttackRect), 0.3f);
+    scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyII::refresh), 0.4f);
 }
 
 void JapanArmyII::SuperPistol() {
     m_sprite->getAnimation()->play("SuperPistol");
     force = 30;
-    this->scheduleOnce(schedule_selector(JapanArmyII::setAttackRect), 0.3f);
-    scheduleOnce(schedule_selector(JapanArmyII::refresh), 0.4f);
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyII::setAttackRect), 0.3f);
+    scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyII::refresh), 0.4f);
 }
 
 void JapanArmyII::airAttack() {
@@ -187,7 +187,7 @@ void JapanArmyII::airAttack() {
 }
 
 void JapanArmyII::groundAttack() {
-    int attackIndex = static_cast<int>(CCRANDOM_0_1() * 100);
+    int attackIndex = static_cast<int>(AXRANDOM_0_1() * 100);
     if (attackIndex <= 30) {
         HeavyPunch();
     } else if (attackIndex <= 55) {

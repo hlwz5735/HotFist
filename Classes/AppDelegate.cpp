@@ -28,10 +28,7 @@
 #include "scenes/DebugTitleScene.h"
 
 #define USE_AUDIO_ENGINE 1
-#define USE_SIMPLE_AUDIO_ENGINE 0
-
-#include "audio/include/AudioEngine.h"
-using namespace cocos2d::experimental;
+#include "audio/AudioEngine.h"
 
 USING_NS_CC;
 
@@ -46,7 +43,7 @@ AppDelegate::AppDelegate()
 AppDelegate::~AppDelegate()
 {
     AudioEngine::end();
-    Director::getInstance()->release();
+    Director::destroyInstance();
 }
 
 // if you want a different context, modify the value of glContextAttrs
@@ -69,7 +66,7 @@ bool AppDelegate::applicationDidFinishLaunching()
 {
     // initialize director
     auto director = Director::getInstance();
-    auto glview = director->getOpenGLView();
+    auto glview = director->getGLView();
 
     if (!glview)
     {
@@ -81,7 +78,7 @@ bool AppDelegate::applicationDidFinishLaunching()
 #else
         glview = GLViewImpl::create("HotFistRemaster");
 #endif
-        director->setOpenGLView(glview);
+        director->setGLView(glview);
     }
 
     // turn on display FPS
@@ -104,7 +101,6 @@ bool AppDelegate::applicationDidFinishLaunching()
 
     // run
     director->runWithScene(scene);
-    director->retain();
 
     return true;
 }

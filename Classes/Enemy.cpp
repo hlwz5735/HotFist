@@ -1,5 +1,5 @@
 ﻿#include "Enemy.h"
-#include "cocostudio/CCArmature.h"
+#include "cocostudio/Armature.h"
 
 USING_NS_CC;
 using namespace cocostudio;
@@ -85,7 +85,7 @@ void Enemy::jump() {
         if (!inTheAir_flag && !finished) {
             finished = true;
             m_sprite->getAnimation()->play("Jump");
-            this->scheduleOnce(schedule_selector(Entity::doJump), 0.33f);
+            this->scheduleOnce(AX_SCHEDULE_SELECTOR(Entity::doJump), 0.33f);
         }
     }
 }

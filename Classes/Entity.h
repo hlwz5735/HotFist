@@ -2,7 +2,7 @@
 #define _ENTITY_HEADER_FLAG_H__
 
 #include "cocos2d.h"
-#include "cocostudio/CCArmature.h"
+#include "cocostudio/Armature.h"
 #include "Global.h"
 #include "AttackRect.h"
 

@@ -94,7 +94,7 @@ bool StartScene::init()
 
     Size visibleSize = Director::getInstance()->getVisibleSize();
     text = Sprite::create("UI_prstoctn.png");
-    text->setColor(ccc3(120, 120, 120));
+    text->setColor(Color3B(120, 120, 120));
     text->setPosition(Point(visibleSize.width / 2, visibleSize.height / 2.5f));
     text->setVisible(false);
     layer->addChild(text);
@@ -105,7 +105,7 @@ bool StartScene::init()
     touchListener->onTouchBegan = CC_CALLBACK_2(StartScene::onTouchBegan, this);
     Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(touchListener, this);
 
-    scheduleOnce(schedule_selector(StartScene::labelonStage), 1.5f);
+    scheduleOnce(AX_SCHEDULE_SELECTOR(StartScene::labelonStage), 1.5f);
     return true;
 }
 

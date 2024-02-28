@@ -2,7 +2,7 @@
 #include "SceneFactory.h"
 
 USING_NS_CC;
-USING_NS_CC_EXT;
+USING_NS_AX_EXT;
 
 // on "init" you need to initialize your instance
 bool TableViewTestLayer::init() {

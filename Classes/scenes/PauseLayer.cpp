@@ -1,6 +1,5 @@
 #include "PauseLayer.h"
-#include "audio/include/AudioEngine.h"
-using namespace cocos2d::experimental;
+#include "audio/AudioEngine.h"
 #include "SceneFactory.h"
 
 USING_NS_CC;
