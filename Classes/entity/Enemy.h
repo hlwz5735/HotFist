@@ -24,43 +24,39 @@ public:
         DIE
     };
 
-
-    int view;
-
-    //视野矩形
-    Rect m_ViewRect;
+    bool init() override;
+    CREATE_FUNC(Enemy);
 
     //初始化并更新视野矩形
     virtual void initViewRect();
 
-    virtual void initBlock() override;
+    void initBlock() override;
 
-    //怪物状态机枚举
-    EnemyState enemyState;
-
-    //攻击
+    // 攻击
     virtual void attack();
 
-    //施用法术（不同敌人施用法术的场合均不同）
+    // 施用法术（不同敌人施用法术的场合均不同）
     virtual void useSkill();
 
-    virtual void changeDirection() override;
+    void changeDirection() override;
 
-    //巡逻
+    // 巡逻
     void patrol();
 
-    virtual void run() override;
+    void run() override;
 
-    virtual void jump() override;
+    void jump() override;
 
-    //巡逻步数
+protected:
+    // 怪物状态机枚举
+    EnemyState enemyState;
+    // 巡逻步数
     int count;
-    //敌人的水平移动速度
+    // 敌人的水平移动速度
     float speedX;
-
-    virtual bool init() override;
-
-    CREATE_FUNC(Enemy);
+    int view;
+    // 视野矩形
+    Rect m_ViewRect;
 };
 
 #endif

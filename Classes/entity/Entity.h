@@ -83,7 +83,7 @@ public:
     EntityState getState() const { return state; }
     void setState(EntityState a) { state = a; }
     float getHp() const { return hp; }
-    void setHP(const float a) { hp = a; }
+    void setHp(const float a) { hp = a; }
     float getSp() const { return sp; }
     void setSP(const float a) { sp = a; }
     const Armature *getArmature() const { return m_sprite; }

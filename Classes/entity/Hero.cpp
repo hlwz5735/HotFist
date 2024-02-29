@@ -6,9 +6,8 @@ USING_NS_CC;
 using namespace cocostudio;
 
 Hero::Hero()
-: m_mode(HeroMode::SHIELD)
-, tp(0)
-{
+    : m_mode(HeroMode::SHIELD)
+      , tp(0) {
     this->hp = 100;
     this->sp = 100;
 }
@@ -19,7 +18,7 @@ bool Hero::init() {
     }
     // 初始化状态
     setState(EntityState::NORMAL);
-    setHP(100);
+    setHp(100);
     setSP(100);
     // 初始化三大数据
     tp = 0;
@@ -46,7 +45,6 @@ bool Hero::init() {
     AudioEngine::preload("Audio/seiya.mp3");
     AudioEngine::preload("Audio/souyuken.mp3");
 
-
     return true;
 }
 
@@ -63,16 +61,19 @@ void Hero::initSprite() {
 }
 
 void Hero::initBlock() {
-    m_block = Rect(getPositionX(),getPositionY(),
-            m_sprite->getContentSize().width - 5,m_sprite->getContentSize().height);
+    m_block = Rect(
+        getPositionX(),
+        getPositionY(),
+        m_sprite->getContentSize().width - 5,
+        m_sprite->getContentSize().height);
 }
 
 void Hero::run() {
     // 在空中的时候什么也不做
-    if (inTheAirFlag) {}
+    if (inTheAirFlag) {
+    }
     // 不在空中，判断是不是其它状态
-    else
-    {
+    else {
         if (getState() == EntityState::NORMAL) {
             if (getMode() == HeroMode::LIGHTBLADE) {
                 m_sprite->getAnimation()->play("SB_Walk");
@@ -92,10 +93,11 @@ void Hero::run() {
                 this->velocityX = -2;
         } else {
             sp -= 0.7f;
-            if (!faceto)
+            if (!faceto) {
                 this->velocityX = 10;
-            else
+            } else {
                 this->velocityX = -10;
+            }
         }
     }
 }
@@ -112,8 +114,7 @@ void Hero::hurt() {
     if (this->getState() != EntityState::HURT) {
         this->setState(EntityState::HURT);
         // 护盾模式下，所有受伤动作均引导向防御动作
-        if (m_mode == HeroMode::SHIELD)
-        {
+        if (m_mode == HeroMode::SHIELD) {
             if (inTheAirFlag) {
                 AudioEngine::play2d("Audio/ea.mp3");
                 // 因为没有空中防御，所以用这个代替
@@ -121,8 +122,7 @@ void Hero::hurt() {
             } else {
                 const float tempRand = AXRANDOM_0_1();
                 // 在头部防御和腹部防御之间随机出一个
-                if (tempRand < 0.5f)
-                {
+                if (tempRand < 0.5f) {
                     AudioEngine::play2d("Audio/e.mp3");
                     headDefence();
                 } else {
@@ -132,8 +132,7 @@ void Hero::hurt() {
             }
         }
         // 光剑模式有几个独有的受伤动作
-        else if (m_mode == HeroMode::LIGHTBLADE)
-        {
+        else if (m_mode == HeroMode::LIGHTBLADE) {
             if (inTheAirFlag) {
                 AudioEngine::play2d("Audio/e.mp3");
                 // 因为没有空中防御，所以用这个代替
@@ -141,8 +140,7 @@ void Hero::hurt() {
             } else {
                 const float tempRand = AXRANDOM_0_1();
                 // 在头部防御和腹部防御之间随机出一个
-                if (tempRand < 0.5f)
-                {
+                if (tempRand < 0.5f) {
                     AudioEngine::play2d("Audio/ea.mp3");
                     SB_HeadHurt();
                 } else {
@@ -152,16 +150,14 @@ void Hero::hurt() {
             }
         }
         // 其他模式
-        else
-        {
+        else {
             if (inTheAirFlag) {
                 AudioEngine::play2d("Audio/e.mp3");
                 airHurt();
             } else {
                 const float tempRand = AXRANDOM_0_1();
                 // 在头部防御和腹部防御之间随机出一个
-                if (tempRand < 0.5f)
-                {
+                if (tempRand < 0.5f) {
                     AudioEngine::play2d("Audio/en.mp3");
                     headHurt();
                 } else {
@@ -234,7 +230,8 @@ void Hero::doHurt(float dt) {
 
 void Hero::hurtCallBack(Armature *armature, MovementEventType type, const char *name) {
     CCLOG("movement callback name:%s \n", name);
-    if (strcmp(name, "FlankDefence") == 0 || strcmp(name, "HeadDefence") == 0 || strcmp(name, "HeadHurt") == 0 || strcmp(name, "FlankHurt") == 0) {
+    if (strcmp(name, "FlankDefence") == 0 || strcmp(name, "HeadDefence") == 0 || strcmp(name, "HeadHurt") == 0 ||
+        strcmp(name, "FlankHurt") == 0) {
         switch (type) {
             case COMPLETE:
                 setState(EntityState::NORMAL);
@@ -265,7 +262,6 @@ void Hero::attack() {
 }
 
 void Hero::bladeAttack() {
-
     if (getState() == EntityState::NORMAL || getState() == EntityState::WALKING) {
         setState(EntityState::ATTACKING);
         if (inTheAirFlag) {
@@ -451,17 +447,14 @@ void Hero::refresh(float dt) {
 
 void Hero::setAttackRect(float dt) {
     auto rect = Rect(
-            getPositionX() - 40,
-            getPositionY() + 16,
-            m_sprite->getContentSize().width - 10,
-            m_sprite->getContentSize().height - 10
+        getPositionX() - 40,
+        getPositionY() + 16,
+        m_sprite->getContentSize().width - 10,
+        m_sprite->getContentSize().height - 10
     );
-    if (faceto)
-    {
+    if (faceto) {
         rect.origin.x -= 40;
-    }
-    else
-    {
+    } else {
         rect.origin.x += 40;
     }
     this->m_attack = AttackRect(rect, force, false);

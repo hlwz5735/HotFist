@@ -17,28 +17,28 @@ class Ninja : public Enemy {
 public:
     void setAttackRect(float dt);
 
-    virtual void refresh(float dt);
+    void refresh(float dt) override;
 
-    virtual void attack();
+    void attack() override;
 
-    virtual bool init();
+    bool init() override;
 
     //初始化碰撞框
-    virtual void initBlock();
+    void initBlock() override;
 
-    virtual void initSprite();
+    void initSprite() override;
 
     //继承他爷爷的
-    virtual void hurt();
+    void hurt() override;
 
     //头部受伤
-    void headHurt();
+    void headHurt() override;
 
     //腹部受伤
-    void flankHurt();
+    void flankHurt() override;
 
     //浮空受伤
-    void airHurt();
+    void airHurt() override;
 
     //受伤动画播放完成后的回调
     void hurtCallBack(Armature *armature, MovementEventType type, const char *name);

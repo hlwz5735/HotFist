@@ -9,58 +9,16 @@
 #ifndef HelloCpp_JapanArmyII_h
 #define HelloCpp_JapanArmyII_h
 
-#include "Enemy.h"
+#include "JapanArmyI.h"
 
 USING_NS_CC;
 
-class JapanArmyII : public Enemy {
+class JapanArmyII : public JapanArmyI {
 public:
-    void setAttackRect(float dt);
-
-    void refresh(float dt) override;
-
-    void attack() override;
+    CREATE_FUNC(JapanArmyII);
 
     bool init() override;
-
-    //初始化碰撞框
-    void initBlock() override;
-
     void initSprite() override;
-
-    void hurt() override;
-
-    //头部受伤
-    void headHurt() override;
-
-    //腹部受伤
-    void flankHurt() override;
-
-    //浮空受伤
-    void airHurt() override;
-
-    // 受伤动画播放完成后的回调
-    void hurtCallBack(Armature *armature, MovementEventType type, const char *name);
-
-    //受伤后处理移动的回调
-    void doHurt(float dt);
-
-    void airAttack();
-
-    void groundAttack();
-
-    //攻击动作的实现函数
-    void HeavyPunch();
-
-    void Pistol();
-
-    void UpAttack();
-
-    void BoxingPunch();
-
-    void SuperPistol();
-
-    CREATE_FUNC(JapanArmyII);
 };
 
 #endif

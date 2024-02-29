@@ -15,54 +15,52 @@ USING_NS_CC;
 
 class Liuhai : public Enemy {
 public:
+    CREATE_FUNC(Liuhai);
+    bool init() override;
+
     void setAttackRect(float dt);
 
-    virtual void refresh(float dt);
+    void refresh(float dt) override;
 
-    virtual void attack();
+    void attack() override;
 
-    virtual bool init();
+    // 初始化碰撞框
+    void initBlock() override;
 
-    //初始化碰撞框
-    virtual void initBlock();
+    void initSprite() override;
 
-    virtual void initSprite();
+    // 继承他爷爷的
+    void hurt() override;
 
-    //继承他爷爷的
-    virtual void hurt();
+    // 头部受伤
+    void headHurt() override;
 
-    //头部受伤
-    void headHurt();
+    // 腹部受伤
+    void flankHurt() override;
 
-    //腹部受伤
-    void flankHurt();
+    // 浮空受伤
+    void airHurt() override;
 
-    //浮空受伤
-    void airHurt();
-
-    //受伤动画播放完成后的回调
+    // 受伤动画播放完成后的回调
     void hurtCallBack(Armature *armature, MovementEventType type, const char *name);
 
-    //受伤后处理移动的回调
+    // 受伤后处理移动的回调
     void doHurt(float dt);
 
-    //	virtual void initViewRect();
     void airAttack();
 
     void groundAttack();
 
-    //攻击动作的实现函数
-    void HeavyPunch();
+    // 攻击动作的实现函数
+    void riderKick();
 
-    void Pistol();
+    void riderSting1();
 
-    void UpAttack();
+    void riderSting2();
 
-    void BoxingPunch();
+    void upAttack();
 
-    void SuperPistol();
-
-    CREATE_FUNC(Liuhai);
+    void saberAttack();
 };
 
 #endif
