@@ -1,6 +1,6 @@
+#include "ShowMsgCommand.h"
 #include "cocostudio/DictionaryHelper.h"
 using cocostudio::DictionaryHelper;
-#include "ShowMsgCommand.h"
 
 ShowMsgCommand ShowMsgCommand::fromJsonDocument(rapidjson::Value& object)
 {

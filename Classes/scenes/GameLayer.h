@@ -3,7 +3,7 @@
 
 #include "cocos2d.h"
 #include "Global.h"
-#include "LevelData.h"
+#include "../readers/LevelData.h"
 #include "Enemy.h"
 
 USING_NS_CC;

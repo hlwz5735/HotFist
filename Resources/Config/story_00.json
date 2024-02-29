@@ -53,6 +53,12 @@
       }
     },
     {
+      "cmd": "wait",
+      "data": {
+        "value": 100
+      }
+    },
+    {
       "cmd": "waitInput"
     },
     {

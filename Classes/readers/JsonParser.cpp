@@ -3,8 +3,8 @@
 
 using namespace cocos2d;
 
-rapidjson::Document getDocumentFromResource(std::string fileName) {
-    std::string contentStr = FileUtils::getInstance()->getStringFromFile(fileName);
+rapidjson::Document getDocumentFromResource(const std::string& fileName) {
+    const std::string contentStr = FileUtils::getInstance()->getStringFromFile(fileName);
     rapidjson::Document jsonDict;
     jsonDict.Parse(contentStr.c_str());
     if (jsonDict.HasParseError())

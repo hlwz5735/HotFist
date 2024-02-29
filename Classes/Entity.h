@@ -101,8 +101,8 @@ public:
     //跳跃（不同的高度不同）
     virtual void jump();
 
-    virtual //跳跃的回调
-    void doJump(float dt);
+    //跳跃的回调
+    virtual void doJump(float dt);
 
     //受伤
     virtual void hurt();

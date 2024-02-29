@@ -4,7 +4,6 @@
 #include "external/json/document.h"
 #include <string>
 
-rapidjson::Document getDocumentFromResource(std::string fileName);
-
+rapidjson::Document getDocumentFromResource(const std::string& fileName);
 
 #endif //HOTFISTREMASTER_JSONPARSER_H

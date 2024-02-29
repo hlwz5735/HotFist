@@ -5,7 +5,7 @@
 #ifndef HOTFISTREMASTER_LEVELDATA_H
 #define HOTFISTREMASTER_LEVELDATA_H
 
-#include "EnemyData.h"
+#include "../EnemyData.h"
 
 using std::string;
 using namespace ax;

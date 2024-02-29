@@ -2,6 +2,7 @@
 #define HOTFISTREMASTER_NEWSTORYSCENE_H
 
 #include "cocos2d.h"
+#include "components/MessageTip.h"
 #include "external/json/document.h"
 USING_NS_CC;
 
@@ -17,11 +18,16 @@ public:
     static NewStoryScene* create(const std::string& storyName);
 
     void update(float dt) override;
+
+    void onExit() override;
+
 private:
     /** 当前进行的事件步骤计数 */
     int commandStep;
-    /** 当前事件的等待帧数，逐帧减一 */
-    int commandWaitFrame;
+
+    /** 当前事件的等待时间 */
+    float commandWaitFrame;
+
     /** 事件总计数 */
     int totalCommandSteps;
     /** 是否处于等待输入的状态 */
@@ -36,6 +42,7 @@ private:
     Sprite* bottomAvatar;
     Label* topMessageLabel;
     Label* bottomMessageLabel;
+    MessageTip *messageTip;
 
     /** 
      * 描述故事的原始JSON文档
@@ -46,6 +53,8 @@ private:
 private:
     /** 加载所有资源 */
     void loadResources();
+    /** 释放所有已加载的资源 */
+    void releaseResources();
 
     /** 处理事件 */
     void handleCommand(rapidjson::Value& object);

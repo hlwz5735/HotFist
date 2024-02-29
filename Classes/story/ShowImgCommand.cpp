@@ -3,8 +3,8 @@
 //
 
 #include "cocostudio/DictionaryHelper.h"
-using cocostudio::DictionaryHelper;
 #include "ShowImgCommand.h"
+using cocostudio::DictionaryHelper;
 
 ShowImgCommand ShowImgCommand::fromJsonDocument(rapidjson::Value &object)
 {

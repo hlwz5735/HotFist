@@ -2,7 +2,7 @@
 #define HOTFISTREMASTER_PHYSICSDEBUGSCENE_H
 
 #include "cocos2d.h"
-#include "LevelData.h"
+#include "../readers/LevelData.h"
 USING_NS_CC;
 
 class PhysicsDebugScene : public Scene

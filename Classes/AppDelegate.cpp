@@ -34,7 +34,6 @@ USING_NS_CC;
 
 /** 设计分辨率 */
 static cocos2d::Size designResolutionSize = cocos2d::Size(640, 360);
-float SCALE_FACTOR = 2.0f;
 
 AppDelegate::AppDelegate()
 {
