@@ -41,7 +41,7 @@ void JapanArmyI::hurt() {
     if (this->getState() != EntityState::HURT) {
         this->setState(EntityState::HURT);
         velocityX = 0;
-        if (inTheAir_flag) {
+        if (inTheAirFlag) {
             airHurt();
         } else {
             float tempRand = AXRANDOM_0_1();
@@ -106,7 +106,7 @@ void JapanArmyI::attack() {
                 enemyState = EnemyState::ATTACK;
             }
             velocityX = 0;
-            if (inTheAir_flag) {
+            if (inTheAirFlag) {
                 airAttack();
             } else {
                 groundAttack();
@@ -119,7 +119,7 @@ void JapanArmyI::refresh(float dt) {
     this->setState(EntityState::NORMAL);
     enemyState = EnemyState::STADINGBY;
     m_sprite->getAnimation()->play("Stand");
-    m_attack.isFinished = true;
+    m_attack.setFinished(true);
 }
 
 void JapanArmyI::setAttackRect(float dt) {

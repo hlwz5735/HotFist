@@ -3,56 +3,26 @@
 USING_NS_CC;
 using namespace cocostudio;
 
-
-Entity::Entity()
-: m_attack(AttackRect())
-, state(EntityState::NORMAL)
-, HP(0)
-, SP(0)
-, velocityX(0)
-, velocityY(0)
-, force(0)
-, finished(false)
-, faceto(false)
-, inTheAir_flag(true)
-, jumpMainFlag(true)
-{}
+Entity::Entity(): m_sprite(nullptr),
+                  m_attack(AttackRect()),
+                  force(0),
+                  inTheAirFlag(true), faceto(false),
+                  finished(false), jumpMainFlag(true),
+                  velocityX(0),
+                  velocityY(0),
+                  state(EntityState::NORMAL),
+                  hp(0), sp(0) {
+}
 
 bool Entity::init() {
     return Node::init();
 }
 
-void Entity::initSprite()
-{
-
-}
-
-Rect Entity::getRect() {
-    return m_block;
-}
-
-AttackRect Entity::getAttackRect() {
-    return m_attack;
-}
-
-Entity::EntityState Entity::getState() {
-    return state;
-}
-
-void Entity::setState(EntityState a) {
-    state = a;
+void Entity::initSprite() {
 }
 
 void Entity::initBlock() {
     m_block = Rect(getPositionX() + 20, getPositionY(), 28, 91);
-}
-
-void Entity::setHP(int a) {
-    HP = a;
-}
-
-void Entity::setSP(int a) {
-    SP = a;
 }
 
 void Entity::run() {
@@ -65,7 +35,7 @@ void Entity::run() {
 
 void Entity::setDirection(bool a) {
     faceto = a;
-    if (a)        //面向左
+    if (a) //面向左
         m_sprite->setScaleX(-1.0f);
     else
         m_sprite->setScaleX(1.0f);
@@ -82,7 +52,7 @@ void Entity::changeDirection() {
 }
 
 void Entity::jump() {
-    if (!inTheAir_flag && !finished) {
+    if (!inTheAirFlag && !finished) {
         finished = true;
         m_sprite->getAnimation()->play("Jump");
         this->scheduleOnce(AX_SCHEDULE_SELECTOR(Entity::doJump), 0.33f);
@@ -94,9 +64,9 @@ void Entity::doJump(float dt) {
     m_sprite->getAnimation()->play("Up");
     setPositionY(temp + 10);
     initBlock();
-    inTheAir_flag = true;
+    inTheAirFlag = true;
     finished = false;
-    jumpMainFlag = false;        //在此处确定修正待机动画
+    jumpMainFlag = false; //在此处确定修正待机动画
     velocityY = 14;
     setState(EntityState::NORMAL);
 }
@@ -133,12 +103,12 @@ void Entity::jumpCallBack(Armature *armature, MovementEventType type, const char
 
 void Entity::hurt() {
     setState(EntityState::HURT);
-    if (inTheAir_flag)                                //浮空的话就出浮空受伤
+    if (inTheAirFlag) //浮空的话就出浮空受伤
     {
         airHurt();
     } else {
         float tempRand = AXRANDOM_0_1();
-        if (tempRand < 0.5f)                        //在头部受伤和腹部受伤之间随机出一个
+        if (tempRand < 0.5f) //在头部受伤和腹部受伤之间随机出一个
         {
             headHurt();
         } else {
@@ -165,7 +135,7 @@ void Entity::airHurt() {
 
 void Entity::refresh(float dt) {
     this->setState(EntityState::NORMAL);
-    m_attack.isFinished = true;
+    m_attack.setFinished(true);
     m_sprite->getAnimation()->play("Stand");
 }
 

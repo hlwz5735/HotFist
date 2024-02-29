@@ -50,7 +50,7 @@ void Liuhai::hurt()
     {
         this->setState(EntityState::HURT);
         velocityX = 0;
-        if (inTheAir_flag)
+        if (inTheAirFlag)
         {
             airHurt();
         }
@@ -134,7 +134,7 @@ void Liuhai::attack()
                 enemyState = EnemyState::ATTACK;
             }
             velocityX = 0;
-            if (inTheAir_flag)
+            if (inTheAirFlag)
             {
                 airAttack();
             }
@@ -150,7 +150,7 @@ void Liuhai::refresh(float dt)
 {
     this->setState(EntityState::NORMAL);
     enemyState = EnemyState::STADINGBY;
-    m_attack.isFinished = true;
+    m_attack.setFinished(true);
     velocityX = 0;
     m_sprite->getAnimation()->play("Stand");
 }

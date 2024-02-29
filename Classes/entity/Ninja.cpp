@@ -17,7 +17,7 @@ bool Ninja::init()
 	{
 		return false;
 	}
-	HP = 500;
+	hp = 500;
 	view = 5*32;
 	enemyState = EnemyState::STADINGBY;
 	//初始化精灵动画
@@ -52,7 +52,7 @@ void Ninja::hurt()
 	{
 		this->setState(EntityState::HURT);
 		velocityX = 0;
-		if (inTheAir_flag)
+		if (inTheAirFlag)
 		{
 			airHurt();
 		}
@@ -130,7 +130,7 @@ void Ninja::attack()
 				enemyState = EnemyState::ATTACK;
 			}
 			velocityX = 0;
-			if (inTheAir_flag)
+			if (inTheAirFlag)
 			{
 				airAttack();
 			}

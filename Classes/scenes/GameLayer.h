@@ -3,8 +3,8 @@
 
 #include "cocos2d.h"
 #include "Global.h"
+#include "../entity/Enemy.h"
 #include "../readers/LevelData.h"
-#include "Enemy.h"
 
 USING_NS_CC;
 
@@ -14,12 +14,14 @@ class GameLayer : public Layer {
 public:
     GameLayer();
 
-    virtual bool init() override;
+    bool init() override;
+
     virtual void loadData(std::string jsonPath);
-    virtual void update(float delta);
+
+    void update(float delta) override;
 
 
-    Hero* getHero() { return this->hero; }
+    Hero *getHero() const { return this->hero; }
 
     CREATE_FUNC(GameLayer);
 
@@ -31,7 +33,7 @@ protected:
     std::vector<Rect> staticBlockVector;
 
     // 敌人容器
-    Vector<Enemy*> enemyArr;
+    Vector<Enemy *> enemyArr;
     // 游戏完成状态
     bool gameFinished = false;
 
@@ -41,6 +43,7 @@ protected:
 
 protected:
     virtual void initMap();
+
     //初始化当前地图的所有碰撞矩形
     void initGroundRect();
 
@@ -63,6 +66,7 @@ protected:
 
 #if defined(DebugDrawRects)
     DrawNode *drawNode;
+
     void updateDebugDraw();
 #endif
 };

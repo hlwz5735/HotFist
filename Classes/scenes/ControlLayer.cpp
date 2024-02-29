@@ -1,21 +1,27 @@
 #include "audio/AudioEngine.h"
 #include "cocostudio/Armature.h"
 #include "ControlLayer.h"
+#include "SceneFactory.h"
 #include "ui/CocosGUI.h"
-#include "../Readers/GuiReader.h"
+#include "../readers/GuiReader.h"
 
 USING_NS_CC;
 using namespace hotfist;
 using cocos2d::ui::Button;
 
-ControlLayer::ControlLayer()
-: isLeftBtnPressed(false)
-, isRightBtnPressed(false)
-{}
+ControlLayer::ControlLayer(): hero(nullptr),
+                              isLeftBtnPressed(false), isRightBtnPressed(false),
+                              imageItemSide(nullptr),
+                              imageItem(nullptr),
+                              hp_Bar(nullptr),
+                              sp_Bar(nullptr),
+                              tp_Bar(nullptr) {
+}
 
-bool ControlLayer::init()
-{
-    if (!Layer::init()) return false;
+bool ControlLayer::init() {
+    if (!Layer::init()) {
+        return false;
+    }
 
     const Size visibleSize = _director->getVisibleSize();
 
@@ -64,135 +70,107 @@ bool ControlLayer::init()
     return true;
 }
 
-void ControlLayer::JmpBtnCallBack(Ref *pSender)
-{
-    if (hero->getState() == Entity::EntityState::NORMAL || hero->getState() == Entity::EntityState::WALKING)
-    {
+void ControlLayer::jmpBtnCallBack(Ref *pSender) {
+    if (hero->getState() == Entity::EntityState::NORMAL || hero->getState() == Entity::EntityState::WALKING) {
         hero->jump();
     }
 }
 
-void ControlLayer::AtkBtnCallBack(Ref *pSender)
-{
-    if (hero->getState() ==Hero:: EntityState::NORMAL || hero->getState() == Entity::EntityState::WALKING)
-    {
+void ControlLayer::atkBtnCallBack(Ref *pSender) {
+    if (hero->getState() == Hero::EntityState::NORMAL || hero->getState() == Entity::EntityState::WALKING) {
         hero->attack();
     }
 }
 
-void ControlLayer::update(float delta)
-{
+void ControlLayer::update(float delta) {
     if (!this->hero) {
         return;
     }
-    if (isLeftBtnPressed && !isRightBtnPressed)
-    {
-        if (hero->getState() == Entity::EntityState::NORMAL || hero->getState() == Entity::EntityState::WALKING)
-        {
-            hero->faceto = true;
-            //面向翻转
-            hero->setDirection(hero->faceto);
+    if (isLeftBtnPressed && !isRightBtnPressed) {
+        if (hero->getState() == Entity::EntityState::NORMAL || hero->getState() == Entity::EntityState::WALKING) {
+            hero->setFaceTo(true);
+            hero->setDirection(hero->getFaceTo());
             hero->run();
             if (hero->getPositionX() <= 0)
                 hero->setPositionX(2);
             hero->initBlock();
         }
     }
-    if (!isLeftBtnPressed && isRightBtnPressed)
-    {
-        if (hero->getState() == Entity::EntityState::NORMAL || hero->getState() == Entity::EntityState::WALKING)
-        {
-            hero->faceto = false;
-            //面向翻转
-            hero->setDirection(hero->faceto);
+    if (!isLeftBtnPressed && isRightBtnPressed) {
+        if (hero->getState() == Entity::EntityState::NORMAL || hero->getState() == Entity::EntityState::WALKING) {
+            hero->setFaceTo(false);
+            hero->setDirection(hero->getFaceTo());
             hero->run();
             hero->initBlock();
         }
     }
 
-    if (!isLeftBtnPressed && !isRightBtnPressed)
-    {
+    if (!isLeftBtnPressed && !isRightBtnPressed) {
         stopPlayer();
     }
 
-    hp_Bar->setScaleX(hero->HP / 100.0f);
-    sp_Bar->setScaleX(hero->SP / 100.0f);
-    tp_Bar->setScaleX(hero->TP / 100.0f);
-
+    hp_Bar->setScaleX(hero->getHp() / 100.0f);
+    sp_Bar->setScaleX(hero->getSp() / 100.0f);
+    tp_Bar->setScaleX(hero->getTp() / 100.0f);
 }
 
-void ControlLayer::stopPlayer()
-{
-    if (hero->getState() == Entity::EntityState::WALKING)
-    {
-        hero->velocityX = 0;
-        if (!hero->inTheAir_flag)
-        {
+void ControlLayer::stopPlayer() {
+    if (hero->getState() == Entity::EntityState::WALKING) {
+        hero->setVelocityX(0);
+        if (!hero->isInTheAir()) {
             hero->setState(Entity::EntityState::NORMAL);
-            if (hero->getMode() == Hero::HeroMode::LIGHTBLADE)
-            {
-                hero->m_sprite->getAnimation()->play("SB_Stand");
-            } else
-                hero->m_sprite->getAnimation()->play("Stand");
-        } else
-        {
-            if (hero->getMode() == Hero::HeroMode::LIGHTBLADE)
-            {
-                hero->m_sprite->getAnimation()->play("SB_Stand");
-            } else
-                hero->m_sprite->getAnimation()->play("Stand");
+            if (hero->getMode() == Hero::HeroMode::LIGHTBLADE) {
+                hero->getArmature()->getAnimation()->play("SB_Stand");
+            } else {
+                hero->getArmature()->getAnimation()->play("Stand");
+            }
+        } else {
+            if (hero->getMode() == Hero::HeroMode::LIGHTBLADE) {
+                hero->getArmature()->getAnimation()->play("SB_Stand");
+            } else {
+                hero->getArmature()->getAnimation()->play("Stand");
+            }
         }
     }
 }
 
-void ControlLayer::BladeBtnCallBack(Ref *pSender)
-{
-    if (hero->getState() == Entity::EntityState::NORMAL || hero->getState() == Entity::EntityState::WALKING)
-    {
+void ControlLayer::bladeBtnCallBack(Ref *pSender) {
+    if (hero->getState() == Entity::EntityState::NORMAL || hero->getState() == Entity::EntityState::WALKING) {
         hero->handBlade();
         imageItem->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("ImageNormal.png"));
     }
 }
 
-void ControlLayer::ShieldBtnCallBack(Ref *pSender)
-{
-    if (hero->getState() == Entity::EntityState::NORMAL || hero->getState() == Entity::EntityState::WALKING)
-    {
+void ControlLayer::shieldBtnCallBack(Ref *pSender) {
+    if (hero->getState() == Entity::EntityState::NORMAL || hero->getState() == Entity::EntityState::WALKING) {
         imageItem->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("ImageNormal.png"));
         hero->modeShield();
     }
 }
 
-void ControlLayer::CloakBtnCallBack(Ref *pSender)
-{
-    if (hero->getState() == Entity::EntityState::NORMAL || hero->getState() == Entity::EntityState::WALKING)
-    {
+void ControlLayer::cloakBtnCallBack(Ref *pSender) {
+    if (hero->getState() == Entity::EntityState::NORMAL || hero->getState() == Entity::EntityState::WALKING) {
         imageItem->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("ImageCloak.png"));
         hero->modeIvisible();
     }
 }
 
-void ControlLayer::ClockUPBtnCallBack(Ref *pSender)
-{
-    if (hero->getState() == Entity::EntityState::NORMAL || hero->getState() == Entity::EntityState::WALKING)
-    {
+void ControlLayer::clockUPBtnCallBack(Ref *pSender) {
+    if (hero->getState() == Entity::EntityState::NORMAL || hero->getState() == Entity::EntityState::WALKING) {
         hero->modeClockUp();
         imageItem->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("ImageSpeed.png"));
     }
 }
 
-void ControlLayer::pauseBtnCallBack(Ref *pSender)
-{
+void ControlLayer::pauseBtnCallBack(Ref *pSender) {
     AudioEngine::pauseAll();
     Director::getInstance()->pushScene(SceneFactory::pauseLayer());
 }
 
-void ControlLayer::_bindEventListener(Node *node)
-{
-    auto button = dynamic_cast<Button*>(node->getChildByName("moveLeftButton"));
+void ControlLayer::_bindEventListener(Node *node) {
+    auto button = dynamic_cast<Button *>(node->getChildByName("moveLeftButton"));
     button->addTouchEventListener([this](Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-        switch (type)
-        {
+        switch (type) {
             case cocos2d::ui::Widget::TouchEventType::BEGAN:
                 this->isLeftBtnPressed = true;
                 break;
@@ -205,10 +183,9 @@ void ControlLayer::_bindEventListener(Node *node)
         }
     });
 
-    button = dynamic_cast<Button*>(node->getChildByName("moveRightButton"));
+    button = dynamic_cast<Button *>(node->getChildByName("moveRightButton"));
     button->addTouchEventListener([this](Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-        switch (type)
-        {
+        switch (type) {
             case cocos2d::ui::Widget::TouchEventType::BEGAN:
                 this->isRightBtnPressed = true;
                 break;
@@ -221,34 +198,34 @@ void ControlLayer::_bindEventListener(Node *node)
         }
     });
 
-    button = dynamic_cast<Button*>(node->getChildByName("attackButton"));
+    button = dynamic_cast<Button *>(node->getChildByName("attackButton"));
     button->addClickEventListener([this](Ref *sender) {
-        this->AtkBtnCallBack(sender);
+        this->atkBtnCallBack(sender);
     });
 
-    button = dynamic_cast<Button*>(node->getChildByName("jumpButton"));
+    button = dynamic_cast<Button *>(node->getChildByName("jumpButton"));
     button->addClickEventListener([this](Ref *sender) {
-        this->JmpBtnCallBack(sender);
+        this->jmpBtnCallBack(sender);
     });
 
-    button = dynamic_cast<Button*>(node->getChildByName("shieldButton"));
+    button = dynamic_cast<Button *>(node->getChildByName("shieldButton"));
     button->addClickEventListener([this](Ref *sender) {
-        this->ShieldBtnCallBack(sender);
+        this->shieldBtnCallBack(sender);
     });
 
-    button = dynamic_cast<Button*>(node->getChildByName("clockUpButton"));
+    button = dynamic_cast<Button *>(node->getChildByName("clockUpButton"));
     button->addClickEventListener([this](Ref *sender) {
-        this->ClockUPBtnCallBack(sender);
+        this->clockUPBtnCallBack(sender);
     });
 
-    button = dynamic_cast<Button*>(node->getChildByName("cloakButton"));
+    button = dynamic_cast<Button *>(node->getChildByName("cloakButton"));
     button->addClickEventListener([this](Ref *sender) {
-        this->CloakBtnCallBack(sender);
+        this->cloakBtnCallBack(sender);
     });
 
-    button = dynamic_cast<Button*>(node->getChildByName("bladeButton"));
+    button = dynamic_cast<Button *>(node->getChildByName("bladeButton"));
     button->addClickEventListener([this](Ref *sender) {
-        this->BladeBtnCallBack(sender);
+        this->bladeBtnCallBack(sender);
     });
 }
 

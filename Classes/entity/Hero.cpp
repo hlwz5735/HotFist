@@ -7,10 +7,10 @@ using namespace cocostudio;
 
 Hero::Hero()
 : m_mode(HeroMode::SHIELD)
-, TP(0)
+, tp(0)
 {
-    this->HP = 100;
-    this->SP = 100;
+    this->hp = 100;
+    this->sp = 100;
 }
 
 bool Hero::init() {
@@ -22,13 +22,13 @@ bool Hero::init() {
     setHP(100);
     setSP(100);
     // 初始化三大数据
-    TP = 0;
+    tp = 0;
     // 初始化模式状态
     m_mode = HeroMode::SHIELD;
     // 初始化水平和竖直方向的速度
     velocityY = 0;
     faceto = false;
-    inTheAir_flag = true;
+    inTheAirFlag = true;
     // 初始化动画
     initSprite();
     // 初始化碰撞框
@@ -69,7 +69,7 @@ void Hero::initBlock() {
 
 void Hero::run() {
     // 在空中的时候什么也不做
-    if (inTheAir_flag) {}
+    if (inTheAirFlag) {}
     // 不在空中，判断是不是其它状态
     else
     {
@@ -84,14 +84,14 @@ void Hero::run() {
     if (getState() == EntityState::NORMAL || getState() == EntityState::WALKING) {
         if (getMode() != HeroMode::CLOCKUP) {
             if (m_mode == HeroMode::INVISIBLE) {
-                SP -= 0.6f;
+                sp -= 0.6f;
             }
             if (!faceto)
                 this->velocityX = 2;
             else
                 this->velocityX = -2;
         } else {
-            SP -= 0.7f;
+            sp -= 0.7f;
             if (!faceto)
                 this->velocityX = 10;
             else
@@ -114,7 +114,7 @@ void Hero::hurt() {
         // 护盾模式下，所有受伤动作均引导向防御动作
         if (m_mode == HeroMode::SHIELD)
         {
-            if (inTheAir_flag) {
+            if (inTheAirFlag) {
                 AudioEngine::play2d("Audio/ea.mp3");
                 // 因为没有空中防御，所以用这个代替
                 airHurt();
@@ -134,7 +134,7 @@ void Hero::hurt() {
         // 光剑模式有几个独有的受伤动作
         else if (m_mode == HeroMode::LIGHTBLADE)
         {
-            if (inTheAir_flag) {
+            if (inTheAirFlag) {
                 AudioEngine::play2d("Audio/e.mp3");
                 // 因为没有空中防御，所以用这个代替
                 SB_FlankHurt();
@@ -154,7 +154,7 @@ void Hero::hurt() {
         // 其他模式
         else
         {
-            if (inTheAir_flag) {
+            if (inTheAirFlag) {
                 AudioEngine::play2d("Audio/e.mp3");
                 airHurt();
             } else {
@@ -268,7 +268,7 @@ void Hero::bladeAttack() {
 
     if (getState() == EntityState::NORMAL || getState() == EntityState::WALKING) {
         setState(EntityState::ATTACKING);
-        if (inTheAir_flag) {
+        if (inTheAirFlag) {
             airAttack();
         } else {
             groundBladeAttack();
@@ -279,7 +279,7 @@ void Hero::bladeAttack() {
 void Hero::normalAttack() {
     if (getState() == EntityState::NORMAL || getState() == EntityState::WALKING) {
         setState(EntityState::ATTACKING);
-        if (inTheAir_flag) {
+        if (inTheAirFlag) {
             airAttack();
         } else {
             groundAttack();
@@ -418,7 +418,7 @@ void Hero::drangonPunch() {
     int temp = static_cast<int>(getPositionY());
     setPositionY(temp + 10);
     setState(EntityState::NORMAL);
-    inTheAir_flag = true;
+    inTheAirFlag = true;
     initBlock();
     velocityY = 10;
     if (faceto)
@@ -441,7 +441,7 @@ void Hero::cycloneKick() {
 
 void Hero::refresh(float dt) {
     this->setState(EntityState::NORMAL);
-    m_attack.isFinished = true;
+    m_attack.setFinished(true);
     velocityX = 0;
     if (getMode() == HeroMode::LIGHTBLADE) {
         m_sprite->getAnimation()->play("SB_Stand");
@@ -468,7 +468,7 @@ void Hero::setAttackRect(float dt) {
 }
 
 void Hero::handBlade() {
-    if (inTheAir_flag) {
+    if (inTheAirFlag) {
         if (getMode() == HeroMode::LIGHTBLADE) {
             setMode(HeroMode::SHIELD);
         } else
@@ -495,7 +495,7 @@ void Hero::afterHandBlade(float dt) {
 }
 
 void Hero::jump() {
-    if (!inTheAir_flag && !finished) {
+    if (!inTheAirFlag && !finished) {
         finished = true;
         if (getMode() == HeroMode::LIGHTBLADE) {
             m_sprite->getAnimation()->play("SB_Jump");
@@ -514,7 +514,7 @@ void Hero::doJump(float dt) {
     setState(EntityState::NORMAL);
     setPositionY(temp + 10);
     initBlock();
-    inTheAir_flag = true;
+    inTheAirFlag = true;
     finished = false;
     // 在此处确定修正待机动画
     jumpMainFlag = false;
@@ -531,7 +531,7 @@ void Hero::modeShield() {
 }
 
 void Hero::modeIvisible() {
-    if (inTheAir_flag) {
+    if (inTheAirFlag) {
         setMode(HeroMode::INVISIBLE);
         scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::afterModeIvisible), 0.6f);
     } else {
@@ -553,7 +553,7 @@ void Hero::afterModeIvisible(float dt) {
 }
 
 void Hero::modeClockUp() {
-    if (inTheAir_flag) {
+    if (inTheAirFlag) {
         setMode(HeroMode::CLOCKUP);
         scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::afterModeClockUp), 0.6f);
     } else {
@@ -577,43 +577,43 @@ void Hero::afterModeClockUp(float dt) {
 void Hero::update(float dt) {
     Entity::update(dt);
     //主角的状态设置
-    if (this->SP > 0) {
+    if (this->sp > 0) {
         if (this->getMode() == HeroMode::INVISIBLE) {
-            this->SP -= 0.2f;
+            this->sp -= 0.2f;
         } else if (this->getMode() == HeroMode::CLOCKUP) {
-            this->SP -= 0.1f;
+            this->sp -= 0.1f;
         } else if (this->getMode() == HeroMode::LIGHTBLADE) {
-            this->SP -= 0.1f;
+            this->sp -= 0.1f;
         } else {
-            this->SP += 0.1f;
+            this->sp += 0.1f;
         }
     } else {
         this->modeShield();
-        this->SP += 1;
+        this->sp += 1;
     }
-    if (this->TP < 100) {
-        this->TP += 0.07f;
+    if (this->tp < 100) {
+        this->tp += 0.07f;
     } else {
-        this->HP = 100;
-        this->SP = 100;
-        this->TP = 0;
+        this->hp = 100;
+        this->sp = 100;
+        this->tp = 0;
     }
-    if (this->HP < 0) {
-        this->HP = 0;
+    if (this->hp < 0) {
+        this->hp = 0;
     }
-    if (this->HP > 100) {
-        this->HP = 100;
+    if (this->hp > 100) {
+        this->hp = 100;
     }
-    if (this->SP < 0) {
-        this->SP = 0;
+    if (this->sp < 0) {
+        this->sp = 0;
     }
-    if (this->SP > 100) {
-        this->SP = 100;
+    if (this->sp > 100) {
+        this->sp = 100;
     }
-    if (this->TP < 0) {
-        this->TP = 0;
+    if (this->tp < 0) {
+        this->tp = 0;
     }
-    if (this->TP > 100) {
-        this->TP = 100;
+    if (this->tp > 100) {
+        this->tp = 100;
     }
 }

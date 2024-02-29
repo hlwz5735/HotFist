@@ -61,7 +61,7 @@ void Enemy::changeDirection()
 
 void Enemy::run() {
 	//在空中的时候什么也不做
-    if (inTheAir_flag) {}
+    if (inTheAirFlag) {}
 	//不在空中，判断是不是其它状态
     else
     {
@@ -82,7 +82,7 @@ void Enemy::run() {
 
 void Enemy::jump() {
     if (getState() == Entity::EntityState::NORMAL || getState() == Entity::EntityState::WALKING) {
-        if (!inTheAir_flag && !finished) {
+        if (!inTheAirFlag && !finished) {
             finished = true;
             m_sprite->getAnimation()->play("Jump");
             this->scheduleOnce(AX_SCHEDULE_SELECTOR(Entity::doJump), 0.33f);

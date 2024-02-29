@@ -9,8 +9,7 @@ USING_NS_CC;
 class Hero : public Entity
 {
 public:
-    Hero();
-    enum class HeroMode
+    enum HeroMode
     {
         // 护盾模式
         SHIELD = 0,
@@ -29,18 +28,18 @@ public:
         // RPG火箭炮状态
         RPG
     };
-public:
-    // 怒气值
-    float TP;
 
-    virtual bool init();
+    Hero();
+    CREATE_FUNC(Hero);
+
+    bool init() override;
 
     // 初始化碰撞框
-    virtual void initBlock();
+    void initBlock() override;
 
-    virtual void initSprite();
+    void initSprite() override;
 
-    virtual void run();
+    void run() override;
 
     // 获取玩家模式状态
     HeroMode getMode();
@@ -49,13 +48,13 @@ public:
     void setMode(HeroMode a);
 
     // 重写父类的这三个受伤函数
-    virtual void hurt();
+    void hurt() override;
 
-    virtual void headHurt();
+    void headHurt() override;
 
-    virtual void flankHurt();
+    void flankHurt() override;
 
-    virtual void airHurt();
+    void airHurt() override;
 
     // 头部防御
     void headDefence();
@@ -114,7 +113,7 @@ public:
     void cycloneKick();
 
     // 主角修正
-    virtual void refresh(float dt) override;
+    void refresh(float dt) override;
 
     void setAttackRect(float dt);
 
@@ -132,15 +131,17 @@ public:
 
     void afterModeClockUp(float dt);
 
-    virtual void jump() override;
+    void jump() override;
 
-    virtual void doJump(float dt) override;
+    void doJump(float dt) override;
 
     void update(float dt) override;
 
-public:
-    CREATE_FUNC(Hero);
+    float getTp() const { return tp; }
+
 private:
+    // 怒气值
+    float tp;
     // 模式状态
     HeroMode m_mode;
 };

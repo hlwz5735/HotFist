@@ -20,5 +20,5 @@ bool GameScene::init()
 void GameScene::loadLevel(const string &levelName)
 {
     gameLayer->loadData(cocos2d::StringUtils::format("Levels/level_%s.json", levelName.c_str()));
-    controlLayer->hero = gameLayer->getHero();
+    controlLayer->setHero(gameLayer->getHero());
 }
