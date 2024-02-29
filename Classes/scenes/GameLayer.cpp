@@ -39,6 +39,7 @@ void GameLayer::loadData(std::string jsonPath) {
 
     hero = Hero::create();
     hero->setPosition(this->levelData.getStartPosition());
+    hero->getRigidBody().addToWorld(this);
     this->addChild(hero, 10);
 }
 
@@ -69,9 +70,8 @@ void GameLayer::initEnemyArr() {
 
     for (auto &enemyData: enemyDataList) {
         Enemy *pEnemy;
-        auto type = enemyData.getType();
 
-        if (type == "JapanArmyI") {
+        if (auto type = enemyData.getType(); type == "JapanArmyI") {
             pEnemy = JapanArmyI::create();
         } else if (type == "JapanArmyII") {
             pEnemy = JapanArmyII::create();
@@ -84,12 +84,23 @@ void GameLayer::initEnemyArr() {
         }
 
         pEnemy->setPosition(enemyData.getPosition());
+        pEnemy->getRigidBody().addToWorld(this);
         this->addChild(pEnemy, 5);
         this->enemyArr.pushBack(pEnemy);
     }
 }
 
+void GameLayer::updatePhysicsWorld(float delta) {
+    auto &rb = hero->getRigidBody();
+    rb.update(delta);
+    for (auto i = enemyArr.begin(); i != enemyArr.end(); ++i) {
+        auto &erb = (*i)->getRigidBody();
+        erb.update(delta);
+    }
+}
+
 void GameLayer::update(float dt) {
+    updatePhysicsWorld(dt);
     if (hero->getState() == Entity::EntityState::NORMAL || hero->getState() == Entity::EntityState::WALKING) {
         updateHero();
     } else if (hero->getState() == Entity::EntityState::HURT) {
@@ -128,63 +139,63 @@ void GameLayer::update(float dt) {
 }
 
 void GameLayer::updateAI() {
-    for (auto pTemp: this->enemyArr) {
-        float heroX = hero->getPositionX();
-        //thisX 是当前怪物的X坐标
-        float thisX = pTemp->getPositionX();
-        float thisY = pTemp->getPositionY();
-
-        //如果当前为待机状态，那么让它变为巡逻状态
-        if (pTemp->enemyState == Enemy::EnemyState::STADINGBY) {
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            pTemp->enemyState = Enemy::EnemyState::PATROLING;
-            pTemp->patrol();
-        } ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //如果在巡逻状态，那么开始判断是业内有木有主角，如果有，变为reaching
-        else if (pTemp->enemyState == Enemy::EnemyState::PATROLING) {
-            //{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{
-            //视野矩形和主角碰撞矩形发生碰撞，也就是敌人“看到了”主角
-            if (pTemp->m_ViewRect.intersectsRect(hero->getRigidRect()) && hero->getMode() != Hero::HeroMode::INVISIBLE) {
-                pTemp->enemyState = Enemy::EnemyState::REACHING;
-            } else
-                pTemp->patrol();
-        } //}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
-        else if (pTemp->enemyState == Enemy::EnemyState::REACHING) {
-            //{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{
-            if (pTemp->m_ViewRect.intersectsRect(hero->getRigidRect())) {
-                if (heroX - thisX >= 40) {
-                    if (hero->getPositionY() - thisY > 12 && heroX - thisX < 80) {
-                        pTemp->jump();
-                    }
-                    pTemp->setDirection(false);
-                    pTemp->run();
-                } else if (heroX - thisX <= -40) {
-                    if (hero->getPositionY() - thisY > 12 && heroX - thisX > -80) {
-                        pTemp->jump();
-                    }
-                    pTemp->setDirection(true);
-                    pTemp->run();
-                } else {
-                    int tempRand = static_cast<int>(AXRANDOM_0_1() * 100);
-                    if (tempRand > 90) {
-                        pTemp->attack();
-                    } else {
-                        pTemp->enemyState = Enemy::EnemyState::STADINGBY;
-                    }
-                }
-            }
-            //从碰撞框中消失，也就是看不到主角了
-            else {
-                pTemp->enemyState = Enemy::EnemyState::PATROLING;
-            }
-
-            if (hero->getMode() == Hero::HeroMode::INVISIBLE) {
-                pTemp->enemyState = Enemy::EnemyState::PATROLING;
-            }
-        } //}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
-        /*********************************中间有待完善************************************/
-        pTemp->initViewRect();
-    }
+    // for (auto pTemp: this->enemyArr) {
+    //     float heroX = hero->getPositionX();
+    //     //thisX 是当前怪物的X坐标
+    //     float thisX = pTemp->getPositionX();
+    //     float thisY = pTemp->getPositionY();
+    //
+    //     //如果当前为待机状态，那么让它变为巡逻状态
+    //     if (pTemp->enemyState == Enemy::EnemyState::STADINGBY) {
+    //         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //         pTemp->enemyState = Enemy::EnemyState::PATROLING;
+    //         pTemp->patrol();
+    //     } ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //     //如果在巡逻状态，那么开始判断是业内有木有主角，如果有，变为reaching
+    //     else if (pTemp->enemyState == Enemy::EnemyState::PATROLING) {
+    //         //{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{
+    //         //视野矩形和主角碰撞矩形发生碰撞，也就是敌人“看到了”主角
+    //         if (pTemp->m_ViewRect.intersectsRect(hero->getRigidRect()) && hero->getMode() != Hero::HeroMode::INVISIBLE) {
+    //             pTemp->enemyState = Enemy::EnemyState::REACHING;
+    //         } else
+    //             pTemp->patrol();
+    //     } //}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
+    //     else if (pTemp->enemyState == Enemy::EnemyState::REACHING) {
+    //         //{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{
+    //         if (pTemp->m_ViewRect.intersectsRect(hero->getRigidRect())) {
+    //             if (heroX - thisX >= 40) {
+    //                 if (hero->getPositionY() - thisY > 12 && heroX - thisX < 80) {
+    //                     pTemp->jump();
+    //                 }
+    //                 pTemp->setDirection(false);
+    //                 pTemp->run();
+    //             } else if (heroX - thisX <= -40) {
+    //                 if (hero->getPositionY() - thisY > 12 && heroX - thisX > -80) {
+    //                     pTemp->jump();
+    //                 }
+    //                 pTemp->setDirection(true);
+    //                 pTemp->run();
+    //             } else {
+    //                 int tempRand = static_cast<int>(AXRANDOM_0_1() * 100);
+    //                 if (tempRand > 90) {
+    //                     pTemp->attack();
+    //                 } else {
+    //                     pTemp->enemyState = Enemy::EnemyState::STADINGBY;
+    //                 }
+    //             }
+    //         }
+    //         //从碰撞框中消失，也就是看不到主角了
+    //         else {
+    //             pTemp->enemyState = Enemy::EnemyState::PATROLING;
+    //         }
+    //
+    //         if (hero->getMode() == Hero::HeroMode::INVISIBLE) {
+    //             pTemp->enemyState = Enemy::EnemyState::PATROLING;
+    //         }
+    //     } //}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
+    //     /*********************************中间有待完善************************************/
+    //     pTemp->initViewRect();
+    // }
 }
 
 void GameLayer::updateHero() {
@@ -389,43 +400,32 @@ void extractRect(const Rect &rect, Point *pArr) {
     pArr[3] = Point(rect.getMinX(), rect.getMaxY());
 }
 
+static void drawRect(DrawNode *drawNode, const Rect &rect, const Color3B &color, float alpha = 0.1f) {
+    Point pointArr[4];
+    extractRect(rect, pointArr);
+    drawNode->drawPolygon(pointArr, 4, Color4F(color, alpha), 1, Color4F(color, 1));
+}
+
 void GameLayer::updateDebugDraw() {
+    const auto rigidbodyColor = Color3B::GRAY;
+    const auto staticBlockColor = Color3B::GREEN;
     const auto attackColor = Color3B(255, 0, 0);
     const auto finishedAttackColor = Color3B(100, 0, 0);
     const auto enemyAttackColor = Color3B::ORANGE;
     const auto enemyFinishedAttackColor = Color3B(100, 50, 0);
 
     this->drawNode->clear();
-    Point pointArr[4];
+
     for (auto &rect: this->staticBlockVector) {
-        extractRect(rect, pointArr);
-        this->drawNode->drawPolygon(pointArr, 4, Color4F(Color3B::GREEN, 0.1f), 1, Color4F::GREEN);
+        drawRect(drawNode, rect, staticBlockColor);
     }
-    Rect rect = this->hero->getRigidRect();
-    extractRect(rect, pointArr);
-    this->drawNode->drawPolygon(pointArr, 4, Color4F(Color3B::GRAY, 0.1f), 1, Color4F::GRAY);
 
-    auto &attackRect = this->hero->getAttackRect();
-    extractRect(attackRect, pointArr);
-    if (!attackRect.isFinished()) {
-        this->drawNode->drawPolygon(pointArr, 4, Color4F(attackColor, 0.1f), 1, Color4F(attackColor, 1));
-    } else {
-        this->drawNode->drawPolygon(pointArr, 4, Color4F(finishedAttackColor, 0.1f), 1,
-                                    Color4F(finishedAttackColor, 1));
-    }
-    for (auto pEnemy: enemyArr) {
-        rect = pEnemy->getRigidRect();
-        extractRect(rect, pointArr);
-        this->drawNode->drawPolygon(pointArr, 4, Color4F(Color3B::GRAY, 0.1f), 1, Color4F::GRAY);
-
-        auto &enemyAttackRect = pEnemy->getAttackRect();
-        extractRect(rect, pointArr);
-        if (!enemyAttackRect.isFinished()) {
-            this->drawNode->drawPolygon(pointArr, 4, Color4F(enemyAttackColor, 0.1f), 1, Color4F(enemyAttackColor, 1));
-        } else {
-            this->drawNode->drawPolygon(pointArr, 4, Color4F(enemyFinishedAttackColor, 0.1f), 1,
-                                        Color4F(enemyFinishedAttackColor, 1));
-        }
+    drawRect(drawNode, hero->getRigidBody().getRealBody(), rigidbodyColor);
+    drawRect(drawNode, hero->getAttackRect(), hero->getAttackRect().isFinished() ? finishedAttackColor : attackColor);
+    for (Enemy *pEnemy: enemyArr) {
+        drawRect(drawNode, pEnemy->getRigidBody().getRealBody(), rigidbodyColor);
+        const auto &enemyAttackRect = pEnemy->getAttackRect();
+        drawRect(drawNode, enemyAttackRect, enemyAttackRect.isFinished() ? enemyFinishedAttackColor : enemyAttackColor);
     }
 }
 #endif

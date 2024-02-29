@@ -25,7 +25,7 @@ bool Ninja::init() {
     return true;
 }
 
-void Ninja::initBlock() {
+void Ninja::initRigidbody() {
     m_block = Rect(
         getPositionX(),
         getPositionY(),

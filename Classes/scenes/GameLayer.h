@@ -13,27 +13,26 @@ class Hero;
 class GameLayer : public Layer {
 public:
     GameLayer();
-
     bool init() override;
+    CREATE_FUNC(GameLayer);
 
     virtual void loadData(std::string jsonPath);
 
     void update(float delta) override;
 
-
     Hero *getHero() const { return this->hero; }
-
-    CREATE_FUNC(GameLayer);
+    const std::vector<Rect> &getStaticBlockVector() { return staticBlockVector; }
 
 protected:
-    TMXTiledMap *map = nullptr;
-    int tileCountX, tileCountY;
     Hero *hero;
 
+    int tileCountX, tileCountY;
     std::vector<Rect> staticBlockVector;
+    TMXTiledMap *map;
 
     // 敌人容器
     Vector<Enemy *> enemyArr;
+
     // 游戏完成状态
     bool gameFinished = false;
 
@@ -41,14 +40,16 @@ protected:
 
     LevelData levelData;
 
-protected:
     virtual void initMap();
 
-    //初始化当前地图的所有碰撞矩形
+    // 初始化当前地图的所有碰撞矩形
     void initGroundRect();
 
     //初始化怪物容器
     virtual void initEnemyArr();
+
+    /** 更新物理世界 */
+    void updatePhysicsWorld(float delta);
 
     //调用平常情况下的主角的刷新
     void updateHero();
@@ -66,7 +67,6 @@ protected:
 
 #if defined(DebugDrawRects)
     DrawNode *drawNode;
-
     void updateDebugDraw();
 #endif
 };

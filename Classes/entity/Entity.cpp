@@ -15,14 +15,22 @@ Entity::Entity(): m_sprite(nullptr),
 }
 
 bool Entity::init() {
-    return Node::init();
+    if (!Node::init()) {
+        return false;
+    }
+
+    initSprite();
+    rigidBody.bind(this);
+    initRigidbody();
+
+    return true;
 }
 
 void Entity::initSprite() {
 }
 
-void Entity::initBlock() {
-    m_block = Rect(getPositionX() + 20, getPositionY(), 28, 91);
+void Entity::initRigidbody() {
+    this->rigidBody.setBody(Rect(20, 0, 28, 91));
 }
 
 void Entity::run() {
@@ -63,7 +71,7 @@ void Entity::doJump(float dt) {
     int temp = (int) getPositionY();
     m_sprite->getAnimation()->play("Up");
     setPositionY(temp + 10);
-    initBlock();
+    initRigidbody();
     inTheAirFlag = true;
     finished = false;
     jumpMainFlag = false; //在此处确定修正待机动画

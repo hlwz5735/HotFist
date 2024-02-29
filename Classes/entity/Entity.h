@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 #include "cocostudio/Armature.h"
 #include "AttackRect.h"
+#include "RigidBody.h"
 
 USING_NS_CC;
 using namespace cocostudio;
@@ -33,10 +34,10 @@ public:
     CREATE_FUNC(Entity);
 
     bool init() override;
-    // 初始化碰撞框
-    virtual void initBlock();
-    // 初始化精灵动画（代替bindSprite用）
+    // 初始化精灵动画
     virtual void initSprite();
+    // 初始化碰撞框
+    virtual void initRigidbody();
 
     // 更新函数，每秒调用60次
     void update(float dt) override;
@@ -95,9 +96,11 @@ public:
     void setVelocityY(const float v) { velocityY = v; }
     bool isInTheAir() const { return inTheAirFlag; }
     void setInTheAir(const bool f) { inTheAirFlag = f; }
+    RigidBody &getRigidBody() { return rigidBody; }
 
 protected:
     EntityState state;
+    RigidBody rigidBody;
     float hp, sp;
     // 新的主角精灵
     Armature *m_sprite;

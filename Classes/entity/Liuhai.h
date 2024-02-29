@@ -25,7 +25,7 @@ public:
     void attack() override;
 
     // 初始化碰撞框
-    void initBlock() override;
+    void initRigidbody() override;
 
     void initSprite() override;
 

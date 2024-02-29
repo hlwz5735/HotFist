@@ -35,7 +35,7 @@ public:
     bool init() override;
 
     // 初始化碰撞框
-    void initBlock() override;
+    void initRigidbody() override;
 
     void initSprite() override;
 

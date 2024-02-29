@@ -24,7 +24,7 @@ bool Liuhai::init() {
     return true;
 }
 
-void Liuhai::initBlock() {
+void Liuhai::initRigidbody() {
     m_block = Rect(getPositionX(), getPositionY(),
                    m_sprite->getContentSize().width - 5, m_sprite->getContentSize().height);
 }

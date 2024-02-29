@@ -93,7 +93,7 @@ void ControlLayer::update(float delta) {
             hero->run();
             if (hero->getPositionX() <= 0)
                 hero->setPositionX(2);
-            hero->initBlock();
+            hero->initRigidbody();
         }
     }
     if (!isLeftBtnPressed && isRightBtnPressed) {
@@ -101,7 +101,7 @@ void ControlLayer::update(float delta) {
             hero->setFaceTo(false);
             hero->setDirection(hero->getFaceTo());
             hero->run();
-            hero->initBlock();
+            hero->initRigidbody();
         }
     }
 

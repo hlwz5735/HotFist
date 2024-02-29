@@ -30,7 +30,7 @@ public:
     //初始化并更新视野矩形
     virtual void initViewRect();
 
-    void initBlock() override;
+    void initRigidbody() override;
 
     // 攻击
     virtual void attack();

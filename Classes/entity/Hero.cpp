@@ -5,11 +5,7 @@
 USING_NS_CC;
 using namespace cocostudio;
 
-Hero::Hero()
-    : m_mode(HeroMode::SHIELD)
-      , tp(0) {
-    this->hp = 100;
-    this->sp = 100;
+Hero::Hero(): tp(0), m_mode(HeroMode::SHIELD) {
 }
 
 bool Hero::init() {
@@ -18,20 +14,17 @@ bool Hero::init() {
     }
     // 初始化状态
     setState(EntityState::NORMAL);
-    setHp(100);
-    setSP(100);
     // 初始化三大数据
+    hp = 100;
+    sp = 100;
     tp = 0;
     // 初始化模式状态
     m_mode = HeroMode::SHIELD;
+
     // 初始化水平和竖直方向的速度
     velocityY = 0;
     faceto = false;
     inTheAirFlag = true;
-    // 初始化动画
-    initSprite();
-    // 初始化碰撞框
-    initBlock();
 
     AudioEngine::preload("Audio/Cloak.mp3");
     AudioEngine::preload("Audio/Clock.mp3");
@@ -49,7 +42,8 @@ bool Hero::init() {
 }
 
 void Hero::initSprite() {
-    ArmatureDataManager::getInstance()->addArmatureFileInfo("Nivida0.png", "Nivida0.plist", "Nivida.ExportJson");
+    ArmatureDataManager::getInstance()->
+        addArmatureFileInfo("Nivida0.png", "Nivida0.plist", "Nivida.ExportJson");
     // 这里直接使用Nivida ，而此信息保存在 Nivida.ExportJson 中，与其创建的项目属性相对应
     m_sprite = Armature::create("Nivida");
     // 设置当前运行动画的索引，一个“工程”可以建立多个动画
@@ -60,12 +54,8 @@ void Hero::initSprite() {
     this->addChild(m_sprite);
 }
 
-void Hero::initBlock() {
-    m_block = Rect(
-        getPositionX(),
-        getPositionY(),
-        m_sprite->getContentSize().width - 5,
-        m_sprite->getContentSize().height);
+void Hero::initRigidbody() {
+    this->rigidBody.setBody(Rect(0, 0, 63 - 5, 113));
 }
 
 void Hero::run() {
@@ -415,7 +405,7 @@ void Hero::drangonPunch() {
     setPositionY(temp + 10);
     setState(EntityState::NORMAL);
     inTheAirFlag = true;
-    initBlock();
+    initRigidbody();
     velocityY = 10;
     if (faceto)
         velocityX = -2;
@@ -506,7 +496,7 @@ void Hero::doJump(float dt) {
         m_sprite->getAnimation()->play("Up");
     setState(EntityState::NORMAL);
     setPositionY(temp + 10);
-    initBlock();
+    initRigidbody();
     inTheAirFlag = true;
     finished = false;
     // 在此处确定修正待机动画

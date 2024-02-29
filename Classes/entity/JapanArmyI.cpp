@@ -14,19 +14,13 @@ bool JapanArmyI::init() {
     hp = 100;
     view = 5 * 32;
     enemyState = EnemyState::STADINGBY;
-    //初始化精灵动画
-    initSprite();
     initViewRect();
     speedX = 1.5;
     return true;
 }
 
-void JapanArmyI::initBlock() {
-    m_block = Rect(
-        getPositionX(),
-        getPositionY(),
-        m_sprite->getContentSize().width - 5,
-        m_sprite->getContentSize().height);
+void JapanArmyI::initRigidbody() {
+    this->rigidBody.setBody(Rect(0, 0, 63 - 5, 113));
 }
 
 void JapanArmyI::initSprite() {

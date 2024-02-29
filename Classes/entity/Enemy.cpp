@@ -50,7 +50,7 @@ void Enemy::patrol() {
 }
 
 //因为不能声明为纯虚函数，所以只能这样。该函数没有实际作用
-void Enemy::initBlock() {}
+void Enemy::initRigidbody() {}
 
 void Enemy::changeDirection()
 {
