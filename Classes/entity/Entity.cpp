@@ -3,11 +3,9 @@
 USING_NS_AX;
 using namespace cocostudio;
 
-Entity::Entity(): m_sprite(nullptr),
-                  m_attack(AttackRect()),
-                  force(0),
-                  inTheAirFlag(true), faceto(false),
-                  finished(false), jumpMainFlag(true),
+Entity::Entity(): armature(nullptr),
+                  power(0),
+                  direction(LEFT),
                   moveSpeed(1.f),
                   state(EntityState::NORMAL),
                   hp(0), sp(0) {
@@ -32,31 +30,23 @@ void Entity::initRigidbody() {
     this->rigidBody.setBody(Rect(20, 0, 28, 91));
 }
 
-void Entity::setDirection(bool a) {
-    faceto = a;
-    m_sprite->setScaleX(a ? -1 : 1);
-}
-
-void Entity::changeDirection() {
-    setDirection(!faceto);
+void Entity::setDirection(Direction a) {
+    direction = a;
+    armature->setScaleX(a);
 }
 
 void Entity::jump() {
-    if (!inTheAirFlag && !finished) {
-        finished = true;
-        m_sprite->getAnimation()->play("Jump");
+    if (rigidBody.isGrounded()) {
+        armature->getAnimation()->play("Jump");
         this->scheduleOnce(AX_SCHEDULE_SELECTOR(Entity::doJump), 0.33f);
     }
 }
 
 void Entity::doJump(float dt) {
     int temp = (int) getPositionY();
-    m_sprite->getAnimation()->play("Up");
+    armature->getAnimation()->play("Up");
     setPositionY(temp + 10);
     initRigidbody();
-    inTheAirFlag = true;
-    finished = false;
-    jumpMainFlag = false; //在此处确定修正待机动画
     rigidBody.getVelocity().y = 14;
     setState(EntityState::NORMAL);
 }
@@ -93,13 +83,13 @@ void Entity::jumpCallBack(Armature *armature, MovementEventType type, const char
 
 void Entity::hurt() {
     setState(EntityState::HURT);
-    if (inTheAirFlag) //浮空的话就出浮空受伤
-    {
+    // 浮空的话就出浮空受伤
+    if (!rigidBody.isGrounded()) {
         airHurt();
     } else {
         float tempRand = AXRANDOM_0_1();
-        if (tempRand < 0.5f) //在头部受伤和腹部受伤之间随机出一个
-        {
+        // 在头部受伤和腹部受伤之间随机出一个
+        if (tempRand < 0.5f) {
             headHurt();
         } else {
             flankHurt();
@@ -125,8 +115,8 @@ void Entity::airHurt() {
 
 void Entity::refresh(float dt) {
     this->setState(EntityState::NORMAL);
-    m_attack.setFinished(true);
-    m_sprite->getAnimation()->play("Stand");
+    attackRect.setFinished(true);
+    armature->getAnimation()->play("Stand");
 }
 
 void Entity::update(float dt) {

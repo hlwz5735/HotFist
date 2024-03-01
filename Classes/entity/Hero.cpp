@@ -24,8 +24,7 @@ bool Hero::init() {
     m_mode = HeroMode::SHIELD;
 
     moveSpeed = 2;
-    faceto = false;
-    inTheAirFlag = true;
+    direction = RIGHT;
 
     AudioEngine::preload("Audio/Cloak.mp3");
     AudioEngine::preload("Audio/Clock.mp3");
@@ -46,13 +45,13 @@ void Hero::initSprite() {
     ArmatureDataManager::getInstance()->
         addArmatureFileInfo("Nivida0.png", "Nivida0.plist", "Nivida.ExportJson");
     // 这里直接使用Nivida ，而此信息保存在 Nivida.ExportJson 中，与其创建的项目属性相对应
-    m_sprite = Armature::create("Nivida");
+    armature = Armature::create("Nivida");
     // 设置当前运行动画的索引，一个“工程”可以建立多个动画
-    m_sprite->getAnimation()->play("Stand");
+    armature->getAnimation()->play("Stand");
     // 设置位置信息
-    m_sprite->setPosition(Point(25, 0));
+    armature->setPosition(Point(25, 0));
     // 添加到容器，当前运行的场景之中
-    this->addChild(m_sprite);
+    this->addChild(armature);
 }
 
 void Hero::initRigidbody() {
@@ -72,7 +71,7 @@ void Hero::hurt() {
         this->setState(EntityState::HURT);
         // 护盾模式下，所有受伤动作均引导向防御动作
         if (m_mode == HeroMode::SHIELD) {
-            if (inTheAirFlag) {
+            if (isInTheAir()) {
                 AudioEngine::play2d("Audio/ea.mp3");
                 // 因为没有空中防御，所以用这个代替
                 airHurt();
@@ -90,7 +89,7 @@ void Hero::hurt() {
         }
         // 光剑模式有几个独有的受伤动作
         else if (m_mode == HeroMode::LIGHTBLADE) {
-            if (inTheAirFlag) {
+            if (isInTheAir()) {
                 AudioEngine::play2d("Audio/e.mp3");
                 // 因为没有空中防御，所以用这个代替
                 SB_FlankHurt();
@@ -108,7 +107,7 @@ void Hero::hurt() {
         }
         // 其他模式
         else {
-            if (inTheAirFlag) {
+            if (isInTheAir()) {
                 AudioEngine::play2d("Audio/e.mp3");
                 airHurt();
             } else {
@@ -127,39 +126,39 @@ void Hero::hurt() {
 }
 
 void Hero::headDefence() {
-    m_sprite->getAnimation()->play("HeadDefence");
+    armature->getAnimation()->play("HeadDefence");
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::doHurt), 0.33f);
-    m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Hero::hurtCallBack));
+    armature->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Hero::hurtCallBack));
 }
 
 void Hero::flankDefence() {
-    m_sprite->getAnimation()->play("FlankDefence");
+    armature->getAnimation()->play("FlankDefence");
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::doHurt), 0.33f);
-    m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Hero::hurtCallBack));
+    armature->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Hero::hurtCallBack));
 }
 
 void Hero::headHurt() {
-    m_sprite->getAnimation()->play("HeadHurt");
+    armature->getAnimation()->play("HeadHurt");
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::doHurt), 0.33f);
-    m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Hero::hurtCallBack));
+    armature->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Hero::hurtCallBack));
 }
 
 void Hero::flankHurt() {
-    m_sprite->getAnimation()->play("FlankHurt");
+    armature->getAnimation()->play("FlankHurt");
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::doHurt), 0.33f);
-    m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Hero::hurtCallBack));
+    armature->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Hero::hurtCallBack));
 }
 
 void Hero::SB_FlankHurt() {
-    m_sprite->getAnimation()->play("SB_FlankHurt");
+    armature->getAnimation()->play("SB_FlankHurt");
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::doHurt), 0.33f);
-    m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Hero::hurtCallBack));
+    armature->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Hero::hurtCallBack));
 }
 
 void Hero::SB_HeadHurt() {
-    m_sprite->getAnimation()->play("SB_HeadHurt");
+    armature->getAnimation()->play("SB_HeadHurt");
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::doHurt), 0.33f);
-    m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Hero::hurtCallBack));
+    armature->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Hero::hurtCallBack));
 }
 
 void Hero::airHurt() {
@@ -169,14 +168,14 @@ void Hero::airHurt() {
     //     velocityX = -2;
     // }
     // velocityY = 5;
-    m_sprite->getAnimation()->play("FlankHurt");
+    armature->getAnimation()->play("FlankHurt");
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::doHurt), 0.33f);
-    m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Hero::hurtCallBack));
+    armature->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Hero::hurtCallBack));
 }
 
 void Hero::doHurt(float dt) {
     ActionInterval *temp;
-    if (faceto) {
+    if (direction) {
         temp = MoveBy::create(0.1f, Point(10, 0));
     } else {
         temp = MoveBy::create(0.1f, Point(-10, 0));
@@ -221,7 +220,7 @@ void Hero::attack() {
 void Hero::bladeAttack() {
     if (getState() == EntityState::NORMAL || getState() == EntityState::WALKING) {
         setState(EntityState::ATTACKING);
-        if (inTheAirFlag) {
+        if (isInTheAir()) {
             airAttack();
         } else {
             groundBladeAttack();
@@ -232,7 +231,7 @@ void Hero::bladeAttack() {
 void Hero::normalAttack() {
     if (getState() == EntityState::NORMAL || getState() == EntityState::WALKING) {
         setState(EntityState::ATTACKING);
-        if (inTheAirFlag) {
+        if (isInTheAir()) {
             airAttack();
         } else {
             groundAttack();
@@ -243,8 +242,8 @@ void Hero::normalAttack() {
 void Hero::airAttack() {
     AudioEngine::play2d("Audio/seiya.mp3");
     if (getMode() == HeroMode::LIGHTBLADE) {
-        m_sprite->getAnimation()->play("RiderSting");
-        force = 25;
+        armature->getAnimation()->play("RiderSting");
+        power = 25;
         // if (faceto)
         //     velocityX = -5;
         // else
@@ -252,12 +251,12 @@ void Hero::airAttack() {
         this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.1f);
         this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::refresh), 0.5f);
     } else {
-        m_sprite->getAnimation()->play("RiderKick");
+        armature->getAnimation()->play("RiderKick");
         // if (faceto)
         //     velocityX = -5;
         // else
         //     velocityX = 5;
-        force = 20;
+        power = 20;
         this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.1f);
         this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::refresh), 0.5f);
     }
@@ -312,56 +311,56 @@ void Hero::groundBladeAttack() {
 
 void Hero::heavyPunch() {
     AudioEngine::play2d("Audio/hea.mp3");
-    m_sprite->getAnimation()->play("HeavyPunch");
-    force = 20;
+    armature->getAnimation()->play("HeavyPunch");
+    power = 20;
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.1f);
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::refresh), 0.4f);
 }
 
 void Hero::upAttack() {
     AudioEngine::play2d("Audio/heng.mp3");
-    m_sprite->getAnimation()->play("UpAttack");
-    force = 20;
+    armature->getAnimation()->play("UpAttack");
+    power = 20;
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.1f);
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::refresh), 0.4f);
 }
 
 void Hero::heavyKick() {
     AudioEngine::play2d("Audio/heng.mp3");
-    m_sprite->getAnimation()->play("HeavyKick");
-    force = 20;
+    armature->getAnimation()->play("HeavyKick");
+    power = 20;
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.1f);
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::refresh), 0.4f);
 }
 
 void Hero::SB_Attack1() {
     AudioEngine::play2d("Audio/heng.mp3");
-    m_sprite->getAnimation()->play("Saber1");
-    force = 28;
+    armature->getAnimation()->play("Saber1");
+    power = 28;
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.1f);
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::refresh), 0.4f);
 }
 
 void Hero::SB_Attack2() {
     AudioEngine::play2d("Audio/heng.mp3");
-    m_sprite->getAnimation()->play("Saber2");
-    force = 28;
+    armature->getAnimation()->play("Saber2");
+    power = 28;
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.1f);
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::refresh), 0.4f);
 }
 
 void Hero::SB_Attack3() {
     AudioEngine::play2d("Audio/heng.mp3");
-    m_sprite->getAnimation()->play("Saber3");
-    force = 30;
+    armature->getAnimation()->play("Saber3");
+    power = 30;
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.1f);
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::refresh), 0.4f);
 }
 
 void Hero::SB_Attack4() {
     AudioEngine::play2d("Audio/heng.mp3");
-    m_sprite->getAnimation()->play("Saber4");
-    force = 35;
+    armature->getAnimation()->play("Saber4");
+    power = 35;
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.1f);
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::refresh), 0.4f);
 }
@@ -371,65 +370,64 @@ void Hero::drangonPunch() {
     int temp = static_cast<int>(getPositionY());
     setPositionY(temp + 10);
     setState(EntityState::NORMAL);
-    inTheAirFlag = true;
     initRigidbody();
     // velocityY = 10;
     // if (faceto)
     //     velocityX = -2;
     // else
     //     velocityX = 2;
-    m_sprite->getAnimation()->play("DrangonPunch");
-    force = 120;
+    armature->getAnimation()->play("DrangonPunch");
+    power = 120;
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.1f);
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::refresh), 0.6f);
 }
 
 void Hero::cycloneKick() {
-    m_sprite->getAnimation()->play("CycloneKick");
+    armature->getAnimation()->play("CycloneKick");
     AudioEngine::play2d("Audio/kale.mp3");
-    force = 135;
+    power = 135;
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.3f);
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::refresh), 0.6f);
 }
 
 void Hero::refresh(float dt) {
     this->setState(EntityState::NORMAL);
-    m_attack.setFinished(true);
+    attackRect.setFinished(true);
     // velocityX = 0;
     if (getMode() == HeroMode::LIGHTBLADE) {
-        m_sprite->getAnimation()->play("SB_Stand");
+        armature->getAnimation()->play("SB_Stand");
     } else
-        m_sprite->getAnimation()->play("Stand");
+        armature->getAnimation()->play("Stand");
 }
 
 void Hero::setAttackRect(float dt) {
     auto rect = Rect(
         getPositionX() - 40,
         getPositionY() + 16,
-        m_sprite->getContentSize().width - 10,
-        m_sprite->getContentSize().height - 10
+        armature->getContentSize().width - 10,
+        armature->getContentSize().height - 10
     );
-    if (faceto) {
+    if (direction) {
         rect.origin.x -= 40;
     } else {
         rect.origin.x += 40;
     }
-    this->m_attack = AttackRect(rect, force, false);
+    this->attackRect = AttackRect(rect, power, false);
 }
 
 void Hero::handBlade() {
-    if (inTheAirFlag) {
+    if (isInTheAir()) {
         if (getMode() == HeroMode::LIGHTBLADE) {
             setMode(HeroMode::SHIELD);
         } else
             setMode(HeroMode::LIGHTBLADE);
     } else {
         if (getMode() == HeroMode::LIGHTBLADE) {
-            m_sprite->getAnimation()->play("Stand");
+            armature->getAnimation()->play("Stand");
             setMode(HeroMode::SHIELD);
         } else {
             setState(EntityState::FORCED);
-            m_sprite->getAnimation()->playByIndex(13);
+            armature->getAnimation()->playByIndex(13);
             AudioEngine::play2d("Audio/haaaaa.mp3");
             scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::afterHandBlade), 1.0f);
         }
@@ -439,18 +437,17 @@ void Hero::handBlade() {
 void Hero::afterHandBlade(float dt) {
     setMode(HeroMode::LIGHTBLADE);
     setState(EntityState::NORMAL);
-    m_sprite->getAnimation()->playByIndex(18);
-    m_sprite->setOpacity(255);
-    m_sprite->setColor(Color3B(255, 255, 255));
+    armature->getAnimation()->playByIndex(18);
+    armature->setOpacity(255);
+    armature->setColor(Color3B(255, 255, 255));
 }
 
 void Hero::jump() {
-    if (!inTheAirFlag && !finished) {
-        finished = true;
+    if (!isInTheAir()) {
         if (getMode() == HeroMode::LIGHTBLADE) {
-            m_sprite->getAnimation()->play("SB_Jump");
+            armature->getAnimation()->play("SB_Jump");
         } else
-            m_sprite->getAnimation()->play("Jump");
+            armature->getAnimation()->play("Jump");
         this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::doJump), 0.33f);
     }
 }
@@ -458,36 +455,31 @@ void Hero::jump() {
 void Hero::doJump(float dt) {
     int temp = static_cast<int>(getPositionY());
     if (getMode() == HeroMode::LIGHTBLADE) {
-        m_sprite->getAnimation()->play("SB_Up");
+        armature->getAnimation()->play("SB_Up");
     } else
-        m_sprite->getAnimation()->play("Up");
+        armature->getAnimation()->play("Up");
     setState(EntityState::NORMAL);
     setPositionY(temp + 10);
-    initRigidbody();
-    inTheAirFlag = true;
-    finished = false;
-    // 在此处确定修正待机动画
-    jumpMainFlag = false;
-    // velocityY = 14;
+    // initRigidbody();
 }
 
 void Hero::modeShield() {
     setMode(HeroMode::SHIELD);
     setState(EntityState::NORMAL);
-    m_sprite->setOpacity(255);
-    m_sprite->setColor(Color3B(255, 255, 255));
+    armature->setOpacity(255);
+    armature->setColor(Color3B(255, 255, 255));
     AudioEngine::play2d("Audio/maxArmor.mp3");
-    m_sprite->getAnimation()->play("Stand");
+    armature->getAnimation()->play("Stand");
 }
 
 void Hero::modeIvisible() {
-    if (inTheAirFlag) {
+    if (isInTheAir()) {
         setMode(HeroMode::INVISIBLE);
         scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::afterModeIvisible), 0.6f);
     } else {
         if (getMode() != HeroMode::INVISIBLE) {
             setState(EntityState::FORCED);
-            m_sprite->getAnimation()->play("ModeChange");
+            armature->getAnimation()->play("ModeChange");
             AudioEngine::play2d("Audio/Cloak.mp3");
             scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::afterModeIvisible), 0.6f);
         }
@@ -497,19 +489,19 @@ void Hero::modeIvisible() {
 void Hero::afterModeIvisible(float dt) {
     setMode(HeroMode::INVISIBLE);
     setState(EntityState::NORMAL);
-    m_sprite->setOpacity(50);
-    m_sprite->setColor(Color3B(0, 0, 200));
-    m_sprite->getAnimation()->play("Stand");
+    armature->setOpacity(50);
+    armature->setColor(Color3B(0, 0, 200));
+    armature->getAnimation()->play("Stand");
 }
 
 void Hero::modeClockUp() {
-    if (inTheAirFlag) {
+    if (isInTheAir()) {
         setMode(HeroMode::CLOCKUP);
         scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::afterModeClockUp), 0.6f);
     } else {
         if (getMode() != HeroMode::CLOCKUP) {
             setState(EntityState::FORCED);
-            m_sprite->getAnimation()->play("ModeChange");
+            armature->getAnimation()->play("ModeChange");
             AudioEngine::play2d("Audio/Clock.mp3");
             scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::afterModeClockUp), 0.6f);
         }
@@ -519,9 +511,9 @@ void Hero::modeClockUp() {
 void Hero::afterModeClockUp(float dt) {
     setMode(HeroMode::CLOCKUP);
     setState(EntityState::NORMAL);
-    m_sprite->setColor(Color3B(30, 255, 40));
-    m_sprite->setOpacity(255);
-    m_sprite->getAnimation()->play("Stand");
+    armature->setColor(Color3B(30, 255, 40));
+    armature->setOpacity(255);
+    armature->getAnimation()->play("Stand");
 }
 
 void Hero::update(float dt) {
@@ -555,11 +547,11 @@ void Hero::switchToWalk() {
 void Hero::updateWalk(float delta) {
     const auto input = InputManager::getInstance();
     if (input->isKeyPressed(InputManager::Keys::DPAD_RIGHT)) {
-        rigidBody.getVelocity().x = 1;
-        setDirection(false);
+        rigidBody.getVelocity().x = moveSpeed;
+        setDirection(RIGHT);
     } else if (input->isKeyPressed(InputManager::Keys::DPAD_LEFT)) {
-        rigidBody.getVelocity().x = -1;
-        setDirection(true);
+        rigidBody.getVelocity().x = -moveSpeed;
+        setDirection(LEFT);
     } else {
         switchToIdle();
     }

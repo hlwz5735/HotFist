@@ -29,20 +29,20 @@ void JapanArmyI::initSprite() {
         "Xinfeng0.png",
         "Xinfeng0.plist",
         "Xinfeng.ExportJson");
-    m_sprite = Armature::create("Xinfeng");
+    armature = Armature::create("Xinfeng");
     // 设置当前运行动画的索引，一个“工程”可以建立多个动画
-    m_sprite->getAnimation()->play("Stand");
+    armature->getAnimation()->play("Stand");
     // 设置位置信息
-    m_sprite->setPosition(25, 0);
+    armature->setPosition(25, 0);
     // 添加到容器，当前运行的场景之中
-    this->addChild(m_sprite);
+    this->addChild(armature);
 }
 
 void JapanArmyI::hurt() {
     if (this->getState() != EntityState::HURT) {
         this->setState(EntityState::HURT);
         // velocityX = 0;
-        if (inTheAirFlag) {
+        if (isInTheAir()) {
             airHurt();
         } else {
             float tempRand = AXRANDOM_0_1();
@@ -57,15 +57,15 @@ void JapanArmyI::hurt() {
 }
 
 void JapanArmyI::headHurt() {
-    m_sprite->getAnimation()->play("HeadHurt");
+    armature->getAnimation()->play("HeadHurt");
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::doHurt), 0.33f);
-    m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(JapanArmyI::hurtCallBack));
+    armature->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(JapanArmyI::hurtCallBack));
 }
 
 void JapanArmyI::flankHurt() {
-    m_sprite->getAnimation()->play("FlankHurt");
+    armature->getAnimation()->play("FlankHurt");
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::doHurt), 0.33f);
-    m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(JapanArmyI::hurtCallBack));
+    armature->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(JapanArmyI::hurtCallBack));
 }
 
 void JapanArmyI::airHurt() {
@@ -75,14 +75,14 @@ void JapanArmyI::airHurt() {
     //     velocityX = -2;
     // }
     // velocityY = 5;
-    m_sprite->getAnimation()->play("FlankHurt");
+    armature->getAnimation()->play("FlankHurt");
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::doHurt), 0.33f);
-    m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(JapanArmyI::hurtCallBack));
+    armature->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(JapanArmyI::hurtCallBack));
 }
 
 void JapanArmyI::doHurt(float dt) {
     setState(EntityState::NORMAL);
-    m_sprite->getAnimation()->play("Stand");
+    armature->getAnimation()->play("Stand");
 }
 
 void JapanArmyI::hurtCallBack(CCArmature *armature, MovementEventType type, const char *name) {
@@ -106,7 +106,7 @@ void JapanArmyI::attack() {
                 enemyState = EnemyState::ATTACK;
             }
             // velocityX = 0;
-            if (inTheAirFlag) {
+            if (isInTheAir()) {
                 airAttack();
             } else {
                 groundAttack();
@@ -118,56 +118,56 @@ void JapanArmyI::attack() {
 void JapanArmyI::refresh(float dt) {
     this->setState(EntityState::NORMAL);
     enemyState = EnemyState::STADINGBY;
-    m_sprite->getAnimation()->play("Stand");
-    m_attack.setFinished(true);
+    armature->getAnimation()->play("Stand");
+    attackRect.setFinished(true);
 }
 
 void JapanArmyI::setAttackRect(float dt) {
     auto rect = Rect(
         getPositionX() - 40,
         getPositionY() + 16,
-        m_sprite->getContentSize().width - 10,
-        m_sprite->getContentSize().height - 10
+        armature->getContentSize().width - 10,
+        armature->getContentSize().height - 10
     );
-    if (faceto) {
+    if (direction) {
         rect.origin.x -= 40;
     } else {
         rect.origin.x += 40;
     }
-    this->m_attack = AttackRect(rect, force, false);
+    this->attackRect = AttackRect(rect, power, false);
 }
 
 void JapanArmyI::heavyPunch() {
-    m_sprite->getAnimation()->play("HeavyPunch");
-    force = 10;
+    armature->getAnimation()->play("HeavyPunch");
+    power = 10;
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::setAttackRect), 0.4f);
     scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::refresh), 0.6f);
 }
 
 void JapanArmyI::pistol() {
-    m_sprite->getAnimation()->play("Pistol");
-    force = 20;
+    armature->getAnimation()->play("Pistol");
+    power = 20;
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::setAttackRect), 0.4f);
     scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::refresh), 0.6f);
 }
 
 void JapanArmyI::upAttack() {
-    m_sprite->getAnimation()->play("UpAttack");
-    force = 10;
+    armature->getAnimation()->play("UpAttack");
+    power = 10;
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::setAttackRect), 0.4f);
     scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::refresh), 0.6f);
 }
 
 void JapanArmyI::boxingPunch() {
-    m_sprite->getAnimation()->play("BoxingPunch");
-    force = 15;
+    armature->getAnimation()->play("BoxingPunch");
+    power = 15;
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::setAttackRect), 0.4f);
     scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::refresh), 0.6f);
 }
 
 void JapanArmyI::superPistol() {
-    m_sprite->getAnimation()->play("SuperPistol");
-    force = 30;
+    armature->getAnimation()->play("SuperPistol");
+    power = 30;
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::setAttackRect), 0.4f);
     scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::refresh), 0.6f);
 }

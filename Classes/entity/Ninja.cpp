@@ -27,53 +27,35 @@ bool Ninja::init() {
 }
 
 void Ninja::initRigidbody() {
-    m_block = Rect(
-        getPositionX(),
-        getPositionY(),
-        m_sprite->getContentSize().width - 5,
-        m_sprite->getContentSize().height);
+    Entity::initRigidbody();
 }
 
 void Ninja::initSprite() {
     ArmatureDataManager::getInstance()->addArmatureFileInfo("Ninja0.png", "Ninja0.plist", "Ninja.ExportJson");
     // 这里直接使用Nivida ，而此信息保存在 Nivida.ExportJson 中，与其创建的项目属性相对应
-    m_sprite = Armature::create("Ninja");
+    armature = Armature::create("Ninja");
     // 设置当前运行动画的索引，一个“工程”可以建立多个动画
-    m_sprite->getAnimation()->play("Stand");
+    armature->getAnimation()->play("Stand");
     // 设置位置信息
-    m_sprite->setPosition(Point(25, 0));
+    armature->setPosition(Point(25, 0));
     // 添加到容器，当前运行的场景之中
-    this->addChild(m_sprite);
+    this->addChild(armature);
 }
 
 void Ninja::hurt() {
-    if (this->getState() != EntityState::HURT) {
-        this->setState(EntityState::HURT);
-        // velocityX = 0;
-        if (inTheAirFlag) {
-            airHurt();
-        } else {
-            float tempRand = AXRANDOM_0_1();
-            //在头部防御和腹部防御之间随机出一个
-            if (tempRand < 0.5f) {
-                headHurt();
-            } else {
-                flankHurt();
-            }
-        }
-    }
+    Enemy::hurt();
 }
 
 void Ninja::headHurt() {
-    m_sprite->getAnimation()->play("HeadHurt");
+    armature->getAnimation()->play("HeadHurt");
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Ninja::doHurt), 0.33f);
-    m_sprite->getAnimation()->setMovementEventCallFunc(this,movementEvent_selector(Ninja::hurtCallBack));
+    armature->getAnimation()->setMovementEventCallFunc(this,movementEvent_selector(Ninja::hurtCallBack));
 }
 
 void Ninja::flankHurt() {
-    m_sprite->getAnimation()->play("FlankHurt");
+    armature->getAnimation()->play("FlankHurt");
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Ninja::doHurt), 0.33f);
-    m_sprite->getAnimation()->setMovementEventCallFunc(this,movementEvent_selector(Ninja::hurtCallBack));
+    armature->getAnimation()->setMovementEventCallFunc(this,movementEvent_selector(Ninja::hurtCallBack));
 }
 
 void Ninja::airHurt() {
@@ -83,14 +65,14 @@ void Ninja::airHurt() {
     //     velocityX = -2;
     // }
     // velocityY = 5;
-    m_sprite->getAnimation()->play("FlankHurt");
+    armature->getAnimation()->play("FlankHurt");
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Ninja::doHurt), 0.33f);
-    m_sprite->getAnimation()->setMovementEventCallFunc(this,movementEvent_selector(Ninja::hurtCallBack));
+    armature->getAnimation()->setMovementEventCallFunc(this,movementEvent_selector(Ninja::hurtCallBack));
 }
 
 void Ninja::doHurt(float dt) {
     setState(EntityState::NORMAL);
-    m_sprite->getAnimation()->play("Stand");
+    armature->getAnimation()->play("Stand");
 }
 
 void Ninja::hurtCallBack(Armature *armature, MovementEventType type, const char *name) {
@@ -107,57 +89,44 @@ void Ninja::hurtCallBack(Armature *armature, MovementEventType type, const char 
 }
 
 void Ninja::attack() {
-    if (getState() == EntityState::NORMAL || getState() == EntityState::WALKING) {
-        if (getState() != EntityState::ATTACKING) {
-            setState(EntityState::ATTACKING);
-            if (this->enemyState != EnemyState::ATTACK) {
-                enemyState = EnemyState::ATTACK;
-            }
-            // velocityX = 0;
-            if (inTheAirFlag) {
-                airAttack();
-            } else {
-                groundAttack();
-            }
-        }
-    }
+    Enemy::attack();
 }
 
 void Ninja::refresh(float dt) {
     this->setState(EntityState::NORMAL);
     enemyState = EnemyState::STADINGBY;
-    m_sprite->getAnimation()->play("Stand");
+    armature->getAnimation()->play("Stand");
 }
 
 void Ninja::setAttackRect(float dt) {
     auto rect = Rect(
         getPositionX() - 40,
         getPositionY() + 16,
-        m_sprite->getContentSize().width - 10,
-        m_sprite->getContentSize().height - 10
+        armature->getContentSize().width - 10,
+        armature->getContentSize().height - 10
     );
-    if (faceto) {
+    if (direction) {
         rect.origin.x -= 40;
     } else {
         rect.origin.x += 40;
     }
-    this->m_attack = AttackRect(rect, force, false);
+    this->attackRect = AttackRect(rect, power, false);
 }
 
 void Ninja::Dart() {
-    m_sprite->getAnimation()->play("Dart");
+    armature->getAnimation()->play("Dart");
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Ninja::setAttackRect), 0.6f);
     scheduleOnce(AX_SCHEDULE_SELECTOR(Ninja::refresh), 0.4f);
 }
 
 void Ninja::Hurt_in_theAir() {
-    m_sprite->getAnimation()->play("Hurt_in_theAir");
+    armature->getAnimation()->play("Hurt_in_theAir");
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Ninja::setAttackRect), 0.6f);
     scheduleOnce(AX_SCHEDULE_SELECTOR(Ninja::refresh), 0.4f);
 }
 
 void Ninja::Boomerang() {
-    m_sprite->getAnimation()->play("Boomerang");
+    armature->getAnimation()->play("Boomerang");
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Ninja::setAttackRect), 0.6f);
     scheduleOnce(AX_SCHEDULE_SELECTOR(Ninja::refresh), 0.4f);
 }

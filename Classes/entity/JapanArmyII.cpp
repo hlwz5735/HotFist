@@ -19,5 +19,5 @@ bool JapanArmyII::init() {
 
 void JapanArmyII::initSprite() {
     JapanArmyI::initSprite();
-    m_sprite->setColor(Color3B(200, 0, 0));
+    armature->setColor(Color3B(200, 0, 0));
 }

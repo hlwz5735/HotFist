@@ -38,12 +38,8 @@ public:
     // 施用法术（不同敌人施用法术的场合均不同）
     virtual void useSkill();
 
-    void changeDirection() override;
-
     // 巡逻
     void patrol();
-
-    void jump() override;
 
 protected:
     // 怪物状态机枚举

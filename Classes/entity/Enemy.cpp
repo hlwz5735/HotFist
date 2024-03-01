@@ -17,18 +17,18 @@ bool Enemy::init() {    //大部分数据都是在基类或者派生类里面初
 
 void Enemy::initViewRect() {
 	//face to the Left,x may be - view
-	if (!faceto)
+	if (!direction)
         m_ViewRect = Rect(
                 getPositionX() - view - 20,
                 getPositionY() - 80,
                 view + 20,
-                m_sprite->getContentSize().height * 2);
+                armature->getContentSize().height * 2);
     else
         m_ViewRect = Rect(
                 getPositionX() - 20,
                 getPositionY() - 80,
                 view + 20,
-                m_sprite->getContentSize().height * 2);
+                armature->getContentSize().height * 2);
 }
 
 void Enemy::attack() {
@@ -44,27 +44,11 @@ void Enemy::patrol() {
         count++;
         // this->run();
         if (count == 100 || getPositionX() <= 10) {
-            this->changeDirection();
+            this->flipDirection();
         }
     }
 }
 
-//因为不能声明为纯虚函数，所以只能这样。该函数没有实际作用
-void Enemy::initRigidbody() {}
-
-void Enemy::changeDirection()
-{
-	//完成父类动作后清零步数，免得敌人蛇精病式巡逻
-    Entity::changeDirection();
-	count = 0;
-}
-
-void Enemy::jump() {
-    if (getState() == Entity::EntityState::NORMAL || getState() == Entity::EntityState::WALKING) {
-        if (!inTheAirFlag && !finished) {
-            finished = true;
-            m_sprite->getAnimation()->play("Jump");
-            this->scheduleOnce(AX_SCHEDULE_SELECTOR(Entity::doJump), 0.33f);
-        }
-    }
+void Enemy::initRigidbody() {
+    Entity::initRigidbody();
 }

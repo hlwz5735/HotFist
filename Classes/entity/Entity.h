@@ -12,7 +12,7 @@
  */
 class Entity : public ax::Node {
 public:
-    // 定义玩家状态
+    // 玩家状态
     enum class EntityState {
         // 正常状态
         NORMAL = 0,
@@ -24,6 +24,11 @@ public:
         HURT,
         // 强制状态
         FORCED
+    };
+
+    enum Direction {
+        LEFT = -1,
+        RIGHT = 1
     };
 
     Entity();
@@ -43,12 +48,6 @@ public:
     // 主角修正
     virtual void refresh(float dt);
 
-    // 设置方向（通用）
-    void setDirection(bool a);
-
-    // 改变方向
-    virtual void changeDirection();
-
     // 跳跃（不同的高度不同）
     virtual void jump();
 
@@ -67,50 +66,46 @@ public:
     // 浮空受伤
     virtual void airHurt();
 
+    // 跳跃动画播放完毕后的回调函数
+    virtual void jumpCallBack(cocostudio::Armature *armature, cocostudio::MovementEventType type, const char *name);
     // 由下蹲站起执行完毕后的回调函数
     virtual void standUpCallBack(cocostudio::Armature *armature, cocostudio::MovementEventType type, const char *name);
 
-    // 跳跃动画播放完毕后的回调函数
-    virtual void jumpCallBack(cocostudio::Armature *armature, cocostudio::MovementEventType type, const char *name);
-
-    const ax::Rect &getRigidRect() const { return m_block; }
-    const AttackRect &getAttackRect() const { return m_attack; }
+    const AttackRect &getAttackRect() const { return attackRect; }
     EntityState getState() const { return state; }
     void setState(EntityState a) { state = a; }
     float getHp() const { return hp; }
     void setHp(const float a) { hp = a; }
     float getSp() const { return sp; }
     void setSP(const float a) { sp = a; }
-    const cocostudio::Armature *getArmature() const { return m_sprite; }
-    bool getFaceTo() const { return faceto; }
-    void setFaceTo(const bool f) { faceto = f; }
-
-    bool isInTheAir() const { return inTheAirFlag; }
-    void setInTheAir(const bool f) { inTheAirFlag = f; }
+    const cocostudio::Armature *getArmature() const { return armature; }
+    cocostudio::ArmatureAnimation *getAnimation() const {
+        if (!armature) {
+            return nullptr;
+        }
+        return armature->getAnimation();
+    }
+    bool getDirection() const { return direction; }
+    void setDirection(Direction f);
+    void flipDirection() { setDirection(static_cast<Direction>(-direction)); }
+    bool isInTheAir() const { return !rigidBody.isGrounded(); }
     RigidBody &getRigidBody() { return rigidBody; }
 
 protected:
+    cocostudio::Armature *armature;
+
     EntityState state;
     RigidBody rigidBody;
     float hp, sp;
-    // 新的主角精灵
-    cocostudio::Armature *m_sprite;
-    // 角色的碰撞框
-    ax::Rect m_block;
+    Direction direction;
     // 角色的攻击框
-    AttackRect m_attack;
-    // 攻击力
-    int force;
-    // 浮空标志
-    bool inTheAirFlag;
-    // 角色的面向，左为true右为false
-    bool faceto;
-    // 有没有成功按下跳跃键的标志
-    bool finished;
-    // 给修正待机姿势用的一个标志
-    bool jumpMainFlag;
+    AttackRect attackRect;
 
+    // ----------- 实体数据 -------------
+    /// 攻击力
+    int power;
     float moveSpeed;
+    // ---------------------------------
 };
 
 #endif
