@@ -42,7 +42,7 @@ void Enemy::useSkill() {
 void Enemy::patrol() {
     if (this->enemyState == EnemyState::PATROLING) {
         count++;
-        this->run();
+        // this->run();
         if (count == 100 || getPositionX() <= 10) {
             this->changeDirection();
         }
@@ -57,27 +57,6 @@ void Enemy::changeDirection()
 	//完成父类动作后清零步数，免得敌人蛇精病式巡逻
     Entity::changeDirection();
 	count = 0;
-}
-
-void Enemy::run() {
-	//在空中的时候什么也不做
-    if (inTheAirFlag) {}
-	//不在空中，判断是不是其它状态
-    else
-    {
-        if (getState() == Entity::EntityState::NORMAL) {
-            m_sprite->getAnimation()->play("Walk");
-            setState(Entity::EntityState::WALKING);
-        }
-    }
-    if (getState() == Entity::EntityState::WALKING || getState() == Entity::EntityState::NORMAL) {
-        if (!faceto)
-            velocityX = speedX;
-        else
-            velocityX = -speedX;
-    } else {
-        velocityX = 0;
-    }
 }
 
 void Enemy::jump() {

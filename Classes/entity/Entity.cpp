@@ -8,8 +8,7 @@ Entity::Entity(): m_sprite(nullptr),
                   force(0),
                   inTheAirFlag(true), faceto(false),
                   finished(false), jumpMainFlag(true),
-                  velocityX(0),
-                  velocityY(0),
+                  moveSpeed(1.f),
                   state(EntityState::NORMAL),
                   hp(0), sp(0) {
 }
@@ -33,30 +32,13 @@ void Entity::initRigidbody() {
     this->rigidBody.setBody(Rect(20, 0, 28, 91));
 }
 
-void Entity::run() {
-    setState(EntityState::WALKING);
-    if (!faceto)
-        this->velocityX = 1.5f;
-    else
-        this->velocityX = -1.5f;
-}
-
 void Entity::setDirection(bool a) {
     faceto = a;
-    if (a) //面向左
-        m_sprite->setScaleX(-1.0f);
-    else
-        m_sprite->setScaleX(1.0f);
+    m_sprite->setScaleX(a ? -1 : 1);
 }
 
 void Entity::changeDirection() {
-    if (faceto) {
-        faceto = false;
-        m_sprite->setScaleX(1.0f);
-    } else {
-        faceto = true;
-        m_sprite->setScaleX(-1.0f);
-    }
+    setDirection(!faceto);
 }
 
 void Entity::jump() {
@@ -75,13 +57,13 @@ void Entity::doJump(float dt) {
     inTheAirFlag = true;
     finished = false;
     jumpMainFlag = false; //在此处确定修正待机动画
-    velocityY = 14;
+    rigidBody.getVelocity().y = 14;
     setState(EntityState::NORMAL);
 }
 
 //
 void Entity::standUpCallBack(Armature *armature, MovementEventType type, const char *name) {
-    CCLOG("movement callback name:%s \n", name);
+    CCLOG("movement callback name: %s \n", name);
     if (strcmp(name, "Down") == 0) {
         switch (type) {
             case COMPLETE:

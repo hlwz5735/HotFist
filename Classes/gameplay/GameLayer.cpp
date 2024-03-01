@@ -1,6 +1,8 @@
 ﻿#include "audio/AudioEngine.h"
 #include "cocostudio/Armature.h"
 #include "GameLayer.h"
+
+#include "InputManager.h"
 #include "../readers/LevelDataReader.h"
 #include "../entity/Hero.h"
 #include "../entity/JapanArmyI.h"
@@ -19,6 +21,7 @@ bool GameLayer::init() {
         return false;
     }
 
+    InputManager::getInstance()->reset();
     this->scheduleUpdate();
 
 #if defined(DebugDrawRects)
@@ -46,6 +49,7 @@ void GameLayer::loadData(const std::string &jsonPath) {
 }
 
 void GameLayer::update(float dt) {
+    InputManager::getInstance()->update();
     updatePhysicsWorld(dt);
     hero->update(dt);
     for (auto enemy: enemyArr) {
@@ -64,11 +68,11 @@ void GameLayer::update(float dt) {
     if (hero->getHp() <= 0) {
         hero->setState(Entity::EntityState::FORCED);
         hero->getArmature()->getAnimation()->play("Fly");
-        if (hero->getFaceTo()) {
-            hero->setVelocityX(5);
-        } else {
-            hero->setVelocityX(-5);
-        }
+        // if (hero->getFaceTo()) {
+        //     hero->setVelocityX(5);
+        // } else {
+        //     hero->setVelocityX(-5);
+        // }
         Scene *scene = SceneFactory::gameOverScene();
         _director->replaceScene(TransitionFade::create(2.0f, scene));
         this->gameFinished = true;

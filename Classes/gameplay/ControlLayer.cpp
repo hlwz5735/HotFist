@@ -1,6 +1,8 @@
 #include "audio/AudioEngine.h"
 #include "cocostudio/Armature.h"
 #include "ControlLayer.h"
+
+#include "InputManager.h"
 #include "SceneFactory.h"
 #include "ui/CocosGUI.h"
 #include "../readers/GuiReader.h"
@@ -8,9 +10,12 @@
 USING_NS_AX;
 using namespace hotfist;
 using ui::Button;
+using ui::Widget;
+
+static void addButtonActionListener(Button *btn, const std::function<void ()>& keyDownCallback, const std::function<void ()>& keyUpCallback);
+static void addButtonActionForKey(Button *btn, int keyCode);
 
 ControlLayer::ControlLayer(): hero(nullptr),
-                              isLeftBtnPressed(false), isRightBtnPressed(false),
                               imageItemSide(nullptr),
                               imageItem(nullptr),
                               hp_Bar(nullptr),
@@ -52,19 +57,20 @@ bool ControlLayer::init() {
     this->addChild(sp_Bar, 25);
     this->addChild(tp_Bar, 25);
 
-    auto btnPause = Button::create("PauseBtn.png", "PauseBtn_P.png", "", cocos2d::ui::Button::TextureResType::PLIST);
-    btnPause->addClickEventListener([this](Ref *sender) {
-        this->pauseBtnCallBack(sender);
-    });
+    const auto btnPause = Button::create(
+        "PauseBtn.png",
+        "PauseBtn_P.png",
+        "",
+        Button::TextureResType::PLIST);
+    btnPause->addClickEventListener([this](Ref *sender) { this->pauseBtnCallBack(sender); });
     btnPause->setPosition(Point(590, 360 - 43));
     this->addChild(btnPause);
 
     this->scheduleUpdate();
 
+    this->bindEventListener(node);
 #if DESKTOP_RUNTIME
     this->addKeyEventListener();
-#else
-    this->_bindEventListener(node);
 #endif
 
     return true;
@@ -83,55 +89,9 @@ void ControlLayer::atkBtnCallBack(Ref *pSender) {
 }
 
 void ControlLayer::update(float delta) {
-    if (!this->hero) {
-        return;
-    }
-    if (isLeftBtnPressed && !isRightBtnPressed) {
-        if (hero->getState() == Entity::EntityState::NORMAL || hero->getState() == Entity::EntityState::WALKING) {
-            hero->setFaceTo(true);
-            hero->setDirection(hero->getFaceTo());
-            hero->run();
-            if (hero->getPositionX() <= 0)
-                hero->setPositionX(2);
-            hero->initRigidbody();
-        }
-    }
-    if (!isLeftBtnPressed && isRightBtnPressed) {
-        if (hero->getState() == Entity::EntityState::NORMAL || hero->getState() == Entity::EntityState::WALKING) {
-            hero->setFaceTo(false);
-            hero->setDirection(hero->getFaceTo());
-            hero->run();
-            hero->initRigidbody();
-        }
-    }
-
-    if (!isLeftBtnPressed && !isRightBtnPressed) {
-        stopPlayer();
-    }
-
     hp_Bar->setScaleX(hero->getHp() / 100.0f);
     sp_Bar->setScaleX(hero->getSp() / 100.0f);
     tp_Bar->setScaleX(hero->getTp() / 100.0f);
-}
-
-void ControlLayer::stopPlayer() {
-    if (hero->getState() == Entity::EntityState::WALKING) {
-        hero->setVelocityX(0);
-        if (!hero->isInTheAir()) {
-            hero->setState(Entity::EntityState::NORMAL);
-            if (hero->getMode() == Hero::HeroMode::LIGHTBLADE) {
-                hero->getArmature()->getAnimation()->play("SB_Stand");
-            } else {
-                hero->getArmature()->getAnimation()->play("Stand");
-            }
-        } else {
-            if (hero->getMode() == Hero::HeroMode::LIGHTBLADE) {
-                hero->getArmature()->getAnimation()->play("SB_Stand");
-            } else {
-                hero->getArmature()->getAnimation()->play("Stand");
-            }
-        }
-    }
 }
 
 void ControlLayer::bladeBtnCallBack(Ref *pSender) {
@@ -169,44 +129,17 @@ void ControlLayer::pauseBtnCallBack(Ref *pSender) {
 
 void ControlLayer::bindEventListener(Node *node) {
     auto button = dynamic_cast<Button *>(node->getChildByName("moveLeftButton"));
-    button->addTouchEventListener([this](Ref *sender, ui::Widget::TouchEventType type) {
-        switch (type) {
-            case ui::Widget::TouchEventType::BEGAN:
-                this->isLeftBtnPressed = true;
-                break;
-            case ui::Widget::TouchEventType::ENDED:
-            case ui::Widget::TouchEventType::CANCELED:
-                this->isLeftBtnPressed = false;
-                break;
-            default:
-                break;
-        }
-    });
+    addButtonActionForKey(button, InputManager::Keys::DPAD_LEFT);
 
     button = dynamic_cast<Button *>(node->getChildByName("moveRightButton"));
-    button->addTouchEventListener([this](Ref *sender, ui::Widget::TouchEventType type) {
-        switch (type) {
-            case ui::Widget::TouchEventType::BEGAN:
-                this->isRightBtnPressed = true;
-                break;
-            case ui::Widget::TouchEventType::ENDED:
-            case ui::Widget::TouchEventType::CANCELED:
-                this->isRightBtnPressed = false;
-                break;
-            default:
-                break;
-        }
-    });
+    addButtonActionForKey(button, InputManager::Keys::DPAD_RIGHT);
 
     button = dynamic_cast<Button *>(node->getChildByName("attackButton"));
-    button->addClickEventListener([this](Ref *sender) {
-        this->atkBtnCallBack(sender);
-    });
+    addButtonActionForKey(button, InputManager::Keys::BTN_ATTACK);
 
     button = dynamic_cast<Button *>(node->getChildByName("jumpButton"));
-    button->addClickEventListener([this](Ref *sender) {
-        this->jmpBtnCallBack(sender);
-    });
+    addButtonActionForKey(button, InputManager::Keys::BTN_JUMP);
+
 
     button = dynamic_cast<Button *>(node->getChildByName("shieldButton"));
     button->addClickEventListener([this](Ref *sender) {
@@ -226,6 +159,30 @@ void ControlLayer::bindEventListener(Node *node) {
     button = dynamic_cast<Button *>(node->getChildByName("bladeButton"));
     button->addClickEventListener([this](Ref *sender) {
         this->bladeBtnCallBack(sender);
+    });
+}
+
+void addButtonActionListener(Button *btn, const std::function<void ()>& keyDownCallback, const std::function<void ()>& keyUpCallback) {
+    btn->addTouchEventListener([=](Ref *_, Widget::TouchEventType type) {
+        switch (type) {
+            case Widget::TouchEventType::BEGAN:
+                keyDownCallback();
+                break;
+            case Widget::TouchEventType::ENDED:
+            case Widget::TouchEventType::CANCELED:
+                keyUpCallback();
+                break;
+            default:
+                break;
+        }
+    });
+}
+
+void addButtonActionForKey(Button *btn, int keyCode) {
+    addButtonActionListener(btn, [keyCode] {
+        InputManager::getInstance()->setKeyStatus(keyCode, true);
+    }, [keyCode] {
+        InputManager::getInstance()->setKeyStatus(keyCode, false);
     });
 }
 
@@ -260,10 +217,10 @@ void ControlLayer::addKeyEventListener() {
                 this->bladeBtnCallBack(nullptr);
                 break;
             case KeyCode::KEY_A:
-                isLeftBtnPressed = true;
+                InputManager::getInstance()->setKeyStatus(InputManager::DPAD_LEFT, true);
                 break;
             case KeyCode::KEY_D:
-                isRightBtnPressed = true;
+                InputManager::getInstance()->setKeyStatus(InputManager::DPAD_RIGHT, true);
                 break;
             default:
                 break;
@@ -271,13 +228,12 @@ void ControlLayer::addKeyEventListener() {
     };
     listener->onKeyReleased = [this](EventKeyboard::KeyCode keyCode, Event* event) {
         log("Key with keycode %d released", keyCode);
-        switch (keyCode)
-        {
+        switch (keyCode) {
             case KeyCode::KEY_A:
-                isLeftBtnPressed = false;
+                InputManager::getInstance()->setKeyStatus(InputManager::DPAD_LEFT, false);
                 break;
             case KeyCode::KEY_D:
-                isRightBtnPressed = false;
+                InputManager::getInstance()->setKeyStatus(InputManager::DPAD_RIGHT, false);
                 break;
             case KeyCode::KEY_P:
                 pauseBtnCallBack(nullptr);

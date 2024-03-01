@@ -49,7 +49,7 @@ void Ninja::initSprite() {
 void Ninja::hurt() {
     if (this->getState() != EntityState::HURT) {
         this->setState(EntityState::HURT);
-        velocityX = 0;
+        // velocityX = 0;
         if (inTheAirFlag) {
             airHurt();
         } else {
@@ -77,12 +77,12 @@ void Ninja::flankHurt() {
 }
 
 void Ninja::airHurt() {
-    if (faceto) {
-        velocityX = 2;
-    } else {
-        velocityX = -2;
-    }
-    velocityY = 5;
+    // if (faceto) {
+    //     velocityX = 2;
+    // } else {
+    //     velocityX = -2;
+    // }
+    // velocityY = 5;
     m_sprite->getAnimation()->play("FlankHurt");
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Ninja::doHurt), 0.33f);
     m_sprite->getAnimation()->setMovementEventCallFunc(this,movementEvent_selector(Ninja::hurtCallBack));
@@ -113,7 +113,7 @@ void Ninja::attack() {
             if (this->enemyState != EnemyState::ATTACK) {
                 enemyState = EnemyState::ATTACK;
             }
-            velocityX = 0;
+            // velocityX = 0;
             if (inTheAirFlag) {
                 airAttack();
             } else {

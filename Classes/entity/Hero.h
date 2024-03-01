@@ -37,8 +37,6 @@ public:
 
     void initSprite() override;
 
-    void run() override;
-
     // 获取玩家模式状态
     HeroMode getMode();
 
@@ -135,9 +133,16 @@ public:
 
     void update(float dt) override;
 
+    void switchToIdle();
+    void updateIdle(float delta);
+    void switchToWalk();
+    void updateWalk(float delta);
+
     float getTp() const { return tp; }
 
 private:
+    void updateStatus();
+
     // 怒气值
     float tp;
     // 模式状态

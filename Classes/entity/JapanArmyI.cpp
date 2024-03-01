@@ -41,7 +41,7 @@ void JapanArmyI::initSprite() {
 void JapanArmyI::hurt() {
     if (this->getState() != EntityState::HURT) {
         this->setState(EntityState::HURT);
-        velocityX = 0;
+        // velocityX = 0;
         if (inTheAirFlag) {
             airHurt();
         } else {
@@ -69,12 +69,12 @@ void JapanArmyI::flankHurt() {
 }
 
 void JapanArmyI::airHurt() {
-    if (faceto) {
-        velocityX = 2;
-    } else {
-        velocityX = -2;
-    }
-    velocityY = 5;
+    // if (faceto) {
+    //     velocityX = 2;
+    // } else {
+    //     velocityX = -2;
+    // }
+    // velocityY = 5;
     m_sprite->getAnimation()->play("FlankHurt");
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(JapanArmyI::doHurt), 0.33f);
     m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(JapanArmyI::hurtCallBack));
@@ -105,7 +105,7 @@ void JapanArmyI::attack() {
             if (this->enemyState != EnemyState::ATTACK) {
                 enemyState = EnemyState::ATTACK;
             }
-            velocityX = 0;
+            // velocityX = 0;
             if (inTheAirFlag) {
                 airAttack();
             } else {

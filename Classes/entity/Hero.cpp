@@ -2,6 +2,8 @@
 #include "cocostudio/Armature.h"
 #include "Hero.h"
 
+#include "InputManager.h"
+
 USING_NS_AX;
 using namespace cocostudio;
 
@@ -21,8 +23,7 @@ bool Hero::init() {
     // 初始化模式状态
     m_mode = HeroMode::SHIELD;
 
-    // 初始化水平和竖直方向的速度
-    velocityY = 0;
+    moveSpeed = 2;
     faceto = false;
     inTheAirFlag = true;
 
@@ -56,40 +57,6 @@ void Hero::initSprite() {
 
 void Hero::initRigidbody() {
     this->rigidBody.setBody(Rect(0, 0, 63 - 5, 113));
-}
-
-void Hero::run() {
-    // 在空中的时候什么也不做
-    if (inTheAirFlag) {
-    }
-    // 不在空中，判断是不是其它状态
-    else {
-        if (getState() == EntityState::NORMAL) {
-            if (getMode() == HeroMode::LIGHTBLADE) {
-                m_sprite->getAnimation()->play("SB_Walk");
-            } else
-                m_sprite->getAnimation()->play("Walk");
-            setState(EntityState::WALKING);
-        }
-    }
-    if (getState() == EntityState::NORMAL || getState() == EntityState::WALKING) {
-        if (getMode() != HeroMode::CLOCKUP) {
-            if (m_mode == HeroMode::INVISIBLE) {
-                sp -= 0.6f;
-            }
-            if (!faceto)
-                this->velocityX = 2;
-            else
-                this->velocityX = -2;
-        } else {
-            sp -= 0.7f;
-            if (!faceto) {
-                this->velocityX = 10;
-            } else {
-                this->velocityX = -10;
-            }
-        }
-    }
 }
 
 Hero::HeroMode Hero::getMode() {
@@ -196,12 +163,12 @@ void Hero::SB_HeadHurt() {
 }
 
 void Hero::airHurt() {
-    if (faceto) {
-        velocityX = 2;
-    } else {
-        velocityX = -2;
-    }
-    velocityY = 5;
+    // if (faceto) {
+    //     velocityX = 2;
+    // } else {
+    //     velocityX = -2;
+    // }
+    // velocityY = 5;
     m_sprite->getAnimation()->play("FlankHurt");
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::doHurt), 0.33f);
     m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Hero::hurtCallBack));
@@ -278,18 +245,18 @@ void Hero::airAttack() {
     if (getMode() == HeroMode::LIGHTBLADE) {
         m_sprite->getAnimation()->play("RiderSting");
         force = 25;
-        if (faceto)
-            velocityX = -5;
-        else
-            velocityX = 5;
+        // if (faceto)
+        //     velocityX = -5;
+        // else
+        //     velocityX = 5;
         this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.1f);
         this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::refresh), 0.5f);
     } else {
         m_sprite->getAnimation()->play("RiderKick");
-        if (faceto)
-            velocityX = -5;
-        else
-            velocityX = 5;
+        // if (faceto)
+        //     velocityX = -5;
+        // else
+        //     velocityX = 5;
         force = 20;
         this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.1f);
         this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::refresh), 0.5f);
@@ -406,11 +373,11 @@ void Hero::drangonPunch() {
     setState(EntityState::NORMAL);
     inTheAirFlag = true;
     initRigidbody();
-    velocityY = 10;
-    if (faceto)
-        velocityX = -2;
-    else
-        velocityX = 2;
+    // velocityY = 10;
+    // if (faceto)
+    //     velocityX = -2;
+    // else
+    //     velocityX = 2;
     m_sprite->getAnimation()->play("DrangonPunch");
     force = 120;
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::setAttackRect), 0.1f);
@@ -428,7 +395,7 @@ void Hero::cycloneKick() {
 void Hero::refresh(float dt) {
     this->setState(EntityState::NORMAL);
     m_attack.setFinished(true);
-    velocityX = 0;
+    // velocityX = 0;
     if (getMode() == HeroMode::LIGHTBLADE) {
         m_sprite->getAnimation()->play("SB_Stand");
     } else
@@ -501,7 +468,7 @@ void Hero::doJump(float dt) {
     finished = false;
     // 在此处确定修正待机动画
     jumpMainFlag = false;
-    velocityY = 14;
+    // velocityY = 14;
 }
 
 void Hero::modeShield() {
@@ -559,7 +526,56 @@ void Hero::afterModeClockUp(float dt) {
 
 void Hero::update(float dt) {
     Entity::update(dt);
-    //主角的状态设置
+    updateStatus();
+
+    switch (state) {
+        case EntityState::WALKING:
+            updateWalk(dt);
+            break;
+        case EntityState::NORMAL:
+            updateIdle(dt);
+            break;
+        default:
+            break;
+    }
+}
+
+void Hero::switchToIdle() {
+    state = EntityState::NORMAL;
+    getArmature()->getAnimation()->play("Stand");
+    rigidBody.getVelocity().x = 0;
+}
+
+void Hero::switchToWalk() {
+    state = EntityState::WALKING;
+    CCLOG("Play Walk");
+    getArmature()->getAnimation()->play("Walk");
+}
+
+void Hero::updateWalk(float delta) {
+    const auto input = InputManager::getInstance();
+    if (input->isKeyPressed(InputManager::Keys::DPAD_RIGHT)) {
+        rigidBody.getVelocity().x = 1;
+        setDirection(false);
+    } else if (input->isKeyPressed(InputManager::Keys::DPAD_LEFT)) {
+        rigidBody.getVelocity().x = -1;
+        setDirection(true);
+    } else {
+        switchToIdle();
+    }
+}
+
+void Hero::updateIdle(float dt) {
+    const auto input = InputManager::getInstance();
+    if (input->isKeyPressed(InputManager::Keys::DPAD_RIGHT)) {
+        switchToWalk();
+    } else if (input->isKeyPressed(InputManager::Keys::DPAD_LEFT)) {
+        switchToWalk();
+    }
+}
+
+void Hero::updateStatus() {
+    // 主角的状态设置
     if (this->sp > 0) {
         if (this->getMode() == HeroMode::INVISIBLE) {
             this->sp -= 0.2f;

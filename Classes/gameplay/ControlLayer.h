@@ -23,8 +23,6 @@ public:
     void clockUPBtnCallBack(Ref *pSender);
     void pauseBtnCallBack(Ref *pSender);
 
-    void stopPlayer();
-
     void setHero(Hero *h) { hero = h; }
 
 private:
@@ -36,9 +34,6 @@ private:
     void bindEventListener(Node *node);
 
     Hero *hero;
-
-    bool isLeftBtnPressed;
-    bool isRightBtnPressed;
 
     // 主角状态框显示用
     ax::Sprite *imageItemSide;

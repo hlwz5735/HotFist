@@ -43,9 +43,6 @@ public:
     // 主角修正
     virtual void refresh(float dt);
 
-    // 行走（主角的仅仅是播放动画，不同敌人移动速度有区别）
-    virtual void run();
-
     // 设置方向（通用）
     void setDirection(bool a);
 
@@ -87,10 +84,7 @@ public:
     const cocostudio::Armature *getArmature() const { return m_sprite; }
     bool getFaceTo() const { return faceto; }
     void setFaceTo(const bool f) { faceto = f; }
-    float getVelocityX() const { return velocityX; }
-    void setVelocityX(const float v) { velocityX = v; }
-    float getVelocityY() const { return velocityY; }
-    void setVelocityY(const float v) { velocityY = v; }
+
     bool isInTheAir() const { return inTheAirFlag; }
     void setInTheAir(const bool f) { inTheAirFlag = f; }
     RigidBody &getRigidBody() { return rigidBody; }
@@ -116,10 +110,7 @@ protected:
     // 给修正待机姿势用的一个标志
     bool jumpMainFlag;
 
-    // 水平方向速度
-    float velocityX;
-    // 竖直方向速度
-    float velocityY;
+    float moveSpeed;
 };
 
 #endif

@@ -43,8 +43,6 @@ public:
     // 巡逻
     void patrol();
 
-    void run() override;
-
     void jump() override;
 
 protected:

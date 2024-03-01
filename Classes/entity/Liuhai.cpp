@@ -44,7 +44,7 @@ void Liuhai::initSprite() {
 void Liuhai::hurt() {
     if (this->getState() != EntityState::HURT) {
         this->setState(EntityState::HURT);
-        velocityX = 0;
+        // velocityX = 0;
         if (inTheAirFlag) {
             airHurt();
         } else {
@@ -72,12 +72,12 @@ void Liuhai::flankHurt() {
 }
 
 void Liuhai::airHurt() {
-    if (faceto) {
-        velocityX = 2;
-    } else {
-        velocityX = -2;
-    }
-    velocityY = 5;
+    // if (faceto) {
+    //     velocityX = 2;
+    // } else {
+    //     velocityX = -2;
+    // }
+    // velocityY = 5;
     m_sprite->getAnimation()->play("FlankHurt");
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Liuhai::doHurt), 0.33f);
     m_sprite->getAnimation()->setMovementEventCallFunc(this, movementEvent_selector(Liuhai::hurtCallBack));
@@ -108,7 +108,7 @@ void Liuhai::attack() {
             if (this->enemyState != EnemyState::ATTACK) {
                 enemyState = EnemyState::ATTACK;
             }
-            velocityX = 0;
+            // velocityX = 0;
             if (inTheAirFlag) {
                 airAttack();
             } else {
@@ -122,7 +122,7 @@ void Liuhai::refresh(float dt) {
     this->setState(EntityState::NORMAL);
     enemyState = EnemyState::STADINGBY;
     m_attack.setFinished(true);
-    velocityX = 0;
+    // velocityX = 0;
     m_sprite->getAnimation()->play("Stand");
 }
 
@@ -144,10 +144,10 @@ void Liuhai::setAttackRect(float dt) {
 void Liuhai::riderKick() {
     m_sprite->getAnimation()->play("RiderKick");
     force = 30;
-    if (faceto) {
-        velocityX = -2;
-    } else
-        velocityX = 2;
+    // if (faceto) {
+    //     velocityX = -2;
+    // } else
+    //     velocityX = 2;
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Liuhai::setAttackRect), 0.4f);
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Liuhai::refresh), 0.6f);
 }
@@ -155,11 +155,11 @@ void Liuhai::riderKick() {
 void Liuhai::riderSting2() {
     m_sprite->getAnimation()->play("RiderSting2");
     force = 30;
-    if (faceto) {
-        velocityX = -3;
-    } else {
-        velocityX = 3;
-    }
+    // if (faceto) {
+    //     velocityX = -3;
+    // } else {
+    //     velocityX = 3;
+    // }
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Liuhai::setAttackRect), 0.4f);
     scheduleOnce(AX_SCHEDULE_SELECTOR(Liuhai::refresh), 0.6f);
 }
@@ -167,12 +167,12 @@ void Liuhai::riderSting2() {
 void Liuhai::upAttack() {
     m_sprite->getAnimation()->play("WAttack");
     force = 45;
-    if (faceto) {
-        velocityX = -3;
-    } else {
-        velocityX = 3;
-    }
-    velocityY = 1;
+    // if (faceto) {
+    //     velocityX = -3;
+    // } else {
+    //     velocityX = 3;
+    // }
+    // velocityY = 1;
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Liuhai::setAttackRect), 0.4f);
     scheduleOnce(AX_SCHEDULE_SELECTOR(Liuhai::refresh), 0.6f);
 }
@@ -187,12 +187,12 @@ void Liuhai::saberAttack() {
 void Liuhai::riderSting1() {
     m_sprite->getAnimation()->play("RiderSting1");
     force = 30;
-    if (faceto) {
-        velocityX = -2;
-    } else {
-        velocityX = 2;
-    }
-    velocityY = 1.5;
+    // if (faceto) {
+    //     velocityX = -2;
+    // } else {
+    //     velocityX = 2;
+    // }
+    // velocityY = 1.5;
     this->scheduleOnce(AX_SCHEDULE_SELECTOR(Liuhai::setAttackRect), 0.4f);
     scheduleOnce(AX_SCHEDULE_SELECTOR(Liuhai::refresh), 0.6f);
 }
