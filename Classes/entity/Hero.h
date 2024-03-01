@@ -4,8 +4,6 @@
 #include "cocos2d.h"
 #include "Entity.h"
 
-USING_NS_CC;
-
 class Hero : public Entity
 {
 public:
@@ -67,7 +65,7 @@ public:
     void SB_FlankHurt();
 
     // 受伤动画播放完成后的回调
-    void hurtCallBack(Armature *armature, MovementEventType type, const char *name);
+    void hurtCallBack(cocostudio::Armature *armature, cocostudio::MovementEventType type, const char *name);
 
     // 受伤后处理移动的回调
     void doHurt(float dt);

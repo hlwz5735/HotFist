@@ -2,11 +2,11 @@
 #define _StoryEnd__
 
 #include "cocos2d.h"
-#include "Global.h"
-#include "SceneFactory.h"
+#include "../Global.h"
+#include "../SceneFactory.h"
 #include "Story.h"
 
-USING_NS_CC;
+USING_NS_AX;
 
 class StoryEnd : public Story {
 public:

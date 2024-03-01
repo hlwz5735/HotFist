@@ -1,6 +1,6 @@
 ﻿#include "Entity.h"
 
-USING_NS_CC;
+USING_NS_AX;
 using namespace cocostudio;
 
 Entity::Entity(): m_sprite(nullptr),

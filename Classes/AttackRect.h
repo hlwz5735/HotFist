@@ -3,9 +3,7 @@
 
 #include "cocos2d.h"
 
-USING_NS_CC;
-
-class AttackRect : public Rect {
+class AttackRect : public ax::Rect {
 public:
     AttackRect();
 

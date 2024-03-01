@@ -2,7 +2,7 @@
 #define _PauseLayer__
 
 #include "cocos2d.h"
-USING_NS_CC;
+USING_NS_AX;
 
 class PauseLayer : public Layer
 {

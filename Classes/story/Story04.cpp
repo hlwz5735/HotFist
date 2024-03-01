@@ -1,7 +1,7 @@
-#include "Story03.h"
-#include "SceneFactory.h"
+#include "Story04.h"
+#include "../SceneFactory.h"
 
-bool Story03::init() {
+bool Story04::init() {
     if (!Story::init()) {
         return false;
     }
@@ -9,18 +9,15 @@ bool Story03::init() {
     dialogBox_top->setVisible(false);
     SpriteFrameCache *frameStart = SpriteFrameCache::getInstance();
     frameStart->addSpriteFramesWithFile("Story00.plist", "Story00.png");
-    frameStart->addSpriteFramesWithFile("Story03.plist", "Story03.png");
+    frameStart->addSpriteFramesWithFile("Story04.plist", "Story04.png");
     count = 1;
     nextEvt();
     return true;
 }
 
-void Story03::nextEvt() {
+void Story04::nextEvt() {
     state = false;
-    if (count == 0) {
-        state = true;
-        count++;
-    } else if (count == 1) {
+    if (count == 1) {
         event01();
         state = true;
         count++;
@@ -55,59 +52,59 @@ void Story03::nextEvt() {
         state = true;
         count++;
     } else {
-        Scene *scene = SceneFactory::loadLevel("03");
+        Scene *scene = SceneFactory::loadLevel("04");
         _director->replaceScene(TransitionFade::create(1.0f, scene));
     }
 }
 
-void Story03::event01() {
-    showNormansImage();
-    text_top->setVisible(true);
-    text_top->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("03_01.png"));
-    dialogBox_top->setVisible(true);
-}
-
-void Story03::event02() {
+void Story04::event01() {
     showNividasImage();
     text_bottom->setVisible(true);
-    text_bottom->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("03_02.png"));
+    text_bottom->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("04_01.png"));
     dialogBox_bottom->setVisible(true);
 }
 
-void Story03::event03() {
+void Story04::event02() {
     showNormansImage();
     text_top->setVisible(true);
-    text_top->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("03_03.png"));
+    text_top->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("04_02.png"));
     dialogBox_top->setVisible(true);
 }
 
-void Story03::event04() {
+void Story04::event03() {
     showNividasImage();
     text_bottom->setVisible(true);
-    text_bottom->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("03_04.png"));
+    text_bottom->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("04_03.png"));
     dialogBox_bottom->setVisible(true);
 }
 
-void Story03::event05() {
+void Story04::event04() {
     showNormansImage();
     text_top->setVisible(true);
-    text_top->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("03_05.png"));
+    text_top->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("04_04.png"));
     dialogBox_top->setVisible(true);
 }
 
-void Story03::event06() {
+void Story04::event05() {
     showNividasImage();
     text_bottom->setVisible(true);
-    text_bottom->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("03_06.png"));
+    text_bottom->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("04_05.png"));
     dialogBox_bottom->setVisible(true);
 }
 
-void Story03::event07() {
+void Story04::event06() {
+    showNormansImage();
     text_top->setVisible(true);
-    text_top->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("03_07.png"));
+    text_top->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("04_06.png"));
+    dialogBox_top->setVisible(true);
 }
 
-void Story03::onEnter()
+void Story04::event07() {
+    text_top->setVisible(true);
+    text_top->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("04_07.png"));
+}
+
+void Story04::onEnter()
 {
     Layer::onEnter();
     AudioEngine::stopAll();

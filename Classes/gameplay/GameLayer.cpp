@@ -9,13 +9,15 @@
 #include "../entity/Ninja.h"
 #include "SceneFactory.h"
 
-USING_NS_CC;
+USING_NS_AX;
 
-GameLayer::GameLayer(): staticBlockVector(std::vector<Rect>()) {
+GameLayer::GameLayer(): hero(nullptr), tileCountX(0), tileCountY(0), map(nullptr) {
 }
 
 bool GameLayer::init() {
-    if (!Layer::init()) return false;
+    if (!Layer::init()) {
+        return false;
+    }
 
     this->scheduleUpdate();
 
@@ -27,12 +29,12 @@ bool GameLayer::init() {
     return true;
 }
 
-void GameLayer::loadData(std::string jsonPath) {
+void GameLayer::loadData(const std::string &jsonPath) {
     this->levelData = LevelDataReader::readDocument(jsonPath);
     this->stageSize = Size(static_cast<int>(this->levelData.getWidth()), 1000);
 
     AudioEngine::stopAll();
-    AudioEngine::play2d(levelData.getBgm().c_str(), true);
+    AudioEngine::play2d(levelData.getBgm(), true);
 
     this->initMap();
     this->initEnemyArr();
@@ -41,6 +43,39 @@ void GameLayer::loadData(std::string jsonPath) {
     hero->setPosition(this->levelData.getStartPosition());
     hero->getRigidBody().addToWorld(this);
     this->addChild(hero, 10);
+}
+
+void GameLayer::update(float dt) {
+    updatePhysicsWorld(dt);
+    hero->update(dt);
+    for (auto enemy: enemyArr) {
+        enemy->update(dt);
+    }
+    updateCamera();
+
+    if (this->gameFinished) {
+        return;
+    }
+    // if (hero->getPositionX() >= this->stageSize.width) {
+    //     this->gameFinished = true;
+    //     Scene *scene = SceneFactory::story02();
+    //     _director->replaceScene(TransitionFade::create(2.0f, scene));
+    // }
+    if (hero->getHp() <= 0) {
+        hero->setState(Entity::EntityState::FORCED);
+        hero->getArmature()->getAnimation()->play("Fly");
+        if (hero->getFaceTo()) {
+            hero->setVelocityX(5);
+        } else {
+            hero->setVelocityX(-5);
+        }
+        Scene *scene = SceneFactory::gameOverScene();
+        _director->replaceScene(TransitionFade::create(2.0f, scene));
+        this->gameFinished = true;
+    }
+#if defined(DebugDrawRects)
+    this->updateDebugDraw();
+#endif
 }
 
 void GameLayer::initMap() {
@@ -55,13 +90,13 @@ void GameLayer::initMap() {
 void GameLayer::initGroundRect() {
     auto objGroup = map->getObjectGroup("groundRect");
 
-    for (auto iter = objGroup->getObjects().begin(); iter != objGroup->getObjects().end(); iter++) {
-        auto blockRect = iter->asValueMap();
+    for (auto &iter : objGroup->getObjects()) {
+        auto blockRect = iter.asValueMap();
         float tempX = blockRect["x"].asFloat();
         float tempY = blockRect["y"].asFloat();
         float tempWidth = blockRect["width"].asFloat();
         float tempHeight = blockRect["height"].asFloat();
-        this->staticBlockVector.push_back(Rect(tempX, tempY, tempWidth, tempHeight));
+        this->staticBlockVector.emplace_back(tempX, tempY, tempWidth, tempHeight);
     }
 }
 
@@ -71,9 +106,8 @@ void GameLayer::initEnemyArr() {
     for (auto &enemyData: enemyDataList) {
         Enemy *pEnemy;
 
-        if (auto type = enemyData.getType(); type == "JapanArmyI") {
-            pEnemy = JapanArmyI::create();
-        } else if (type == "JapanArmyII") {
+        const auto type = enemyData.getType();
+        if (type == "JapanArmyII") {
             pEnemy = JapanArmyII::create();
         } else if (type == "Liuhai") {
             pEnemy = Liuhai::create();
@@ -93,49 +127,10 @@ void GameLayer::initEnemyArr() {
 void GameLayer::updatePhysicsWorld(float delta) {
     auto &rb = hero->getRigidBody();
     rb.update(delta);
-    for (auto i = enemyArr.begin(); i != enemyArr.end(); ++i) {
-        auto &erb = (*i)->getRigidBody();
-        erb.update(delta);
+    for (auto &enemy : enemyArr) {
+        auto &rigidbody = enemy->getRigidBody();
+        rigidbody.update(delta);
     }
-}
-
-void GameLayer::update(float dt) {
-    updatePhysicsWorld(dt);
-    if (hero->getState() == Entity::EntityState::NORMAL || hero->getState() == Entity::EntityState::WALKING) {
-        updateHero();
-    } else if (hero->getState() == Entity::EntityState::HURT) {
-        updateHero();
-    }
-    hero->update(dt);
-    //怪物的检测
-    updateEnemy();
-    updateAI();
-
-    updateMap();
-
-    if (this->gameFinished) {
-        return;
-    }
-    if (hero->getPositionX() >= this->stageSize.width) {
-        this->gameFinished = true;
-        Scene *scene = SceneFactory::story02();
-        _director->replaceScene(TransitionFade::create(2.0f, scene));
-    }
-    if (hero->getHp() <= 0) {
-        hero->setState(Entity::EntityState::FORCED);
-        hero->getArmature()->getAnimation()->play("Fly");
-        if (hero->getFaceTo()) {
-            hero->setVelocityX(5);
-        } else {
-            hero->setVelocityX(-5);
-        }
-        Scene *scene = SceneFactory::gameOverScene();
-        _director->replaceScene(TransitionFade::create(2.0f, scene));
-        this->gameFinished = true;
-    }
-#if defined(DebugDrawRects)
-    this->updateDebugDraw();
-#endif
 }
 
 void GameLayer::updateAI() {
@@ -358,38 +353,25 @@ void GameLayer::updateEnemy() {
     // }
 }
 
-void GameLayer::updateMap() {
-    Point viewPoint = updateCameraPosition();
-    this->setPosition(viewPoint);
-}
-
-Point GameLayer::updateCameraPosition() {
-    // 获取当前地图的图块数
-    Size mapTiledNum = this->map->getMapSize();
-    Size tiledSize = this->map->getTileSize();
-
-    // 获取地图的尺寸
-    Size mapSize = Size(
-        mapTiledNum.width * tiledSize.width,
-        mapTiledNum.height * tiledSize.height);
-    Size visibleSize = _director->getVisibleSize();
+void GameLayer::updateCamera() {
+    const Size mapTiledNum = map->getMapSize();
+    const Size tiledSize = map->getTileSize();
+    const Size mapSize = Size(mapTiledNum.width * tiledSize.width, mapTiledNum.height * tiledSize.height);
+    const Size visibleSize = _director->getVisibleSize();
+    // 屏幕中点
+    const Point centerPos = Point(visibleSize.width / 2, visibleSize.height / 2);
 
     // 主角的坐标
-    Point spritePos = this->hero->getPosition();
-    // 如果主角的坐标小于屏幕的一半，则取屏幕中点坐标，否则取主角的坐标
-    float x = std::max(spritePos.x, visibleSize.width / 2);
-    float y = std::max(spritePos.y, visibleSize.height / 2);
-    // 如果X、Y的坐标大于右上角的极限值，则取极限值的坐标（极限值是指
-    // 不让地图超出屏幕造成出现黑边的极限坐标）
-    x = std::min(x, mapSize.width - visibleSize.width / 2);
-    y = std::min(y, mapSize.height - visibleSize.height / 2);
+    const Point spritePos = this->hero->getPosition();
 
-    // 目标点
-    Point destPos = Point(x, y);
-    // 屏幕中点
-    Point centerPos = Point(visibleSize.width / 2, visibleSize.height / 2);
-    // 计算屏幕中点和所要移动的目的点之间的距离
-    return centerPos - destPos;
+    // 如果主角的坐标小于屏幕的一半，则取屏幕中点坐标，否则取主角的坐标
+    float x = std::max(spritePos.x, centerPos.x);
+    float y = std::max(spritePos.y, centerPos.y);
+    // 如果X、Y的坐标大于右上角的极限值，则取不让地图超出屏幕造成出现黑边的极限坐标
+    x = std::min(x, mapSize.width - centerPos.x);
+    y = std::min(y, mapSize.height - centerPos.y);
+
+    this->setPosition(centerPos - Point(x, y));
 }
 
 #if defined(DebugDrawRects)

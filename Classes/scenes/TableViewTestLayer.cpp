@@ -1,7 +1,7 @@
 #include "TableViewTestLayer.h"
 #include "SceneFactory.h"
 
-USING_NS_CC;
+USING_NS_AX;
 USING_NS_AX_EXT;
 
 // on "init" you need to initialize your instance

@@ -30,7 +30,7 @@
 #define USE_AUDIO_ENGINE 1
 #include "audio/AudioEngine.h"
 
-USING_NS_CC;
+USING_NS_AX;
 
 /** 设计分辨率 */
 static cocos2d::Size designResolutionSize = cocos2d::Size(640, 360);

@@ -5,9 +5,9 @@
 #include "ui/CocosGUI.h"
 #include "../readers/GuiReader.h"
 
-USING_NS_CC;
+USING_NS_AX;
 using namespace hotfist;
-using cocos2d::ui::Button;
+using ui::Button;
 
 ControlLayer::ControlLayer(): hero(nullptr),
                               isLeftBtnPressed(false), isRightBtnPressed(false),
@@ -29,8 +29,6 @@ bool ControlLayer::init() {
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile("UIPacked.plist", "UIPacked.png");
     auto node = GuiReader::readDocument("Config/ui_control_layer.json");
     this->addChild(node);
-
-    this->_bindEventListener(node);
 
     imageItemSide = Sprite::createWithSpriteFrameName("ImageItemSide.png");
     imageItem = Sprite::createWithSpriteFrameName("ImageNormal.png");
@@ -65,6 +63,8 @@ bool ControlLayer::init() {
 
 #if DESKTOP_RUNTIME
     this->addKeyEventListener();
+#else
+    this->_bindEventListener(node);
 #endif
 
     return true;
@@ -167,15 +167,15 @@ void ControlLayer::pauseBtnCallBack(Ref *pSender) {
     Director::getInstance()->pushScene(SceneFactory::pauseLayer());
 }
 
-void ControlLayer::_bindEventListener(Node *node) {
+void ControlLayer::bindEventListener(Node *node) {
     auto button = dynamic_cast<Button *>(node->getChildByName("moveLeftButton"));
-    button->addTouchEventListener([this](Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+    button->addTouchEventListener([this](Ref *sender, ui::Widget::TouchEventType type) {
         switch (type) {
-            case cocos2d::ui::Widget::TouchEventType::BEGAN:
+            case ui::Widget::TouchEventType::BEGAN:
                 this->isLeftBtnPressed = true;
                 break;
-            case cocos2d::ui::Widget::TouchEventType::ENDED:
-            case cocos2d::ui::Widget::TouchEventType::CANCELED:
+            case ui::Widget::TouchEventType::ENDED:
+            case ui::Widget::TouchEventType::CANCELED:
                 this->isLeftBtnPressed = false;
                 break;
             default:
@@ -184,13 +184,13 @@ void ControlLayer::_bindEventListener(Node *node) {
     });
 
     button = dynamic_cast<Button *>(node->getChildByName("moveRightButton"));
-    button->addTouchEventListener([this](Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+    button->addTouchEventListener([this](Ref *sender, ui::Widget::TouchEventType type) {
         switch (type) {
-            case cocos2d::ui::Widget::TouchEventType::BEGAN:
+            case ui::Widget::TouchEventType::BEGAN:
                 this->isRightBtnPressed = true;
                 break;
-            case cocos2d::ui::Widget::TouchEventType::ENDED:
-            case cocos2d::ui::Widget::TouchEventType::CANCELED:
+            case ui::Widget::TouchEventType::ENDED:
+            case ui::Widget::TouchEventType::CANCELED:
                 this->isRightBtnPressed = false;
                 break;
             default:
@@ -239,25 +239,25 @@ void ControlLayer::addKeyEventListener() {
         switch (keyCode)
         {
             case KeyCode::KEY_SPACE:
-                this->JmpBtnCallBack(nullptr);
+                this->jmpBtnCallBack(nullptr);
                 break;
             case KeyCode::KEY_U:
-                this->AtkBtnCallBack(nullptr);
+                this->atkBtnCallBack(nullptr);
                 break;
             case KeyCode::KEY_I:
-                this->AtkBtnCallBack(nullptr);
+                this->atkBtnCallBack(nullptr);
                 break;
             case KeyCode::KEY_1:
-                this->ShieldBtnCallBack(nullptr);
+                this->shieldBtnCallBack(nullptr);
                 break;
             case KeyCode::KEY_2:
-                this->ClockUPBtnCallBack(nullptr);
+                this->clockUPBtnCallBack(nullptr);
                 break;
             case KeyCode::KEY_3:
-                this->CloakBtnCallBack(nullptr);
+                this->cloakBtnCallBack(nullptr);
                 break;
             case KeyCode::KEY_4:
-                this->BladeBtnCallBack(nullptr);
+                this->bladeBtnCallBack(nullptr);
                 break;
             case KeyCode::KEY_A:
                 isLeftBtnPressed = true;

@@ -4,7 +4,7 @@
 #include "cocos2d.h"
 #include "GUI/ScrollView/TableView.h"
 
-USING_NS_CC;
+USING_NS_AX;
 USING_NS_AX_EXT;
 
 class TableViewTestLayer : public Layer, public TableViewDataSource, public TableViewDelegate {

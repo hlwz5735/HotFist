@@ -4,7 +4,7 @@
 #include "cocos2d.h"
 #include "components/MessageTip.h"
 #include "external/json/document.h"
-USING_NS_CC;
+USING_NS_AX;
 
 class ShowImgCommand;
 class MoveImgCommand;

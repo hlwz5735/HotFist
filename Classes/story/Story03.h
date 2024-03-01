@@ -1,16 +1,13 @@
-#ifndef _Story02__
-#define _Story02__
+#ifndef _Story03__
+#define _Story03__
 #include "cocos2d.h"
-#include "Global.h"
+#include "../Global.h"
 #include "Story.h"
 
-USING_NS_CC;
-class Story02:public Story
+USING_NS_AX;
+class Story03:public Story
 {
 public:
-	Story02(){}
-	~Story02(){}
-
 	virtual bool init();
 	virtual void onEnter() override;
 	virtual void nextEvt();
@@ -21,11 +18,7 @@ public:
 	void event04();
 	void event05();
 	void event06();
-// 	void event07();
-// 	void event08();
-// 	void event09();
-// 	void event10();
-
-	CREATE_FUNC(Story02);
+	void event07();
+	CREATE_FUNC(Story03);
 };
 #endif

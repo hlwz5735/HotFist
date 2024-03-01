@@ -5,9 +5,9 @@
 #include <algorithm>
 #include "Global.h"
 #include "RigidBody.h"
-#include "scenes/GameLayer.h"
+#include "../gameplay/GameLayer.h"
 
-using namespace ax;
+USING_NS_AX;
 
 const auto gravity = Vec2(0, -PHYSICS_GRAVITY);
 

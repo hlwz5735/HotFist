@@ -1,7 +1,7 @@
 #include "GameOverLayer.h"
 #include "SceneFactory.h"
 
-USING_NS_CC;
+USING_NS_AX;
 
 bool GameOverLayer::init()
 {

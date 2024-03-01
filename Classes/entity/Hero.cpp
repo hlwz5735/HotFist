@@ -2,7 +2,7 @@
 #include "cocostudio/Armature.h"
 #include "Hero.h"
 
-USING_NS_CC;
+USING_NS_AX;
 using namespace cocostudio;
 
 Hero::Hero(): tp(0), m_mode(HeroMode::SHIELD) {

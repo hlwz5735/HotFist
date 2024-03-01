@@ -2,7 +2,7 @@
 #define _GameOverLayer__
 
 #include "cocos2d.h"
-USING_NS_CC;
+USING_NS_AX;
 
 /************************************************************************
  * GameOverLayer:游戏结束界面

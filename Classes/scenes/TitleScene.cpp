@@ -2,7 +2,7 @@
 #include "TitleScene.h"
 #include "SceneFactory.h"
 
-USING_NS_CC;
+USING_NS_AX;
 
 bool TitleScene::init() {
     if (!Scene::init()) {

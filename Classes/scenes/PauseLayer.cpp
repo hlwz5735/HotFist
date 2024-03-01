@@ -2,7 +2,7 @@
 #include "audio/AudioEngine.h"
 #include "SceneFactory.h"
 
-USING_NS_CC;
+USING_NS_AX;
 
 bool PauseLayer::init() {
     if (!Layer::init()) {

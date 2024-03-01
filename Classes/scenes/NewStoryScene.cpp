@@ -13,7 +13,7 @@
 #pragma execution_character_set("utf-8")
 #endif
 
-USING_NS_CC;
+USING_NS_AX;
 
 constexpr float frameDuration = 1.f / 60;
 

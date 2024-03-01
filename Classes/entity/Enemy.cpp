@@ -1,7 +1,7 @@
 ﻿#include "Enemy.h"
 #include "cocostudio/Armature.h"
 
-USING_NS_CC;
+USING_NS_AX;
 using namespace cocostudio;
 
 bool Enemy::init() {    //大部分数据都是在基类或者派生类里面初始化的，所以这个初始化函数就比较水……

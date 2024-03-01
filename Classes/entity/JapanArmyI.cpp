@@ -5,7 +5,8 @@
 #include "cocostudio/Armature.h"
 #include "JapanArmyI.h"
 
-USING_NS_CC;
+USING_NS_AX;
+using namespace cocostudio;
 
 bool JapanArmyI::init() {
     if (!Enemy::init()) {

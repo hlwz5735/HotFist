@@ -7,7 +7,7 @@
 //
 #include "JapanArmyII.h"
 
-USING_NS_CC;
+USING_NS_AX;
 
 bool JapanArmyII::init() {
     if (!JapanArmyI::init()) {

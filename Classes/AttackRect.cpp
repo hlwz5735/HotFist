@@ -1,6 +1,6 @@
 #include "AttackRect.h"
 
-USING_NS_CC;
+USING_NS_AX;
 
 AttackRect::AttackRect(): m_force(0), isCanFly(false), finished(false) {
 }

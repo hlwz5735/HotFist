@@ -7,7 +7,7 @@
 #include "Director.h"
 #include "Global.h"
 
-using namespace ax;
+USING_NS_AX;
 
 const static TTFConfig ttfConfig(
     "fonts/Deng.ttf",

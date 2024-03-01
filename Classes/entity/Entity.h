@@ -6,14 +6,11 @@
 #include "AttackRect.h"
 #include "RigidBody.h"
 
-USING_NS_CC;
-using namespace cocostudio;
-
 /**
  * Entity类，作为所有在地图上显示的物体的对象的父类存在
  * 是Enemy和Hero类的父类
  */
-class Entity : public Node {
+class Entity : public ax::Node {
 public:
     // 定义玩家状态
     enum class EntityState {
@@ -74,12 +71,12 @@ public:
     virtual void airHurt();
 
     // 由下蹲站起执行完毕后的回调函数
-    virtual void standUpCallBack(Armature *armature, MovementEventType type, const char *name);
+    virtual void standUpCallBack(cocostudio::Armature *armature, cocostudio::MovementEventType type, const char *name);
 
     // 跳跃动画播放完毕后的回调函数
-    virtual void jumpCallBack(Armature *armature, MovementEventType type, const char *name);
+    virtual void jumpCallBack(cocostudio::Armature *armature, cocostudio::MovementEventType type, const char *name);
 
-    const Rect &getRigidRect() const { return m_block; }
+    const ax::Rect &getRigidRect() const { return m_block; }
     const AttackRect &getAttackRect() const { return m_attack; }
     EntityState getState() const { return state; }
     void setState(EntityState a) { state = a; }
@@ -87,7 +84,7 @@ public:
     void setHp(const float a) { hp = a; }
     float getSp() const { return sp; }
     void setSP(const float a) { sp = a; }
-    const Armature *getArmature() const { return m_sprite; }
+    const cocostudio::Armature *getArmature() const { return m_sprite; }
     bool getFaceTo() const { return faceto; }
     void setFaceTo(const bool f) { faceto = f; }
     float getVelocityX() const { return velocityX; }
@@ -103,9 +100,9 @@ protected:
     RigidBody rigidBody;
     float hp, sp;
     // 新的主角精灵
-    Armature *m_sprite;
+    cocostudio::Armature *m_sprite;
     // 角色的碰撞框
-    Rect m_block;
+    ax::Rect m_block;
     // 角色的攻击框
     AttackRect m_attack;
     // 攻击力

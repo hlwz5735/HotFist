@@ -8,34 +8,24 @@
 #include "../EnemyData.h"
 
 using std::string;
-using namespace ax;
+USING_NS_AX;
 
-class LevelData
-{
+class LevelData {
 public:
-    const string &getName() const;
+    LevelData();
 
-    void setName(const string &name);
-
-    float getWidth() const;
-
-    void setWidth(float width);
-
-    const Point &getStartPosition() const;
-
-    void setStartPosition(const Point &startPosition);
-
-    const string &getTmxMap() const;
-
-    void setTmxMap(const string &tmxMap);
-
-    vector<EnemyData> &getEnemies();
-
-    void setEnemies(const vector<EnemyData> &enemies);
-
-    const string &getBgm() const;
-
-    void setBgm(const string &bgm);
+    const string &getName() const { return name; }
+    void setName(const string &name) { this->name = name; }
+    float getWidth() const { return width; }
+    void setWidth(float width) { this->width = width; }
+    const Point &getStartPosition() const { return startPosition; }
+    void setStartPosition(const Point &startPosition) { this->startPosition = startPosition; }
+    const string &getTmxMap() const { return tmxMap; }
+    void setTmxMap(const string &tmxMap) { this->tmxMap = tmxMap; }
+    vector<EnemyData> &getEnemies() { return enemies; }
+    void setEnemies(const vector<EnemyData> &enemies) { this->enemies = enemies; }
+    const string &getBgm() const { return bgm; }
+    void setBgm(const string &bgm) { this->bgm = bgm; }
 
 private:
     /** 关卡名 */

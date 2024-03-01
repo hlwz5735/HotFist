@@ -11,39 +11,35 @@ using namespace cocos2d;
 using namespace cocostudio;
 using namespace hotfist;
 
-Node* createNodeFromDocument(rapidjson::Document jsonDoc);
+static Node *createNodeFromDocument(rapidjson::Document jsonDoc);
 
-Node* GuiReader::readDocument(std::string fileName)
-{
+Node *GuiReader::readDocument(std::string fileName) {
     return createNodeFromDocument(getDocumentFromResource(fileName));
 }
 
-Node* createNodeFromDocument(rapidjson::Document jsonDoc) {
-    auto dicHelper = DictionaryHelper::getInstance();
+static Node *createNodeFromDocument(rapidjson::Document jsonDoc) {
+    const auto node = Node::create();
+    const auto dicHelper = DictionaryHelper::getInstance();
 
-    auto node = Node::create();
+    for (auto iterator = jsonDoc.MemberBegin(); iterator != jsonDoc.MemberEnd(); ++iterator) {
+        const auto key = iterator->name.GetString();
 
-    auto iterator = jsonDoc.MemberBegin();
-    while (iterator != jsonDoc.MemberEnd())
-    {
-        auto key = iterator->name.GetString();
-
-        auto normalImage = dicHelper->getStringValue_json(iterator->value, "normalImage", "");
-        auto selectedImage = dicHelper->getStringValue_json(iterator->value, "selectedImage", normalImage);
-        auto disableImage = dicHelper->getStringValue_json(iterator->value, "disableImage", normalImage);
-        auto label = dicHelper->getStringValue_json(iterator->value, "label", "");
-        auto flippedX = dicHelper->getBooleanValue_json(iterator->value, "flippedX", false);
-        auto scale9 = dicHelper->getBooleanValue_json(iterator->value, "scale9", false);
+        auto &value = iterator->value;
+        const auto normalImage = dicHelper->getStringValue_json(value, "normalImage", "");
+        const auto selectedImage = dicHelper->getStringValue_json(value, "selectedImage", normalImage);
+        const auto disableImage = dicHelper->getStringValue_json(value, "disableImage", normalImage);
+        const auto label = dicHelper->getStringValue_json(value, "label", "");
+        const auto flippedX = dicHelper->getBooleanValue_json(value, "flippedX", false);
+        const auto scale9 = dicHelper->getBooleanValue_json(value, "scale9", false);
         auto position = Point::ZERO;
-        if (iterator->value.HasMember("position"))
-        {
+        if (value.HasMember("position")) {
             position = Point(
-                    dicHelper->getFloatValue_json(iterator->value["position"], "x", 0),
-                    dicHelper->getFloatValue_json(iterator->value["position"], "y", 0)
+                dicHelper->getFloatValue_json(value["position"], "x", 0),
+                dicHelper->getFloatValue_json(value["position"], "y", 0)
             );
         }
 
-        auto button = ui::Button::create(normalImage, selectedImage, disableImage, ui::Button::TextureResType::PLIST);
+        const auto button = ui::Button::create(normalImage, selectedImage, disableImage, ui::Button::TextureResType::PLIST);
         button->setTitleText(label);
         button->setScale9Enabled(scale9);
         button->setFlippedX(flippedX);
@@ -51,8 +47,6 @@ Node* createNodeFromDocument(rapidjson::Document jsonDoc) {
         button->setName(key);
 
         node->addChild(button);
-
-        iterator++;
     }
     node->setPosition(Point::ZERO);
     return node;

@@ -3,22 +3,20 @@
 
 #include "cocos2d.h"
 
-USING_NS_CC;
-
 class GameLayer;
 class ControlLayer;
 
-class GameScene : public Scene
-{
+class GameScene : public ax::Scene {
 public:
-    virtual bool init() override;
+    bool init() override;
 
-    void loadLevel(const std::string& levelName);
+    void loadLevel(const std::string &levelName);
 
     CREATE_FUNC(GameScene);
+
 private:
-    GameLayer* gameLayer;
-    ControlLayer* controlLayer;
+    GameLayer *gameLayer;
+    ControlLayer *controlLayer;
 };
 
 

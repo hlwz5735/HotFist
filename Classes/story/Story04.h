@@ -1,10 +1,10 @@
 #ifndef _Story04__
 #define _Story04__
 #include "cocos2d.h"
-#include "Global.h"
+#include "../Global.h"
 #include "Story.h"
 
-USING_NS_CC;
+USING_NS_AX;
 class Story04:public Story
 {
 public:

@@ -3,7 +3,7 @@
 
 #include "cocos2d.h"
 #include "../readers/LevelData.h"
-USING_NS_CC;
+USING_NS_AX;
 
 class PhysicsDebugScene : public Scene
 {

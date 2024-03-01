@@ -3,7 +3,7 @@
 
 #include "Entity.h"
 
-USING_NS_CC;
+USING_NS_AX;
 
 class Enemy : public Entity {
 public:

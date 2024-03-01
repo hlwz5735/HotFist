@@ -8,7 +8,8 @@
 #include "cocostudio/Armature.h"
 #include "Liuhai.h"
 
-USING_NS_CC;
+USING_NS_AX;
+using namespace cocostudio;
 
 bool Liuhai::init() {
     if (!Enemy::init()) {

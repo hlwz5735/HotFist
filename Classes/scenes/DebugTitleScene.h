@@ -7,7 +7,7 @@
 
 #include "cocos2d.h"
 #include "GUI/ScrollView/ScrollView.h"
-USING_NS_CC;
+USING_NS_AX;
 using namespace cocos2d::extension;
 
 class DebugTitleScene: public Scene, public ScrollViewDelegate

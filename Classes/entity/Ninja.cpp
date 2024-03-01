@@ -9,7 +9,8 @@
 #include "cocostudio/Armature.h"
 #include "Ninja.h"
 
-USING_NS_CC;
+USING_NS_AX;
+using namespace cocostudio;
 
 bool Ninja::init() {
     if (!Enemy::init()) {

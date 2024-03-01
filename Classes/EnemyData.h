@@ -8,7 +8,7 @@
 #include "math/Vec2.h"
 
 using namespace std;
-using namespace ax;
+USING_NS_AX;
 
 class EnemyData
 {

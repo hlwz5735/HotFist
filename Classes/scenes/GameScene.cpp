@@ -1,9 +1,10 @@
-﻿#include "GameLayer.h"
-#include "ControlLayer.h"
+﻿#include "../gameplay/GameLayer.h"
+#include "../gameplay/ControlLayer.h"
 #include "GameScene.h"
 
-bool GameScene::init()
-{
+USING_NS_AX;
+
+bool GameScene::init() {
     if (!Scene::init()) {
         return false;
     }
@@ -17,8 +18,7 @@ bool GameScene::init()
     return true;
 }
 
-void GameScene::loadLevel(const string &levelName)
-{
+void GameScene::loadLevel(const string &levelName) {
     gameLayer->loadData(cocos2d::StringUtils::format("Levels/level_%s.json", levelName.c_str()));
     controlLayer->setHero(gameLayer->getHero());
 }

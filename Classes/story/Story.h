@@ -3,9 +3,9 @@
 
 #include "cocos2d.h"
 #include "audio/AudioEngine.h"
-#include "Global.h"
+#include "../Global.h"
 
-USING_NS_CC;
+USING_NS_AX;
 
 class Story : public Layer {
 public:

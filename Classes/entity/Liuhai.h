@@ -11,8 +11,6 @@
 
 #include "Enemy.h"
 
-USING_NS_CC;
-
 class Liuhai : public Enemy {
 public:
     CREATE_FUNC(Liuhai);
@@ -42,7 +40,7 @@ public:
     void airHurt() override;
 
     // 受伤动画播放完成后的回调
-    void hurtCallBack(Armature *armature, MovementEventType type, const char *name);
+    void hurtCallBack(cocostudio::Armature *armature, cocostudio::MovementEventType type, const char *name);
 
     // 受伤后处理移动的回调
     void doHurt(float dt);

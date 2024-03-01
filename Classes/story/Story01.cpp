@@ -1,5 +1,5 @@
 #include "Story01.h"
-#include "SceneFactory.h"
+#include "../SceneFactory.h"
 
 bool Story01::init() {
     if (!Story::init()) {

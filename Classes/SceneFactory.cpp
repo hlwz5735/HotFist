@@ -8,16 +8,14 @@
 #include "scenes/PauseLayer.h"
 #include "scenes/TableViewTestLayer.h"
 
-#include "Story00.h"
-#include "Story01.h"
-#include "Story02.h"
-#include "Story03.h"
-#include "Story04.h"
-#include "Story05.h"
-#include "StoryEnd.h"
-/************************************************************************/
-/* 场景管理器                                                             */
-/************************************************************************/
+#include "story/Story00.h"
+#include "story/Story01.h"
+#include "story/Story02.h"
+#include "story/Story03.h"
+#include "story/Story04.h"
+#include "story/Story05.h"
+#include "story/StoryEnd.h"
+
 Scene *SceneFactory::story00() {
     return Story00::createScene();
 }
@@ -61,7 +59,7 @@ Scene *SceneFactory::storyEnd() {
     return scene;
 }
 
-Scene *SceneFactory::loadLevel(const std::string& levelName) {
+Scene *SceneFactory::loadLevel(const std::string &levelName) {
     GameScene *scene = GameScene::create();
     scene->loadLevel(levelName);
     return scene;
@@ -96,7 +94,6 @@ Scene *SceneFactory::ctnLayer() {
     return pMenuScene;
 }
 
-Scene *SceneFactory::startScene()
-{
-    return StartScene::createScene();
+Scene *SceneFactory::startScene() {
+    return StartScene::create();
 }
