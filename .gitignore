@@ -1,8 +1,2 @@
-/cocos2d
-/proj.android
-/proj.ios_mac
-/proj.linux
-/proj.win32
-
 /build_arm64
 /.idea
