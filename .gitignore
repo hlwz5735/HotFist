@@ -1,2 +1,6 @@
+/cocos2d
 /build_arm64
+/build_x64
 /.idea
+/.vs
+/out
