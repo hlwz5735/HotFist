@@ -76,18 +76,6 @@ bool ControlLayer::init() {
     return true;
 }
 
-void ControlLayer::jmpBtnCallBack(Ref *pSender) {
-    if (hero->getState() == Entity::EntityState::NORMAL || hero->getState() == Entity::EntityState::WALKING) {
-        hero->jump();
-    }
-}
-
-void ControlLayer::atkBtnCallBack(Ref *pSender) {
-    if (hero->getState() == Hero::EntityState::NORMAL || hero->getState() == Entity::EntityState::WALKING) {
-        hero->attack();
-    }
-}
-
 void ControlLayer::update(float delta) {
     hp_Bar->setScaleX(hero->getHp() / 100.0f);
     sp_Bar->setScaleX(hero->getSp() / 100.0f);
@@ -196,13 +184,11 @@ void ControlLayer::addKeyEventListener() {
         switch (keyCode)
         {
             case KeyCode::KEY_SPACE:
-                this->jmpBtnCallBack(nullptr);
+                InputManager::getInstance()->setKeyStatus(InputManager::BTN_JUMP, true);
                 break;
             case KeyCode::KEY_U:
-                this->atkBtnCallBack(nullptr);
-                break;
             case KeyCode::KEY_I:
-                this->atkBtnCallBack(nullptr);
+                InputManager::getInstance()->setKeyStatus(InputManager::BTN_ATTACK, true);
                 break;
             case KeyCode::KEY_1:
                 this->shieldBtnCallBack(nullptr);
@@ -229,6 +215,9 @@ void ControlLayer::addKeyEventListener() {
     listener->onKeyReleased = [this](EventKeyboard::KeyCode keyCode, Event* event) {
         log("Key with keycode %d released", keyCode);
         switch (keyCode) {
+            case KeyCode::KEY_SPACE:
+                InputManager::getInstance()->setKeyStatus(InputManager::BTN_JUMP, false);
+                break;
             case KeyCode::KEY_A:
                 InputManager::getInstance()->setKeyStatus(InputManager::DPAD_LEFT, false);
                 break;
@@ -237,6 +226,10 @@ void ControlLayer::addKeyEventListener() {
                 break;
             case KeyCode::KEY_P:
                 pauseBtnCallBack(nullptr);
+                break;
+            case KeyCode::KEY_U:
+            case KeyCode::KEY_I:
+                InputManager::getInstance()->setKeyStatus(InputManager::BTN_ATTACK, false);
                 break;
             default:
                 break;

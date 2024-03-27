@@ -44,7 +44,6 @@ void GameLayer::loadData(const std::string &jsonPath) {
 
     hero = Hero::create();
     hero->setPosition(this->levelData.getStartPosition());
-    hero->getRigidBody().addToWorld(this);
     this->addChild(hero, 10);
 }
 
@@ -122,19 +121,18 @@ void GameLayer::initEnemyArr() {
         }
 
         pEnemy->setPosition(enemyData.getPosition());
-        pEnemy->getRigidBody().addToWorld(this);
         this->addChild(pEnemy, 5);
         this->enemyArr.pushBack(pEnemy);
     }
 }
 
 void GameLayer::updatePhysicsWorld(float delta) {
-    auto &rb = hero->getRigidBody();
-    rb.update(delta);
-    for (auto &enemy : enemyArr) {
-        auto &rigidbody = enemy->getRigidBody();
-        rigidbody.update(delta);
-    }
+    //auto &rb = hero->getRigidBody();
+    //rb.update(delta);
+    //for (auto &enemy : enemyArr) {
+    //    auto &rigidbody = enemy->getRigidBody();
+    //    rigidbody.update(delta);
+    //}
 }
 
 void GameLayer::updateAI() {
@@ -406,12 +404,12 @@ void GameLayer::updateDebugDraw() {
         drawRect(drawNode, rect, staticBlockColor);
     }
 
-    drawRect(drawNode, hero->getRigidBody().getRealBody(), rigidbodyColor);
-    drawRect(drawNode, hero->getAttackRect(), hero->getAttackRect().isFinished() ? finishedAttackColor : attackColor);
-    for (Enemy *pEnemy: enemyArr) {
-        drawRect(drawNode, pEnemy->getRigidBody().getRealBody(), rigidbodyColor);
-        const auto &enemyAttackRect = pEnemy->getAttackRect();
-        drawRect(drawNode, enemyAttackRect, enemyAttackRect.isFinished() ? enemyFinishedAttackColor : enemyAttackColor);
-    }
+    //drawRect(drawNode, hero->getRigidBody().getRealBody(), rigidbodyColor);
+    //drawRect(drawNode, hero->getAttackRect(), hero->getAttackRect().isFinished() ? finishedAttackColor : attackColor);
+    //for (Enemy *pEnemy: enemyArr) {
+    //    drawRect(drawNode, pEnemy->getRigidBody().getRealBody(), rigidbodyColor);
+    //    const auto &enemyAttackRect = pEnemy->getAttackRect();
+    //    drawRect(drawNode, enemyAttackRect, enemyAttackRect.isFinished() ? enemyFinishedAttackColor : enemyAttackColor);
+    //}
 }
 #endif

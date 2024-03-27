@@ -4,6 +4,7 @@
 
 #ifndef STATUS_H
 #define STATUS_H
+#include <string>
 
 namespace hotfist {
 
@@ -13,7 +14,10 @@ public:
     virtual void onExit() = 0;
 
     virtual void update(float dt) = 0;
+
+    virtual const std::string& getName();
 private:
+    std::string name;
 };
 
 }

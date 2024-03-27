@@ -14,8 +14,9 @@ bool Hero::init() {
     if (!Entity::init()) {
         return false;
     }
+    initPhysicsBody(Vec2(58, 112));
     // 初始化状态
-    setState(EntityState::NORMAL);
+    state = EntityState::NORMAL;
     // 初始化三大数据
     hp = 100;
     sp = 100;
@@ -23,7 +24,7 @@ bool Hero::init() {
     // 初始化模式状态
     m_mode = HeroMode::SHIELD;
 
-    moveSpeed = 2;
+    moveSpeed = 100;
     direction = RIGHT;
 
     AudioEngine::preload("Audio/Cloak.mp3");
@@ -52,18 +53,88 @@ void Hero::initSprite() {
     armature->setPosition(Point(25, 0));
     // 添加到容器，当前运行的场景之中
     this->addChild(armature);
+
+    Entity::initSprite();
 }
 
-void Hero::initRigidbody() {
-    this->rigidBody.setBody(Rect(0, 0, 63 - 5, 113));
+void Hero::update(float dt) {
+    Entity::update(dt);
+
+    updateStatus();
+    updateInput(dt);
 }
 
-Hero::HeroMode Hero::getMode() {
-    return m_mode;
+void Hero::updateInput(float dt) {
+    const auto input = InputManager::getInstance();
+    if (input->isKeyPressed(InputManager::Keys::BTN_JUMP)) {
+        this->jump();
+        return;
+    }
+    if (input->isKeyPressed(InputManager::Keys::DPAD_RIGHT)) {
+        setDirection(RIGHT);
+        if (state == EntityState::NORMAL) {
+            switchToWalk();
+        }
+    }
+    else if (input->isKeyPressed(InputManager::Keys::DPAD_LEFT)) {
+        setDirection(LEFT);
+        if (state == EntityState::NORMAL) {
+            switchToWalk();
+        }
+    }
+    else {
+        if (state == EntityState::WALKING) {
+            switchToIdle();
+        }
+    }
 }
 
-void Hero::setMode(HeroMode a) {
-    m_mode = a;
+void Hero::updateStatus() {
+    // 主角的状态设置
+    if (this->sp > 0) {
+        if (this->getMode() == HeroMode::INVISIBLE) {
+            this->sp -= 0.2f;
+        }
+        else if (this->getMode() == HeroMode::CLOCKUP) {
+            this->sp -= 0.1f;
+        }
+        else if (this->getMode() == HeroMode::LIGHTBLADE) {
+            this->sp -= 0.1f;
+        }
+        else {
+            this->sp += 0.1f;
+        }
+    }
+    else {
+        this->modeShield();
+        this->sp += 1;
+    }
+    if (this->tp < 100) {
+        this->tp += 0.07f;
+    }
+    else {
+        this->hp = 100;
+        this->sp = 100;
+        this->tp = 0;
+    }
+    if (this->hp < 0) {
+        this->hp = 0;
+    }
+    if (this->hp > 100) {
+        this->hp = 100;
+    }
+    if (this->sp < 0) {
+        this->sp = 0;
+    }
+    if (this->sp > 100) {
+        this->sp = 100;
+    }
+    if (this->tp < 0) {
+        this->tp = 0;
+    }
+    if (this->tp > 100) {
+        this->tp = 100;
+    }
 }
 
 void Hero::hurt() {
@@ -370,7 +441,6 @@ void Hero::drangonPunch() {
     int temp = static_cast<int>(getPositionY());
     setPositionY(temp + 10);
     setState(EntityState::NORMAL);
-    initRigidbody();
     // velocityY = 10;
     // if (faceto)
     //     velocityX = -2;
@@ -402,16 +472,12 @@ void Hero::refresh(float dt) {
 
 void Hero::setAttackRect(float dt) {
     auto rect = Rect(
-        getPositionX() - 40,
+        getPositionX() - 40 * direction,
         getPositionY() + 16,
         armature->getContentSize().width - 10,
         armature->getContentSize().height - 10
     );
-    if (direction) {
-        rect.origin.x -= 40;
-    } else {
-        rect.origin.x += 40;
-    }
+
     this->attackRect = AttackRect(rect, power, false);
 }
 
@@ -442,26 +508,29 @@ void Hero::afterHandBlade(float dt) {
     armature->setColor(Color3B(255, 255, 255));
 }
 
-void Hero::jump() {
-    if (!isInTheAir()) {
-        if (getMode() == HeroMode::LIGHTBLADE) {
-            armature->getAnimation()->play("SB_Jump");
-        } else
-            armature->getAnimation()->play("Jump");
-        this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::doJump), 0.33f);
-    }
-}
-
-void Hero::doJump(float dt) {
-    int temp = static_cast<int>(getPositionY());
-    if (getMode() == HeroMode::LIGHTBLADE) {
-        armature->getAnimation()->play("SB_Up");
-    } else
-        armature->getAnimation()->play("Up");
-    setState(EntityState::NORMAL);
-    setPositionY(temp + 10);
-    // initRigidbody();
-}
+//void Hero::jump() {
+//    if (rigidBody.isGrounded()) {
+//        if (getMode() == HeroMode::LIGHTBLADE) {
+//            armature->getAnimation()->play("SB_Jump");
+//        } else {
+//            armature->getAnimation()->play("Jump");
+//        }
+//        setState(EntityState::ATTACKING);
+//        this->scheduleOnce(AX_SCHEDULE_SELECTOR(Hero::doJump), 0.16f);
+//    }
+//}
+//
+//void Hero::doJump(float dt) {
+//    int temp = static_cast<int>(getPositionY());
+//    if (getMode() == HeroMode::LIGHTBLADE) {
+//        armature->getAnimation()->play("SB_Up");
+//    } else {
+//        armature->getAnimation()->play("Up");
+//    }
+//    setState(EntityState::NORMAL);
+//    //setPositionY(temp + 10);
+//    rigidBody.getVelocity().y = 10;
+//}
 
 void Hero::modeShield() {
     setMode(HeroMode::SHIELD);
@@ -514,97 +583,4 @@ void Hero::afterModeClockUp(float dt) {
     armature->setColor(Color3B(30, 255, 40));
     armature->setOpacity(255);
     armature->getAnimation()->play("Stand");
-}
-
-void Hero::update(float dt) {
-    Entity::update(dt);
-    updateStatus();
-
-    switch (state) {
-        case EntityState::WALKING:
-            updateWalk(dt);
-            break;
-        case EntityState::NORMAL:
-            updateIdle(dt);
-            break;
-        default:
-            break;
-    }
-}
-
-void Hero::switchToIdle() {
-    state = EntityState::NORMAL;
-    getArmature()->getAnimation()->play("Stand");
-    rigidBody.getVelocity().x = 0;
-}
-
-void Hero::switchToWalk() {
-    state = EntityState::WALKING;
-    CCLOG("Play Walk");
-    getArmature()->getAnimation()->play("Walk");
-}
-
-void Hero::updateWalk(float delta) {
-    const auto input = InputManager::getInstance();
-    if (input->isKeyPressed(InputManager::Keys::DPAD_RIGHT)) {
-        rigidBody.getVelocity().x = moveSpeed;
-        setDirection(RIGHT);
-    } else if (input->isKeyPressed(InputManager::Keys::DPAD_LEFT)) {
-        rigidBody.getVelocity().x = -moveSpeed;
-        setDirection(LEFT);
-    } else {
-        switchToIdle();
-    }
-}
-
-void Hero::updateIdle(float dt) {
-    const auto input = InputManager::getInstance();
-    if (input->isKeyPressed(InputManager::Keys::DPAD_RIGHT)) {
-        switchToWalk();
-    } else if (input->isKeyPressed(InputManager::Keys::DPAD_LEFT)) {
-        switchToWalk();
-    }
-}
-
-void Hero::updateStatus() {
-    // 主角的状态设置
-    if (this->sp > 0) {
-        if (this->getMode() == HeroMode::INVISIBLE) {
-            this->sp -= 0.2f;
-        } else if (this->getMode() == HeroMode::CLOCKUP) {
-            this->sp -= 0.1f;
-        } else if (this->getMode() == HeroMode::LIGHTBLADE) {
-            this->sp -= 0.1f;
-        } else {
-            this->sp += 0.1f;
-        }
-    } else {
-        this->modeShield();
-        this->sp += 1;
-    }
-    if (this->tp < 100) {
-        this->tp += 0.07f;
-    } else {
-        this->hp = 100;
-        this->sp = 100;
-        this->tp = 0;
-    }
-    if (this->hp < 0) {
-        this->hp = 0;
-    }
-    if (this->hp > 100) {
-        this->hp = 100;
-    }
-    if (this->sp < 0) {
-        this->sp = 0;
-    }
-    if (this->sp > 100) {
-        this->sp = 100;
-    }
-    if (this->tp < 0) {
-        this->tp = 0;
-    }
-    if (this->tp > 100) {
-        this->tp = 100;
-    }
 }

@@ -48,7 +48,3 @@ void Enemy::patrol() {
         }
     }
 }
-
-void Enemy::initRigidbody() {
-    Entity::initRigidbody();
-}

@@ -25,10 +25,6 @@ bool Liuhai::init() {
     return true;
 }
 
-void Liuhai::initRigidbody() {
-    Entity::initRigidbody();
-}
-
 void Liuhai::initSprite() {
     ArmatureDataManager::getInstance()->addArmatureFileInfo("Liuhai0.png", "Liuhai0.plist", "Liuhai.ExportJson");
     armature = Armature::create("Liuhai");

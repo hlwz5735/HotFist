@@ -15,8 +15,6 @@ public:
 
     void update(float delta) override;
 
-    void jmpBtnCallBack(Ref *pSender);
-    void atkBtnCallBack(Ref *pSender);
     void bladeBtnCallBack(Ref *pSender);
     void shieldBtnCallBack(Ref *pSender);
     void cloakBtnCallBack(Ref *pSender);

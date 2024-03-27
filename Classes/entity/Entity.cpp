@@ -6,7 +6,8 @@ using namespace cocostudio;
 Entity::Entity(): armature(nullptr),
                   power(0),
                   direction(LEFT),
-                  moveSpeed(1.f),
+                  moveSpeed(100.f),
+                  jumpAbility(120),
                   state(EntityState::NORMAL),
                   hp(0), sp(0) {
 }
@@ -15,76 +16,108 @@ bool Entity::init() {
     if (!Node::init()) {
         return false;
     }
-
     initSprite();
-    rigidBody.bind(this);
-    initRigidbody();
-
     return true;
 }
 
 void Entity::initSprite() {
+    if (armature != nullptr) {
+        animation = armature->getAnimation();
+    }
 }
 
-void Entity::initRigidbody() {
-    this->rigidBody.setBody(Rect(20, 0, 28, 91));
+void Entity::initPhysicsBody(const ax::Vec2 &size, const ax::Vec2 &offset) {
+    //const auto realOffset = Vec2(size.x / 2, size.y / 2) + offset;
+    //const auto physicsBody = PhysicsBody::createBox(size, PhysicsMaterial(1, 0, 1), realOffset);
+    //physicsBody->setDynamic(true);
+    //physicsBody->setRotationEnable(false);
+    //setPhysicsBody(physicsBody);
 }
 
-void Entity::setDirection(Direction a) {
-    direction = a;
-    armature->setScaleX(a);
+void Entity::update(float dt) {
+    Node::update(dt);
+    grounded = false;
+    //_physicsBody->getWorld()->rayCast([this](PhysicsWorld& world, const PhysicsRayCastInfo& info, void* data) {
+    //    if (info.shape->getBody() == _physicsBody) {
+    //        return false;
+    //    }
+    //    grounded = true;
+    //    return true;
+    //}, getPosition(), getPosition() + Vec2(0, 1), nullptr);
+
+    switch (state) {
+    case EntityState::WALKING:
+        updateWalk(dt);
+        break;
+    case EntityState::NORMAL:
+        updateIdle(dt);
+        break;
+    case EntityState::JUMPING:
+        updateJump(dt);
+        break;
+    default:
+        break;
+    }
+}
+
+void Entity::switchToIdle() {
+    if (state == EntityState::NORMAL) {
+        return;
+    }
+    state = EntityState::NORMAL;
+    animation->play("Stand");
+    const auto v = _physicsBody->getVelocity();
+    _physicsBody->setVelocity(Vec2(0, v.y));
+}
+
+void Entity::updateIdle(float delta) {
+}
+
+
+void Entity::switchToWalk() {
+    if (state == EntityState::WALKING) {
+        return;
+    }
+    state = EntityState::WALKING;
+    animation->play("Walk");
+}
+
+
+void Entity::updateWalk(float delta) {
+    const auto vx = static_cast<int>(direction) * moveSpeed;
+    const auto v = _physicsBody->getVelocity();
+    _physicsBody->setVelocity(Vec2(vx, v.y));
+}
+
+void Entity::switchToJump() {
+    state = EntityState::ATTACKING;
+    animation->play("Jump");
+    this->scheduleOnce(AX_SCHEDULE_SELECTOR(Entity::doJump), 0.17f);
+}
+
+void Entity::updateJump(float delta) {
+    if (grounded) {
+        switchToIdle();
+    }
 }
 
 void Entity::jump() {
-    if (rigidBody.isGrounded()) {
-        armature->getAnimation()->play("Jump");
-        this->scheduleOnce(AX_SCHEDULE_SELECTOR(Entity::doJump), 0.33f);
+    if (grounded && (state == EntityState::NORMAL || state == EntityState::WALKING)) {
+        switchToJump();
     }
 }
 
 void Entity::doJump(float dt) {
-    int temp = (int) getPositionY();
-    armature->getAnimation()->play("Up");
-    setPositionY(temp + 10);
-    initRigidbody();
-    rigidBody.getVelocity().y = 14;
-    setState(EntityState::NORMAL);
-}
-
-//
-void Entity::standUpCallBack(Armature *armature, MovementEventType type, const char *name) {
-    CCLOG("movement callback name: %s \n", name);
-    if (strcmp(name, "Down") == 0) {
-        switch (type) {
-            case COMPLETE:
-                //setState(NORMAL);
-                armature->getAnimation()->play("Stand");
-                break;
-            default:
-                break;
-        }
-    }
-}
-
-//
-void Entity::jumpCallBack(Armature *armature, MovementEventType type, const char *name) {
-    CCLOG("movement callback name:%s \n", name);
-    if (strcmp(name, "Jump") == 0) {
-        switch (type) {
-            case COMPLETE:
-                setState(EntityState::NORMAL);
-                armature->getAnimation()->play("Up");
-                break;
-            default:
-                break;
-        }
-    }
+    animation->play("Up");
+    const auto v = _physicsBody->getVelocity();
+    _physicsBody->setVelocity(Vec2(v.x, jumpAbility));
+    state = EntityState::JUMPING;
 }
 
 void Entity::hurt() {
     setState(EntityState::HURT);
     // 浮空的话就出浮空受伤
-    if (!rigidBody.isGrounded()) {
+    if (!grounded) {
         airHurt();
     } else {
         float tempRand = AXRANDOM_0_1();
@@ -119,6 +152,7 @@ void Entity::refresh(float dt) {
     armature->getAnimation()->play("Stand");
 }
 
-void Entity::update(float dt) {
-    Node::update(dt);
+void Entity::setDirection(Direction dir) {
+    direction = dir;
+    armature->setScaleX(dir);
 }

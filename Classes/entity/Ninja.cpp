@@ -26,10 +26,6 @@ bool Ninja::init() {
     return true;
 }
 
-void Ninja::initRigidbody() {
-    Entity::initRigidbody();
-}
-
 void Ninja::initSprite() {
     ArmatureDataManager::getInstance()->addArmatureFileInfo("Ninja0.png", "Ninja0.plist", "Ninja.ExportJson");
     // 这里直接使用Nivida ，而此信息保存在 Nivida.ExportJson 中，与其创建的项目属性相对应

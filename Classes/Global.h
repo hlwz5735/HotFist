@@ -15,6 +15,6 @@
 // 调试线框绘制标记
 #define DebugDrawRects 1
 
-constexpr float SCALE_FACTOR = 1.f;
+constexpr float SCALE_FACTOR = 1.5f;
 
 #endif

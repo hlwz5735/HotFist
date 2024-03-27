@@ -1,4 +1,4 @@
-//
+﻿//
 // Created by 厉猛 on 2024-02-29.
 //
 
@@ -12,7 +12,7 @@ USING_NS_AX;
 const auto gravity = Vec2(0, -PHYSICS_GRAVITY);
 
 /// 计算两矩形的相交矩形
-Rect intercectRect(const Rect &r1, const Rect &r2) {
+static Rect intersectRect(const Rect &r1, const Rect &r2) {
     auto x1 = std::max(r1.getMinX(), r2.getMinX());
     auto y1 = std::max(r1.getMinY(), r2.getMinY());
     auto x2 = std::min(r1.getMaxX(), r2.getMaxX());
@@ -61,6 +61,37 @@ void RigidBody::update(float delta) {
 
     parent->setPosition(destPos);
     realBody = destBody;
+
+    // 立足地面判断
+    const float checkY = realBody.getMinY() - 1.5f;
+    grounded = false;
+    for (const auto &blockRect : blockList) {
+        auto checkPoint = Vec2(realBody.getMinX(), checkY);
+        int vote = 0;
+        if (blockRect.containsPoint(checkPoint)) {
+            ++vote;
+        }
+        checkPoint.x += 0.1f;
+        if (blockRect.containsPoint(checkPoint)) {
+            ++vote;
+        }
+        checkPoint.x = realBody.getMidX();
+        if (blockRect.containsPoint(checkPoint)) {
+            ++vote;
+        }
+        checkPoint.x = realBody.getMaxX();
+        if (blockRect.containsPoint(checkPoint)) {
+            ++vote;
+        }
+        checkPoint.x -= 0.1f;
+        if (blockRect.containsPoint(checkPoint)) {
+            ++vote;
+        }
+        if (vote > 1) {
+            grounded = true;
+            break;
+        }
+    }
 }
 
 Vec2 RigidBody::realForce() {
@@ -68,7 +99,7 @@ Vec2 RigidBody::realForce() {
 }
 
 Vec2 RigidBody::doCompensation(const Rect &destBody, const Rect &staticBlock) {
-    auto intersect = intercectRect(destBody, staticBlock);
+    auto intersect = intersectRect(destBody, staticBlock);
     auto compensationVec = centerPointDiff(destBody, intersect);
     if (compensationVec.x != 0) {
         this->velocity.x = 0;

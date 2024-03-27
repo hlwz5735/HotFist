@@ -22,9 +22,6 @@ public:
 
     void attack() override;
 
-    // 初始化碰撞框
-    void initRigidbody() override;
-
     void initSprite() override;
 
     // 继承他爷爷的

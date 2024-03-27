@@ -5,8 +5,6 @@
 #include "PlatformMacros.h"
 #include "InputManager.h"
 
-
-
 InputManager *InputManager::getInstance() {
     if (!instance) {
         instance = new InputManager();
@@ -49,6 +47,9 @@ void InputManager::reset() {
 InputManager::InputManager(): lastKeyStates(nullptr), keyStates(nullptr) {
     lastKeyStates = new bool[KEYS_MAX];
     keyStates = new bool[KEYS_MAX];
+
+    memset(lastKeyStates, 0, sizeof(bool) * KEYS_MAX);
+    memset(keyStates, 0, sizeof(bool) * KEYS_MAX);
 }
 
 InputManager::~InputManager() {

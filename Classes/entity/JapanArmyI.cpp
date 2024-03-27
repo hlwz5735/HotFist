@@ -20,10 +20,6 @@ bool JapanArmyI::init() {
     return true;
 }
 
-void JapanArmyI::initRigidbody() {
-    this->rigidBody.setBody(Rect(0, 0, 63 - 5, 113));
-}
-
 void JapanArmyI::initSprite() {
     ArmatureDataManager::getInstance()->addArmatureFileInfo(
         "Xinfeng0.png",
